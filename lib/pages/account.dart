@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gender_picker/gender_picker.dart';
 import 'package:gender_picker/source/enums.dart';
 import 'package:pomagacze/components/auth_required_state.dart';
+import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:pomagacze/utils/gender_serializing.dart';
@@ -17,9 +18,7 @@ class AccountPage extends StatefulWidget {
 class AccountPageState extends AuthRequiredState<AccountPage> {
   final _usernameController = TextEditingController();
   var _loading = true;
-  DateTime? _birthDate;
-  Gender? _gender;
-
+  final UserProfile userProfile = UserProfile();
   /// Called once a user id is received within `onAuthenticated()`
   Future<void> _getProfile(String userId) async {
     setState(() {
@@ -38,8 +37,8 @@ class AccountPageState extends AuthRequiredState<AccountPage> {
     final data = response.data;
     if (data != null) {
       _usernameController.text = (data['name'] ?? '') as String;
-      _gender = deserializeGender(data['gender']);
-      _birthDate = DateTime.tryParse(data['birth_date']);
+      userProfile.gender = deserializeGender(data['gender']);
+      userProfile.birthDate = DateTime.tryParse(data['birth_date']);
     }
     setState(() {
       _loading = false;
@@ -56,8 +55,8 @@ class AccountPageState extends AuthRequiredState<AccountPage> {
     final updates = {
       'id': user!.id,
       'name': userName,
-      'birth_date': _birthDate?.toIso8601String().toString(),
-      'gender': _gender?.serialize().toString(),
+      'birth_date': userProfile.birthDate?.toIso8601String().toString(),
+      'gender': userProfile.gender?.serialize().toString(),
       'updated_at': DateTime.now().toIso8601String(),
     };
     final response = await supabase.from('profiles').upsert(updates).execute();
@@ -109,13 +108,13 @@ class AccountPageState extends AuthRequiredState<AccountPage> {
                 GenderPickerWithImage(
                   showOtherGender: true,
                   verticalAlignedText: false,
-                  selectedGender: _gender,
+                  selectedGender: userProfile.gender,
                   selectedGenderTextStyle: const TextStyle(
                       color: Color(0xFF8b32a8), fontWeight: FontWeight.bold),
                   unSelectedGenderTextStyle: const TextStyle(
                       color: Colors.white, fontWeight: FontWeight.normal),
                   onChanged: (Gender? gender) {
-                    _gender = gender;
+                    userProfile.gender = gender;
                   },
                   equallyAligned: true,
                   animationDuration: const Duration(milliseconds: 300),
@@ -128,13 +127,13 @@ class AccountPageState extends AuthRequiredState<AccountPage> {
                 DateTimePicker(
                   type: DateTimePickerType.date,
                   dateMask: 'd MMM, yyyy',
-                  initialValue: _birthDate?.toString(),
+                  initialValue: userProfile.birthDate?.toString(),
                   firstDate: DateTime(1900),
                   lastDate: DateTime.now(),
                   icon: const Icon(Icons.event),
                   dateLabelText: 'Data urodzenia',
                   onChanged: (dateTimeString) {
-                    _birthDate = DateTime.tryParse(dateTimeString);
+                    userProfile.birthDate = DateTime.tryParse(dateTimeString);
                   },
                 ),
                 TextFormField(
