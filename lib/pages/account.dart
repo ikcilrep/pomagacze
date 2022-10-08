@@ -106,14 +106,14 @@ class AccountPageState extends AuthRequiredState<AccountPage> {
           ),
           TextFormField(
             controller: _usernameController,
-            decoration: const InputDecoration(labelText: 'User Name'),
+            decoration: const InputDecoration(labelText: 'Nazwa użytkownika'),
           ),
           const SizedBox(height: 18),
           ElevatedButton(
               onPressed: _updateProfile,
-              child: Text(_loading ? 'Saving...' : 'Update')),
+              child: Text(_loading ? 'Zapisywanie...' : 'Zapisz')),
           const SizedBox(height: 18),
-          ElevatedButton(onPressed: _signOut, child: const Text('Sign Out')),
+          ElevatedButton(onPressed: _signOut, child: const Text('Wyloguj się')),
         ],
       ),
     );
