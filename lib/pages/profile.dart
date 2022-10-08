@@ -2,11 +2,11 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:gender_picker/source/enums.dart';
 import 'package:pomagacze/components/auth_required_state.dart';
+import 'package:pomagacze/db/users.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/utils/constants.dart';
-import 'package:pomagacze/utils/misc.dart';
+import 'package:pomagacze/utils/string_extensions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:pomagacze/utils/user_profile_updates.dart';
 import 'package:pomagacze/utils/snackbar.dart';
 import 'package:pomagacze/utils/gender_serializing.dart';
 
@@ -28,10 +28,9 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
       _isLoading = true;
     });
 
-    userProfile =
-        await UserProfileUpdates.fetchFromDatabase(userId, onError: (message) {
+    userProfile = await UsersDB.getByID(userId).catchError((err) {
       if (mounted) {
-        context.showErrorSnackBar(message: message);
+        context.showErrorSnackBar(message: (err as PostgrestError).message);
       }
     });
 
@@ -49,22 +48,21 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
     });
 
     userProfile.name = _usernameController.text;
-    final error = await userProfile.pushToDatabase();
-    _showErrorOrSuccessMessage(error);
+
+    try {
+      await UsersDB.update(userProfile);
+      if (mounted) {
+        context.showSnackBar(message: 'Udało się pomyślnie zapisać zmiany!');
+      }
+    } catch (err) {
+      if (mounted) {
+        context.showErrorSnackBar(message: (err as PostgrestError).message);
+      }
+    }
 
     setState(() {
       _isLoading = false;
     });
-  }
-
-  void _showErrorOrSuccessMessage(PostgrestError? error) {
-    if (mounted) {
-      if (error != null) {
-        context.showErrorSnackBar(message: error.message);
-      } else {
-        context.showSnackBar(message: 'Udało się pomyślnie zapisać zmiany!');
-      }
-    }
   }
 
   Future<void> _signOut() async {
@@ -91,7 +89,9 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_isInitialized) return const Center(child: CircularProgressIndicator());
+    if (!_isInitialized) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
