@@ -19,7 +19,7 @@ class _LoginPageState extends AuthState<LoginPage> {
   Future<void> _signIn() async {
     await supabase.auth.signInWithProvider(
       Provider.google,
-      options: AuthOptions(redirectTo: 'https://urvsgbuuxnpnefnxtoha.supabase.co/auth/v1/callback')
+      options: AuthOptions(redirectTo: 'com.pomagacze.pomagacze://login-callback/')
     );
 
   }

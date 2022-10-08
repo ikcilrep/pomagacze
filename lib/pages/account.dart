@@ -12,7 +12,6 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends AuthRequiredState<AccountPage> {
   final _usernameController = TextEditingController();
-  final _websiteController = TextEditingController();
   var _loading = false;
 
   /// Called once a user id is received within `onAuthenticated()`
@@ -33,7 +32,6 @@ class _AccountPageState extends AuthRequiredState<AccountPage> {
     final data = response.data;
     if (data != null) {
       _usernameController.text = (data['username'] ?? '') as String;
-      _websiteController.text = (data['website'] ?? '') as String;
     }
     setState(() {
       _loading = false;
@@ -46,12 +44,10 @@ class _AccountPageState extends AuthRequiredState<AccountPage> {
       _loading = true;
     });
     final userName = _usernameController.text;
-    final website = _websiteController.text;
     final user = supabase.auth.currentUser;
     final updates = {
       'id': user!.id,
-      'username': userName,
-      'website': website,
+      'name': userName,
       'updated_at': DateTime.now().toIso8601String(),
     };
     final response = await supabase.from('profiles').upsert(updates).execute();
@@ -85,7 +81,6 @@ class _AccountPageState extends AuthRequiredState<AccountPage> {
   @override
   void dispose() {
     _usernameController.dispose();
-    _websiteController.dispose();
     super.dispose();
   }
 
@@ -99,11 +94,6 @@ class _AccountPageState extends AuthRequiredState<AccountPage> {
           TextFormField(
             controller: _usernameController,
             decoration: const InputDecoration(labelText: 'User Name'),
-          ),
-          const SizedBox(height: 18),
-          TextFormField(
-            controller: _websiteController,
-            decoration: const InputDecoration(labelText: 'Website'),
           ),
           const SizedBox(height: 18),
           ElevatedButton(
