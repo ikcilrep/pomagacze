@@ -14,6 +14,7 @@ class AccountPage extends StatefulWidget {
 class AccountPageState extends AuthRequiredState<AccountPage> {
   final _usernameController = TextEditingController();
   var _loading = false;
+  DateTime? _birthDate;
 
   /// Called once a user id is received within `onAuthenticated()`
   Future<void> _getProfile(String userId) async {
@@ -49,8 +50,10 @@ class AccountPageState extends AuthRequiredState<AccountPage> {
     final updates = {
       'id': user!.id,
       'name': userName,
+      'birth_date': _birthDate?.toIso8601String().toString(),
       'updated_at': DateTime.now().toIso8601String(),
     };
+    print(_birthDate?.toIso8601String().toString());
     final response = await supabase.from('profiles').upsert(updates).execute();
 
     if (mounted) {
@@ -98,11 +101,14 @@ class AccountPageState extends AuthRequiredState<AccountPage> {
           DateTimePicker(
             type: DateTimePickerType.date,
             dateMask: 'd MMM, yyyy',
-            initialValue: DateTime.now().toString(),
+            initialValue: null,
             firstDate: DateTime(1900),
             lastDate: DateTime.now(),
             icon: const Icon(Icons.event),
             dateLabelText: 'Data urodzenia',
+            onChanged: (dateTimeString) {
+              _birthDate = DateTime.tryParse(dateTimeString);
+            },
           ),
           TextFormField(
             controller: _usernameController,
