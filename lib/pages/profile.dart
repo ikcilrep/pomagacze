@@ -45,6 +45,14 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
 
     userProfile.name = _usernameController.text;
     final error = await userProfile.pushToDatabase();
+    _showErrorOrSuccessMessage(error);
+
+    setState(() {
+      _loading = false;
+    });
+  }
+
+  void _showErrorOrSuccessMessage(PostgrestError? error) {
     if (mounted) {
       if (error != null) {
         context.showErrorSnackBar(message: error.message);
@@ -52,10 +60,6 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
         context.showSnackBar(message: 'Udało się pomyślnie zapisać zmiany!');
       }
     }
-
-    setState(() {
-      _loading = false;
-    });
   }
 
   Future<void> _signOut() async {
