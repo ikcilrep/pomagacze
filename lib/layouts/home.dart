@@ -37,11 +37,11 @@ class _HomeLayoutState extends State<HomeLayout> {
   Widget _buildBody() {
     switch(_index) {
       case 0:
-        return FeedPage();
+        return const FeedPage();
       case 1:
-        return RequestHelpPage();
+        return const RequestHelpPage();
       case 2:
-        return ProfilePage();
+        return const ProfilePage();
       default:
         return Container();
     }
