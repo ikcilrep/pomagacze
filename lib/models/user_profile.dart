@@ -3,6 +3,7 @@ import 'package:pomagacze/utils/gender_serializing.dart';
 
 class UserProfile {
   String? name;
+  String? avatarURL;
   DateTime? birthDate;
   Gender? gender;
 
@@ -12,7 +13,7 @@ class UserProfile {
     if (data != null) {
       name = data['name'];
       gender = GenderSerializing.deserialize(data['gender']);
-      birthDate = DateTime.tryParse(data['birth_date']);
+      birthDate = DateTime.tryParse(data['birth_date'] ?? '');
     }
   }
 }

@@ -5,8 +5,11 @@ import 'package:gender_picker/source/enums.dart';
 import 'package:pomagacze/components/auth_required_state.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/utils/constants.dart';
+import 'package:pomagacze/utils/misc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:pomagacze/utils/user_profile_updates.dart';
+import 'package:pomagacze/utils/snackbar.dart';
+import 'package:pomagacze/utils/gender_serializing.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -18,6 +21,7 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends AuthRequiredState<ProfilePage> {
   final _usernameController = TextEditingController();
   var _loading = true;
+  var _initialized = false;
   late UserProfile userProfile;
 
   Future<void> _fetchProfile(String userId) async {
@@ -25,7 +29,8 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
       _loading = true;
     });
 
-    userProfile = await UserProfileUpdates.fetchFromDatabase(userId, onError: (message) {
+    userProfile =
+        await UserProfileUpdates.fetchFromDatabase(userId, onError: (message) {
       if (mounted) {
         context.showErrorSnackBar(message: message);
       }
@@ -35,6 +40,7 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
 
     setState(() {
       _loading = false;
+      _initialized = true;
     });
   }
 
@@ -86,58 +92,57 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Profil')),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView(
-              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-              children: [
-                GenderPickerWithImage(
-                  showOtherGender: true,
-                  verticalAlignedText: false,
-                  selectedGender: userProfile.gender,
-                  selectedGenderTextStyle: const TextStyle(
-                      color: Color(0xFF8b32a8), fontWeight: FontWeight.bold),
-                  unSelectedGenderTextStyle: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.normal),
-                  onChanged: (Gender? gender) {
-                    userProfile.gender = gender;
-                  },
-                  equallyAligned: true,
-                  animationDuration: const Duration(milliseconds: 300),
-                  isCircular: true,
-                  // default : true,
-                  opacityOfGradient: 0.4,
-                  padding: const EdgeInsets.all(3),
-                  size: 50, //default : 40
-                ),
-                DateTimePicker(
-                  type: DateTimePickerType.date,
-                  dateMask: 'd MMM, yyyy',
-                  initialValue: userProfile.birthDate?.toString(),
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime.now(),
-                  icon: const Icon(Icons.event),
-                  dateLabelText: 'Data urodzenia',
-                  onChanged: (dateTimeString) {
-                    userProfile.birthDate = DateTime.tryParse(dateTimeString);
-                  },
-                ),
-                TextFormField(
-                  controller: _usernameController,
-                  decoration:
-                      const InputDecoration(labelText: 'Nazwa użytkownika'),
-                ),
-                const SizedBox(height: 18),
-                ElevatedButton(
-                    onPressed: _saveChanges,
-                    child: Text(_loading ? 'Zapisywanie...' : 'Zapisz')),
-                const SizedBox(height: 18),
-                ElevatedButton(
-                    onPressed: _signOut, child: const Text('Wyloguj się')),
-              ],
-            ),
+    if (!_initialized) return Center(child: CircularProgressIndicator());
+
+    return ListView(
+      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+      children: [
+        TextFormField(
+          controller: _usernameController,
+          decoration: const InputDecoration(labelText: 'Nazwa użytkownika'),
+        ),
+        const SizedBox(height: 12),
+        DropdownButtonFormField<Gender>(
+          items: Gender.values.map((value) {
+            return DropdownMenuItem<Gender>(
+              value: value,
+              child: Text(value.display().capitalizeFirst()),
+            );
+          }).toList(),
+          decoration: const InputDecoration(labelText: 'Płeć'),
+          value: userProfile.gender,
+          onChanged: (_) {},
+        ),
+        const SizedBox(height: 12),
+        DateTimePicker(
+          type: DateTimePickerType.date,
+          dateMask: 'd MMM, yyyy',
+          initialValue: userProfile.birthDate?.toString(),
+          firstDate: DateTime(1900),
+          lastDate: DateTime.now(),
+          // icon: const Icon(Icons.event),
+          dateLabelText: 'Data urodzenia',
+          onChanged: (dateTimeString) {
+            userProfile.birthDate = DateTime.tryParse(dateTimeString);
+          },
+          decoration: const InputDecoration(labelText: 'Data urodzenia'),
+        ),
+        const SizedBox(height: 18),
+        ElevatedButton(
+          onPressed: _saveChanges,
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              foregroundColor: Theme.of(context).colorScheme.onPrimary),
+          child: _loading
+              ? Transform.scale(
+                  scale: 0.7,
+                  child: CircularProgressIndicator(
+                      color: Theme.of(context).colorScheme.onPrimary))
+              : Text('Zapisz'),
+        ),
+        const SizedBox(height: 12),
+        OutlinedButton(onPressed: _signOut, child: const Text('Wyloguj się')),
+      ],
     );
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pomagacze/utils/constants.dart';
+import 'package:pomagacze/utils/snackbar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AuthState<T extends StatefulWidget> extends SupabaseAuthState<T> {
@@ -14,7 +14,7 @@ class AuthState<T extends StatefulWidget> extends SupabaseAuthState<T> {
   void onAuthenticated(Session session) {
     if (mounted) {
       Navigator.of(context)
-          .pushNamedAndRemoveUntil('/profile', (route) => false);
+          .pushNamedAndRemoveUntil('/home', (route) => false);
     }
   }
 

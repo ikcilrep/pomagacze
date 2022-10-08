@@ -12,7 +12,7 @@ extension GenderSerializing on Gender {
     }
   }
 
-  static Gender? deserialize(String serializedGender) {
+  static Gender? deserialize(String? serializedGender) {
     switch (serializedGender) {
       case "male":
         return Gender.Male;
@@ -22,6 +22,17 @@ extension GenderSerializing on Gender {
         return Gender.Others;
       default:
         return null;
+    }
+  }
+
+  String display() {
+    switch(this) {
+      case Gender.Male:
+        return "Mężczyzna";
+      case Gender.Female:
+        return "Kobieta";
+      default:
+        return "Inna";
     }
   }
 }
