@@ -6,7 +6,7 @@ import 'package:pomagacze/components/auth_required_state.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:pomagacze/utils/gender_serializing.dart';
+import 'package:pomagacze/utils/user_profile_updates.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -18,57 +18,41 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends AuthRequiredState<ProfilePage> {
   final _usernameController = TextEditingController();
   var _loading = true;
-  final UserProfile userProfile = UserProfile();
-  /// Called once a user id is received within `onAuthenticated()`
-  Future<void> _getProfile(String userId) async {
+  late UserProfile userProfile;
+
+  Future<void> _fetchProfile(String userId) async {
     setState(() {
       _loading = true;
     });
-    final response = await supabase
-        .from('profiles')
-        .select()
-        .eq('id', userId)
-        .single()
-        .execute();
-    final error = response.error;
-    if (error != null && response.status != 406 && mounted) {
-      context.showErrorSnackBar(message: error.message);
-    }
-    final data = response.data;
-    if (data != null) {
-      _usernameController.text = (data['name'] ?? '') as String;
-      userProfile.gender = deserializeGender(data['gender']);
-      userProfile.birthDate = DateTime.tryParse(data['birth_date']);
-    }
+
+    userProfile = await UserProfileUpdates.fetchFromDatabase(userId, onError: (message) {
+      if (mounted) {
+        context.showErrorSnackBar(message: message);
+      }
+    });
+
+    _usernameController.text = userProfile.name ?? '';
+
     setState(() {
       _loading = false;
     });
   }
 
-  /// Called when user taps `Update` button
-  Future<void> _updateProfile() async {
+  Future<void> _saveChanges() async {
     setState(() {
       _loading = true;
     });
-    final userName = _usernameController.text;
-    final user = supabase.auth.currentUser;
-    final updates = {
-      'id': user!.id,
-      'name': userName,
-      'birth_date': userProfile.birthDate?.toIso8601String().toString(),
-      'gender': userProfile.gender?.serialize().toString(),
-      'updated_at': DateTime.now().toIso8601String(),
-    };
-    final response = await supabase.from('profiles').upsert(updates).execute();
 
+    userProfile.name = _usernameController.text;
+    final error = await userProfile.pushToDatabase();
     if (mounted) {
-      final error = response.error;
       if (error != null) {
         context.showErrorSnackBar(message: error.message);
       } else {
         context.showSnackBar(message: 'Udało się pomyślnie zapisać zmiany!');
       }
     }
+
     setState(() {
       _loading = false;
     });
@@ -86,7 +70,7 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
   void onAuthenticated(Session session) {
     final user = session.user;
     if (user != null) {
-      _getProfile(user.id);
+      _fetchProfile(user.id);
     }
   }
 
@@ -143,7 +127,7 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
                 ),
                 const SizedBox(height: 18),
                 ElevatedButton(
-                    onPressed: _updateProfile,
+                    onPressed: _saveChanges,
                     child: Text(_loading ? 'Zapisywanie...' : 'Zapisz')),
                 const SizedBox(height: 18),
                 ElevatedButton(
