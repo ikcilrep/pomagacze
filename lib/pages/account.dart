@@ -7,10 +7,10 @@ class AccountPage extends StatefulWidget {
   const AccountPage({Key? key}) : super(key: key);
 
   @override
-  _AccountPageState createState() => _AccountPageState();
+  AccountPageState createState() => AccountPageState();
 }
 
-class _AccountPageState extends AuthRequiredState<AccountPage> {
+class AccountPageState extends AuthRequiredState<AccountPage> {
   final _usernameController = TextEditingController();
   var _loading = false;
 
