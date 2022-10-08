@@ -36,15 +36,28 @@ class LoginPageState extends AuthState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Zaloguj się')),
-      body: Padding(padding: const EdgeInsets.only(bottom: 20), child: Align(
-        alignment: Alignment.bottomCenter,
-        child: _isLoading ? const CircularProgressIndicator(color: Colors.white,) : GoogleAuthButton(
-            style: const AuthButtonStyle(),
-            onPressed: _signIn,
-            themeMode: ThemeMode.light,
-            text: 'Zaloguj się z Google'),
-      )),
+      appBar: AppBar(
+          title: Center(
+              child: Text('Pomagacze',
+                  style: TextStyle(fontWeight: FontWeight.bold)))),
+      body: Padding(
+          padding: const EdgeInsets.only(bottom: 50),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Center(
+                  child: GoogleAuthButton(
+                      style: AuthButtonStyle(
+                        textStyle: Theme.of(context).typography.englishLike.bodyText2,
+                        height: 50,
+                      ),
+                      isLoading: _isLoading,
+                      onPressed: _signIn,
+                      themeMode: ThemeMode.light,
+                      text: 'Zaloguj się z Google'),
+                )
+              ])),
     );
   }
 }

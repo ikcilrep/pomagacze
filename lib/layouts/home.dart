@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pomagacze/pages/community.dart';
 import 'package:pomagacze/pages/feed.dart';
 import 'package:pomagacze/pages/profile.dart';
-import 'package:pomagacze/pages/request_help.dart';
 
 class HomeLayout extends StatefulWidget {
   const HomeLayout({Key? key}) : super(key: key);
@@ -12,7 +12,7 @@ class HomeLayout extends StatefulWidget {
 
 const destinations = [
   NavigationDestination(icon: Icon(Icons.handshake), label: 'Pomagaj'),
-  NavigationDestination(icon: Icon(Icons.add), label: 'Zleć pomoc'),
+  NavigationDestination(icon: Icon(Icons.people), label: 'Społeczność'),
   NavigationDestination(icon: Icon(Icons.account_circle), label: 'Profil'),
 ];
 
@@ -39,7 +39,7 @@ class _HomeLayoutState extends State<HomeLayout> {
       case 0:
         return FeedPage();
       case 1:
-        return RequestHelpPage();
+        return CommunityPage();
       case 2:
         return ProfilePage();
       default:
