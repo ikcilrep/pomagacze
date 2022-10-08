@@ -18,4 +18,3 @@ extension ShowSnackBar on BuildContext {
     showSnackBar(message: message, backgroundColor: Colors.red);
   }
 }
-

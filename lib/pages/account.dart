@@ -1,8 +1,11 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:gender_picker/gender_picker.dart';
+import 'package:gender_picker/source/enums.dart';
 import 'package:pomagacze/components/auth_required_state.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:pomagacze/utils/gender_serializing.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({Key? key}) : super(key: key);
@@ -15,6 +18,7 @@ class AccountPageState extends AuthRequiredState<AccountPage> {
   final _usernameController = TextEditingController();
   var _loading = false;
   DateTime? _birthDate;
+  Gender? _gender;
 
   /// Called once a user id is received within `onAuthenticated()`
   Future<void> _getProfile(String userId) async {
@@ -51,9 +55,9 @@ class AccountPageState extends AuthRequiredState<AccountPage> {
       'id': user!.id,
       'name': userName,
       'birth_date': _birthDate?.toIso8601String().toString(),
+      'gender': _gender?.serialize().toString(),
       'updated_at': DateTime.now().toIso8601String(),
     };
-    print(_birthDate?.toIso8601String().toString());
     final response = await supabase.from('profiles').upsert(updates).execute();
 
     if (mounted) {
@@ -98,6 +102,25 @@ class AccountPageState extends AuthRequiredState<AccountPage> {
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
         children: [
+          GenderPickerWithImage(
+            showOtherGender: true,
+            verticalAlignedText: false,
+            selectedGender: Gender.Male,
+            selectedGenderTextStyle: const TextStyle(
+                color: Color(0xFF8b32a8), fontWeight: FontWeight.bold),
+            unSelectedGenderTextStyle: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.normal),
+            onChanged: (Gender? gender) {
+              _gender = gender;
+            },
+            equallyAligned: true,
+            animationDuration: const Duration(milliseconds: 300),
+            isCircular: true,
+            // default : true,
+            opacityOfGradient: 0.4,
+            padding: const EdgeInsets.all(3),
+            size: 50, //default : 40
+          ),
           DateTimePicker(
             type: DateTimePickerType.date,
             dateMask: 'd MMM, yyyy',

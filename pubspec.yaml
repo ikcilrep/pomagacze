@@ -39,6 +39,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   date_time_picker: ^2.1.0
   auth_buttons: ^3.0.0
+  gender_picker: ^1.1.0
 
 dev_dependencies:
   flutter_test:
