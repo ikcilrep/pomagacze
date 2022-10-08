@@ -11,6 +11,6 @@ ThemeData getTheme({bool dark = false}) {
     data = ThemeData.light(useMaterial3: true).copyWith(colorScheme: defaultLightScheme);
   }
   return data.copyWith(
-    inputDecorationTheme: InputDecorationTheme(filled: true)
+    inputDecorationTheme: const InputDecorationTheme(filled: true)
   );
 }

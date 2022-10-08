@@ -1,6 +1,5 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:gender_picker/gender_picker.dart';
 import 'package:gender_picker/source/enums.dart';
 import 'package:pomagacze/components/auth_required_state.dart';
 import 'package:pomagacze/models/user_profile.dart';
@@ -20,13 +19,13 @@ class ProfilePage extends StatefulWidget {
 
 class ProfilePageState extends AuthRequiredState<ProfilePage> {
   final _usernameController = TextEditingController();
-  var _loading = true;
-  var _initialized = false;
+  var _isLoading = true;
+  var _isInitialized = false;
   late UserProfile userProfile;
 
   Future<void> _fetchProfile(String userId) async {
     setState(() {
-      _loading = true;
+      _isLoading = true;
     });
 
     userProfile =
@@ -39,14 +38,14 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
     _usernameController.text = userProfile.name ?? '';
 
     setState(() {
-      _loading = false;
-      _initialized = true;
+      _isLoading = false;
+      _isInitialized = true;
     });
   }
 
   Future<void> _saveChanges() async {
     setState(() {
-      _loading = true;
+      _isLoading = true;
     });
 
     userProfile.name = _usernameController.text;
@@ -54,7 +53,7 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
     _showErrorOrSuccessMessage(error);
 
     setState(() {
-      _loading = false;
+      _isLoading = false;
     });
   }
 
@@ -92,7 +91,7 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_initialized) return Center(child: CircularProgressIndicator());
+    if (!_isInitialized) return const Center(child: CircularProgressIndicator());
 
     return ListView(
       padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
@@ -133,12 +132,12 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
           style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.primary,
               foregroundColor: Theme.of(context).colorScheme.onPrimary),
-          child: _loading
+          child: _isLoading
               ? Transform.scale(
                   scale: 0.7,
                   child: CircularProgressIndicator(
                       color: Theme.of(context).colorScheme.onPrimary))
-              : Text('Zapisz'),
+              : const Text('Zapisz'),
         ),
         const SizedBox(height: 12),
         OutlinedButton(onPressed: _signOut, child: const Text('Wyloguj się')),
