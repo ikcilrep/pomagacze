@@ -1,3 +1,4 @@
+import 'package:auth_buttons/auth_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:pomagacze/components/auth_state.dart';
 import 'package:pomagacze/utils/constants.dart';
@@ -15,11 +16,9 @@ class LoginPageState extends AuthState<LoginPage> {
   late final TextEditingController _emailController;
 
   Future<void> _signIn() async {
-    await supabase.auth.signInWithProvider(
-      Provider.google,
-      options: AuthOptions(redirectTo: 'com.pomagacze.pomagacze://login-callback/')
-    );
-
+    await supabase.auth.signInWithProvider(Provider.google,
+        options: AuthOptions(
+            redirectTo: 'com.pomagacze.pomagacze://login-callback/'));
   }
 
   @override
@@ -38,16 +37,14 @@ class LoginPageState extends AuthState<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Zaloguj się')),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-        children: [
-          ElevatedButton(
-            onPressed: _isLoading ? null : _signIn,
-            child: Text(_isLoading ?'Ładowanie' : 'Zaloguj się z Google'),
-          ),
-        ],
-      ),
+      body: Padding(padding: const EdgeInsets.only(bottom: 20), child: Align(
+        alignment: Alignment.bottomCenter,
+        child: !_isLoading ? const CircularProgressIndicator(color: Colors.white,) : GoogleAuthButton(
+            style: const AuthButtonStyle(),
+            onPressed: _signIn,
+            themeMode: ThemeMode.light,
+            text: 'Zaloguj się z Google'),
+      )),
     );
   }
 }
-

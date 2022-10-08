@@ -23,6 +23,8 @@ class MyApp extends StatelessWidget {
       title: 'Pomagacze',
       theme: ThemeData.dark().copyWith(
         primaryColor: Colors.green,
+        progressIndicatorTheme:
+            const ProgressIndicatorThemeData(color: Colors.white),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             foregroundColor: Colors.white,
