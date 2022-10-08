@@ -13,7 +13,7 @@ extension GenderSerializing on Gender {
   }
 }
 
-Gender deserializeGender(String serializedGender) {
+Gender? deserializeGender(String serializedGender) {
   switch (serializedGender) {
     case "male":
       return Gender.Male;
@@ -22,6 +22,6 @@ Gender deserializeGender(String serializedGender) {
     case "other":
       return Gender.Others;
     default:
-      throw UnimplementedError();
+      return null;
   }
 }

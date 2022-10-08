@@ -16,7 +16,7 @@ class AccountPage extends StatefulWidget {
 
 class AccountPageState extends AuthRequiredState<AccountPage> {
   final _usernameController = TextEditingController();
-  var _loading = false;
+  var _loading = true;
   DateTime? _birthDate;
   Gender? _gender;
 
@@ -37,7 +37,9 @@ class AccountPageState extends AuthRequiredState<AccountPage> {
     }
     final data = response.data;
     if (data != null) {
-      _usernameController.text = (data['username'] ?? '') as String;
+      _usernameController.text = (data['name'] ?? '') as String;
+      _gender = deserializeGender(data['gender']);
+      _birthDate = DateTime.tryParse(data['birth_date']);
     }
     setState(() {
       _loading = false;
@@ -99,52 +101,56 @@ class AccountPageState extends AuthRequiredState<AccountPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Profil')),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-        children: [
-          GenderPickerWithImage(
-            showOtherGender: true,
-            verticalAlignedText: false,
-            selectedGender: Gender.Male,
-            selectedGenderTextStyle: const TextStyle(
-                color: Color(0xFF8b32a8), fontWeight: FontWeight.bold),
-            unSelectedGenderTextStyle: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.normal),
-            onChanged: (Gender? gender) {
-              _gender = gender;
-            },
-            equallyAligned: true,
-            animationDuration: const Duration(milliseconds: 300),
-            isCircular: true,
-            // default : true,
-            opacityOfGradient: 0.4,
-            padding: const EdgeInsets.all(3),
-            size: 50, //default : 40
-          ),
-          DateTimePicker(
-            type: DateTimePickerType.date,
-            dateMask: 'd MMM, yyyy',
-            initialValue: null,
-            firstDate: DateTime(1900),
-            lastDate: DateTime.now(),
-            icon: const Icon(Icons.event),
-            dateLabelText: 'Data urodzenia',
-            onChanged: (dateTimeString) {
-              _birthDate = DateTime.tryParse(dateTimeString);
-            },
-          ),
-          TextFormField(
-            controller: _usernameController,
-            decoration: const InputDecoration(labelText: 'Nazwa użytkownika'),
-          ),
-          const SizedBox(height: 18),
-          ElevatedButton(
-              onPressed: _updateProfile,
-              child: Text(_loading ? 'Zapisywanie...' : 'Zapisz')),
-          const SizedBox(height: 18),
-          ElevatedButton(onPressed: _signOut, child: const Text('Wyloguj się')),
-        ],
-      ),
+      body: _loading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView(
+              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+              children: [
+                GenderPickerWithImage(
+                  showOtherGender: true,
+                  verticalAlignedText: false,
+                  selectedGender: _gender,
+                  selectedGenderTextStyle: const TextStyle(
+                      color: Color(0xFF8b32a8), fontWeight: FontWeight.bold),
+                  unSelectedGenderTextStyle: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.normal),
+                  onChanged: (Gender? gender) {
+                    _gender = gender;
+                  },
+                  equallyAligned: true,
+                  animationDuration: const Duration(milliseconds: 300),
+                  isCircular: true,
+                  // default : true,
+                  opacityOfGradient: 0.4,
+                  padding: const EdgeInsets.all(3),
+                  size: 50, //default : 40
+                ),
+                DateTimePicker(
+                  type: DateTimePickerType.date,
+                  dateMask: 'd MMM, yyyy',
+                  initialValue: _birthDate?.toString(),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime.now(),
+                  icon: const Icon(Icons.event),
+                  dateLabelText: 'Data urodzenia',
+                  onChanged: (dateTimeString) {
+                    _birthDate = DateTime.tryParse(dateTimeString);
+                  },
+                ),
+                TextFormField(
+                  controller: _usernameController,
+                  decoration:
+                      const InputDecoration(labelText: 'Nazwa użytkownika'),
+                ),
+                const SizedBox(height: 18),
+                ElevatedButton(
+                    onPressed: _updateProfile,
+                    child: Text(_loading ? 'Zapisywanie...' : 'Zapisz')),
+                const SizedBox(height: 18),
+                ElevatedButton(
+                    onPressed: _signOut, child: const Text('Wyloguj się')),
+              ],
+            ),
     );
   }
 }
