@@ -58,7 +58,7 @@ class AccountPageState extends AuthRequiredState<AccountPage> {
       if (error != null) {
         context.showErrorSnackBar(message: error.message);
       } else {
-        context.showSnackBar(message: 'Successfully updated profile!');
+        context.showSnackBar(message: 'Udało się pomyślnie zapisać zmiany!');
       }
     }
     setState(() {
@@ -91,7 +91,7 @@ class AccountPageState extends AuthRequiredState<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: AppBar(title: const Text('Profil')),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
         children: [
