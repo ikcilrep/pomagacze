@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase/supabase.dart';
 import 'package:pomagacze/components/auth_state.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -9,11 +7,11 @@ class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  LoginPageState createState() => LoginPageState();
 }
 
-class _LoginPageState extends AuthState<LoginPage> {
-  bool _isLoading = false;
+class LoginPageState extends AuthState<LoginPage> {
+  final bool _isLoading = false;
   late final TextEditingController _emailController;
 
   Future<void> _signIn() async {

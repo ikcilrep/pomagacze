@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:supabase/supabase.dart';
 import 'package:pomagacze/components/auth_required_state.dart';
 import 'package:pomagacze/utils/constants.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({Key? key}) : super(key: key);
@@ -26,7 +26,7 @@ class _AccountPageState extends AuthRequiredState<AccountPage> {
         .single()
         .execute();
     final error = response.error;
-    if (error != null && response.status != 406) {
+    if (error != null && response.status != 406 && mounted) {
       context.showErrorSnackBar(message: error.message);
     }
     final data = response.data;
@@ -51,11 +51,14 @@ class _AccountPageState extends AuthRequiredState<AccountPage> {
       'updated_at': DateTime.now().toIso8601String(),
     };
     final response = await supabase.from('profiles').upsert(updates).execute();
-    final error = response.error;
-    if (error != null) {
-      context.showErrorSnackBar(message: error.message);
-    } else {
-      context.showSnackBar(message: 'Successfully updated profile!');
+
+    if (mounted) {
+      final error = response.error;
+      if (error != null) {
+        context.showErrorSnackBar(message: error.message);
+      } else {
+        context.showSnackBar(message: 'Successfully updated profile!');
+      }
     }
     setState(() {
       _loading = false;
@@ -65,7 +68,7 @@ class _AccountPageState extends AuthRequiredState<AccountPage> {
   Future<void> _signOut() async {
     final response = await supabase.auth.signOut();
     final error = response.error;
-    if (error != null) {
+    if (error != null && mounted) {
       context.showErrorSnackBar(message: error.message);
     }
   }
@@ -106,4 +109,3 @@ class _AccountPageState extends AuthRequiredState<AccountPage> {
     );
   }
 }
-

@@ -5,10 +5,10 @@ class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
 
   @override
-  _SplashPageState createState() => _SplashPageState();
+  SplashPageState createState() => SplashPageState();
 }
 
-class _SplashPageState extends AuthState<SplashPage> {
+class SplashPageState extends AuthState<SplashPage> {
   @override
   void initState() {
     recoverSupabaseSession();
