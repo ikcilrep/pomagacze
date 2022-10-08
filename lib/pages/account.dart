@@ -1,3 +1,4 @@
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:pomagacze/components/auth_required_state.dart';
 import 'package:pomagacze/utils/constants.dart';
@@ -94,6 +95,15 @@ class AccountPageState extends AuthRequiredState<AccountPage> {
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
         children: [
+          DateTimePicker(
+            type: DateTimePickerType.date,
+            dateMask: 'd MMM, yyyy',
+            initialValue: DateTime.now().toString(),
+            firstDate: DateTime(1900),
+            lastDate: DateTime.now(),
+            icon: const Icon(Icons.event),
+            dateLabelText: 'Data urodzenia',
+          ),
           TextFormField(
             controller: _usernameController,
             decoration: const InputDecoration(labelText: 'User Name'),
