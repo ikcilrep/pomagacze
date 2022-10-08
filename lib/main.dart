@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pomagacze/pages/account.dart';
+import 'package:pomagacze/pages/profile.dart';
 import 'package:pomagacze/pages/login.dart';
 import 'package:pomagacze/pages/splash.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       routes: <String, WidgetBuilder>{
         '/': (_) => const SplashPage(),
         '/login': (_) => const LoginPage(),
-        '/account': (_) => const AccountPage(),
+        '/profile': (_) => const ProfilePage(),
       },
     );
   }

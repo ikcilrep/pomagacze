@@ -8,14 +8,14 @@ import 'package:pomagacze/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:pomagacze/utils/gender_serializing.dart';
 
-class AccountPage extends StatefulWidget {
-  const AccountPage({Key? key}) : super(key: key);
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
-  AccountPageState createState() => AccountPageState();
+  ProfilePageState createState() => ProfilePageState();
 }
 
-class AccountPageState extends AuthRequiredState<AccountPage> {
+class ProfilePageState extends AuthRequiredState<ProfilePage> {
   final _usernameController = TextEditingController();
   var _loading = true;
   final UserProfile userProfile = UserProfile();
