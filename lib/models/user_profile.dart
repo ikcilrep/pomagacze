@@ -11,7 +11,7 @@ class UserProfile {
   UserProfile.fromData(dynamic data) {
     if (data != null) {
       name = data['name'];
-      gender = deserializeGender(data['gender']);
+      gender = GenderSerializing.deserialize(data['gender']);
       birthDate = DateTime.tryParse(data['birth_date']);
     }
   }
