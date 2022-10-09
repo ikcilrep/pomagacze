@@ -102,8 +102,9 @@ class _RequestFormState extends State<RequestForm> {
                       const SizedBox(height: 25),
                       OpenMapPicker(
                         decoration: const InputDecoration(
-                          hintText: "Miejsce zbiórki",
+                          labelText: "Miejsce zbiórki",
                         ),
+                        removeIcon: Icon(Icons.clear, color: Theme.of(context).colorScheme.onSurface),
                         onChanged: (FormattedLocation? newValue) {
                           _location = newValue;
                         },

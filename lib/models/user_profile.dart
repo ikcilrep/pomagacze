@@ -10,6 +10,7 @@ class UserProfile {
   double? latitude;
   double? longitude;
   String? placeName;
+  int xp = 0;
 
   set location(FormattedLocation? value) {
     if (value != null) {
@@ -41,6 +42,7 @@ class UserProfile {
       latitude = data['latitude'];
       longitude = data['latitude'];
       placeName = data['place_name'];
+      xp = data['xp'];
     }
   }
 
@@ -51,5 +53,6 @@ class UserProfile {
         'latitude': latitude,
         'longitude': longitude,
         'place_name': placeName,
+        'xp': xp,
       };
 }
