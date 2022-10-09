@@ -1,26 +1,26 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gender_picker/source/enums.dart';
 import 'package:open_location_picker/open_location_picker.dart';
-import 'package:pomagacze/components/auth_required_state.dart';
 import 'package:pomagacze/components/buttons.dart';
 import 'package:pomagacze/db/users.dart';
 import 'package:pomagacze/models/user_profile.dart';
+import 'package:pomagacze/state/user.dart';
 import 'package:pomagacze/utils/string_extensions.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:pomagacze/utils/snackbar.dart';
 import 'package:pomagacze/utils/gender_serializing.dart';
 
-class EditProfilePage extends StatefulWidget {
-  final UserProfile userProfile;
+class EditProfilePage extends ConsumerStatefulWidget {
 
-  const EditProfilePage({Key? key, required this.userProfile}) : super(key: key);
+  const EditProfilePage({Key? key}) : super(key: key);
 
   @override
   EditProfilePageState createState() => EditProfilePageState();
 }
 
-class EditProfilePageState extends AuthRequiredState<EditProfilePage> {
+class EditProfilePageState extends ConsumerState<EditProfilePage> {
   final _usernameController = TextEditingController();
   var _isLoading = false;
   late UserProfile userProfile;
@@ -28,7 +28,7 @@ class EditProfilePageState extends AuthRequiredState<EditProfilePage> {
   @override
   void initState() {
     super.initState();
-    userProfile = widget.userProfile;
+    userProfile = ref.read(userProfileProvider).value!;
     _usernameController.text = userProfile.name ?? '';
   }
 
@@ -41,6 +41,7 @@ class EditProfilePageState extends AuthRequiredState<EditProfilePage> {
 
     try {
       await UsersDB.update(userProfile);
+      ref.refresh(userProfileProvider);
       if (mounted) {
         context.showSnackBar(message: 'Udało się pomyślnie zapisać zmiany!');
       }
@@ -67,6 +68,13 @@ class EditProfilePageState extends AuthRequiredState<EditProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    var userProfileAsync = ref.watch(userProfileProvider);
+
+    if(userProfileAsync.hasError) return Text('Coś poszło nie tak');
+    if(userProfileAsync.isLoading) return Center(child: CircularProgressIndicator());
+
+    var userProfile = userProfileAsync.value!;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 25, horizontal: 15),
       child: Column(
