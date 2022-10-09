@@ -1,6 +1,7 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:gender_picker/source/enums.dart';
+import 'package:open_location_picker/open_location_picker.dart';
 import 'package:pomagacze/components/auth_required_state.dart';
 import 'package:pomagacze/components/buttons.dart';
 import 'package:pomagacze/db/users.dart';
@@ -126,6 +127,15 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
             userProfile.birthDate = DateTime.tryParse(dateTimeString);
           },
           decoration: const InputDecoration(labelText: 'Data urodzenia'),
+        ),
+        const SizedBox(height: 12),
+        OpenMapPicker(
+          decoration: const InputDecoration(
+            hintText: "Miejsce zamieszkania",
+          ),
+          onSaved: (FormattedLocation? newValue) {
+            /// save new value
+          },
         ),
         const SizedBox(height: 18),
         ElevatedButton(

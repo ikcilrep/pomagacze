@@ -1,5 +1,7 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:location/location.dart';
+import 'package:open_location_picker/open_location_picker.dart';
 import 'package:pomagacze/pages/request_form.dart';
 import 'package:pomagacze/pages/login.dart';
 import 'package:pomagacze/pages/splash.dart';
@@ -17,20 +19,22 @@ Future<void> main() async {
 
   initializeDateFormatting('pl');
 
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final Location location = Location();
 
-  @override
-  Widget build(BuildContext context) {
+  MyApp({super.key});
+
+  Widget _buildRoutes() {
     return DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MaterialApp(
               title: 'Pomagacze',
               theme: getTheme(),
               // darkTheme: getTheme(dark: true),
               initialRoute: '/',
+              debugShowCheckedModeBanner: false,
               routes: <String, WidgetBuilder>{
                 '/': (_) => const SplashPage(),
                 '/login': (_) => const LoginPage(),
@@ -38,5 +42,40 @@ class MyApp extends StatelessWidget {
                 '/new': (_) => RequestForm(),
               },
             ));
+  }
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return OpenMapSettings(
+      onError: (context, error) {},
+      getCurrentLocation: _getCurrentLocationUsingLocationPackage,
+      reverseZoom: ReverseZoom.building,
+      getLocationStream: () => location.onLocationChanged
+          .map((event) => LatLng(event.latitude!, event.longitude!)),
+      child: _buildRoutes(),
+    );
+  }
+
+  Future<LatLng?> _getCurrentLocationUsingLocationPackage() async {
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        throw Exception("Service is not enabled");
+      }
+    }
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        throw Exception("Permission not granted");
+      }
+    }
+    var locationData = await location.getLocation();
+
+    return LatLng(locationData.latitude!, locationData.longitude!);
   }
 }
