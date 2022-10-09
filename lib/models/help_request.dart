@@ -24,17 +24,16 @@ class HelpRequest {
         author = UserProfile.fromData(data['author']);
       }
       id = data['id'] ?? '';
-      latitude = data['latitude'] is int
-          ? data['latitude'].toDouble()
-          : data['latitude'];
-      longitude = data['longitude'] is int
-          ? data['longitude'].toDouble()
-          : data['longitude'];
+      latitude = castToDoubleIfInteger(data['latitude']);
+      longitude = castToDoubleIfInteger(data['longitude']);
       placeName = data['place_name'];
       dateStart = DateTime.tryParse(data['date_start'] ?? '');
       dateEnd = DateTime.tryParse(data['date_end'] ?? '');
     }
   }
+
+  double? castToDoubleIfInteger(number) =>
+      number is int ? number.toDouble() : number;
 
   Map<String, dynamic> toJson() {
     return {
