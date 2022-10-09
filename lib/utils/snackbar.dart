@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 extension ShowSnackBar on BuildContext {
   void showSnackBar({
     required String message,
-    Color backgroundColor = Colors.white,
+    Color? backgroundColor,
+    Color? color,
   }) {
+    print(message);
     ScaffoldMessenger.of(this).showSnackBar(SnackBar(
-      content: Text(message),
-      backgroundColor: backgroundColor,
+      content: Text(message, style: TextStyle(color: Theme.of(this).colorScheme.onSurface)),
+      backgroundColor: backgroundColor ?? Theme.of(this).colorScheme.surface,
     ));
   }
 
