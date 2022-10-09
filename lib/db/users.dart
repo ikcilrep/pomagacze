@@ -6,7 +6,7 @@ import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/gender_serializing.dart';
 
 class UsersDB {
-  static Future<UserProfile> getByID(String id) async {
+  static Future<UserProfile> getById(String id) async {
     final response = await supabase
         .from('profiles')
         .select()

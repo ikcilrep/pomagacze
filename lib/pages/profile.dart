@@ -30,7 +30,7 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
       _isLoading = true;
     });
 
-    userProfile = await UsersDB.getByID(userId).catchError((err) {
+    userProfile = await UsersDB.getById(userId).catchError((err) {
       if (mounted) {
         context.showErrorSnackBar(message: (err as PostgrestError).message);
       }
