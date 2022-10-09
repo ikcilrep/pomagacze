@@ -78,7 +78,7 @@ class _RequestFormState extends State<RequestForm> {
                 key: _formKey,
                 initialValue: widget.initialData?.toJson() ?? {},
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(15),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
@@ -91,7 +91,7 @@ class _RequestFormState extends State<RequestForm> {
                       const SizedBox(height: 15),
                       FormBuilderTextField(
                         name: 'description',
-                        minLines: 3,
+                        minLines: 1,
                         // any number you need (It works as the rows for the textarea)
                         keyboardType: TextInputType.multiline,
                         maxLines: 8,
@@ -99,17 +99,7 @@ class _RequestFormState extends State<RequestForm> {
                         validator: FormBuilderValidators.required(
                             errorText: 'Opis nie może być pusty'),
                       ),
-                      const SizedBox(height: 25),
-                      OpenMapPicker(
-                        decoration: const InputDecoration(
-                          labelText: "Miejsce zbiórki",
-                        ),
-                        removeIcon: Icon(Icons.clear, color: Theme.of(context).colorScheme.onSurface),
-                        onChanged: (FormattedLocation? newValue) {
-                          _location = newValue;
-                        },
-                      ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 15),
                       FormBuilderField(
                         name: 'date_start',
                         initialValue: DateTime.now().toString(),
@@ -165,7 +155,16 @@ class _RequestFormState extends State<RequestForm> {
                           );
                         },
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 20),
+                      OpenMapPicker(
+                        decoration: const InputDecoration(
+                          labelText: "Miejsce zbiórki",
+                        ),
+                        removeIcon: Icon(Icons.clear, color: Theme.of(context).colorScheme.onSurface),
+                        onChanged: (FormattedLocation? newValue) {
+                          _location = newValue;
+                        },
+                      ),
                     ],
                   ),
                 ),
