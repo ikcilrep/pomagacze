@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pomagacze/components/indexed_transition_switcher.dart';
 import 'package:pomagacze/pages/community.dart';
 import 'package:pomagacze/pages/feed.dart';
 import 'package:pomagacze/pages/profile.dart';
+import 'package:animations/animations.dart';
 
 class HomeLayout extends StatefulWidget {
   const HomeLayout({Key? key}) : super(key: key);
@@ -18,6 +20,13 @@ const destinations = [
 
 class _HomeLayoutState extends State<HomeLayout> {
   int _index = 0;
+  bool _reversed = false;
+
+  final List<Widget> _pages = [
+    const FeedPage(key: PageStorageKey('feed')),
+    const CommunityPage(key: PageStorageKey('community')),
+    const ProfilePage(key: PageStorageKey('profile'))
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +37,7 @@ class _HomeLayoutState extends State<HomeLayout> {
         destinations: destinations,
         selectedIndex: _index,
         onDestinationSelected: (i) => setState(() {
+          _reversed = i < _index;
           _index = i;
         }),
       ),
@@ -35,15 +45,22 @@ class _HomeLayoutState extends State<HomeLayout> {
   }
 
   Widget _buildBody() {
-    switch(_index) {
-      case 0:
-        return const FeedPage();
-      case 1:
-        return const CommunityPage();
-      case 2:
-        return const ProfilePage();
-      default:
-        return Container();
-    }
+    return IndexedTransitionSwitcher(
+      reverse: _reversed,
+      transitionBuilder: (
+        Widget child,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+      ) {
+        return SharedAxisTransition(
+          animation: animation,
+          secondaryAnimation: secondaryAnimation,
+          transitionType: SharedAxisTransitionType.horizontal,
+          child: child,
+        );
+      },
+      index: _index,
+      children: _pages,
+    );
   }
 }
