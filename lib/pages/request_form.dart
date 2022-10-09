@@ -20,7 +20,6 @@ class _RequestFormState extends State<RequestForm> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   bool _loading = false;
-  bool _allDay = false;
 
   @override
   void initState() {
@@ -36,7 +35,6 @@ class _RequestFormState extends State<RequestForm> {
 
     var values = {
       ..._formKey.currentState!.value,
-      'date_all_day': _allDay,
       'author_id': supabase.auth.currentUser?.id
     };
 
@@ -95,24 +93,13 @@ class _RequestFormState extends State<RequestForm> {
                             errorText: 'Opis nie może być pusty'),
                       ),
                       const SizedBox(height: 25),
-                      SwitchListTile(
-                        title: const Text('Cały dzień'),
-                        value: _allDay,
-                        onChanged: (v) {
-                          setState(() {
-                            _allDay = v;
-                          });
-                        },
-                      ),
                       const SizedBox(height: 10),
                       FormBuilderField(
                         name: 'date_start',
                         initialValue: DateTime.now().toString(),
                         builder: (field) {
                           return DateTimePicker(
-                            type: _allDay
-                                ? DateTimePickerType.date
-                                : DateTimePickerType.dateTimeSeparate,
+                            type: DateTimePickerType.dateTimeSeparate,
                             key: Key(field.value.toString()),
                             dateMask: 'EE, dd MMM yyyy',
                             initialValue: field.value,
@@ -146,9 +133,7 @@ class _RequestFormState extends State<RequestForm> {
                             DateTime.now().add(const Duration(hours: 1)).toString(),
                         builder: (field) {
                           return DateTimePicker(
-                            type: _allDay
-                                ? DateTimePickerType.date
-                                : DateTimePickerType.dateTimeSeparate,
+                            type: DateTimePickerType.dateTimeSeparate,
                             dateMask: 'EE, dd MMM yyyy',
                             initialValue: field.value.toString(),
                             key: Key(field.value.toString()),
