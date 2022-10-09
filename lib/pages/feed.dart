@@ -44,7 +44,7 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
         child: OpenContainer<bool>(
             transitionType: ContainerTransitionType.fadeThrough,
             openBuilder: (BuildContext context, VoidCallback _) {
-              return RequestForm();
+              return const RequestForm();
             },
             tappable: false,
             closedShape:
@@ -65,7 +65,7 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
                 elevation: 1.5,
                 animateIcon: false,
                 color: Theme.of(context).colorScheme.primary,
-                duration: Duration(milliseconds: 150),
+                duration: const Duration(milliseconds: 150),
               );
             }));
 
