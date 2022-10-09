@@ -39,7 +39,7 @@ class UserProfile {
       birthDate = DateTime.tryParse(data['birth_date'] ?? '');
       latitude = data['latitude'];
       longitude = data['latitude'];
-      placeName = data['placeName'];
+      placeName = data['place_name'];
     }
   }
 }

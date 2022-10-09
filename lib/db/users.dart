@@ -28,7 +28,7 @@ class UsersDB {
       'updated_at': DateTime.now().toIso8601String(),
       'latitude': profile.latitude,
       'longitude': profile.longitude,
-      'placeName': profile.placeName,
+      'place_name': profile.placeName,
     };
     final response = await supabase.from('profiles').upsert(updates).execute();
     response.throwOnError();
