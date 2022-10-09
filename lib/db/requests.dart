@@ -6,13 +6,14 @@ class RequestsDB {
   static Future<List<HelpRequest>> getAll() async {
     var result = await supabase.from('requests').select().execute();
     result.throwOnError();
-    return (result.data as List<dynamic>).map((e) => HelpRequest.fromData(e)).toList();
+    return (result.data as List<dynamic>)
+        .map((e) => HelpRequest.fromData(e))
+        .toList();
   }
 
   static Future<void> update(HelpRequest data) async {
-    var result = await supabase.from('requests').upsert({
-      ...data.toJSON(),
-    }).execute();
+    var result =
+        await supabase.from('requests').upsert(data.toJson()).execute();
     result.throwOnError();
   }
 }

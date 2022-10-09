@@ -76,7 +76,7 @@ class _RequestFormState extends State<RequestForm> {
             children: [
               FormBuilder(
                 key: _formKey,
-                initialValue: widget.initialData?.toJSON() ?? {},
+                initialValue: widget.initialData?.toJson() ?? {},
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(

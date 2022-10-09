@@ -32,7 +32,7 @@ class HelpRequest {
     }
   }
 
-  Map<String, dynamic> toJSON() {
+  Map<String, dynamic> toJson() {
     return {
       ...(id?.isNotEmpty == true ? {'id': id} : {}),
       'author_id': authorId,
