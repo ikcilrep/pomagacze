@@ -73,7 +73,7 @@ class EditProfilePageState extends AuthRequiredState<EditProfilePage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Edytuj profil', style: Theme.of(context).textTheme.headline6),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           TextFormField(
             controller: _usernameController,
             decoration: const InputDecoration(labelText: 'Nazwa użytkownika'),
@@ -88,7 +88,7 @@ class EditProfilePageState extends AuthRequiredState<EditProfilePage> {
             }).toList(),
             decoration: const InputDecoration(labelText: 'Płeć'),
             value: userProfile.gender,
-            onChanged: (_) {},
+            onChanged: (newGender) { userProfile.gender = newGender;},
           ),
           const SizedBox(height: 12),
           DateTimePicker(
@@ -126,7 +126,7 @@ class EditProfilePageState extends AuthRequiredState<EditProfilePage> {
                   child: const Text('Anuluj'),
                 ),
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Expanded(
                 child: ElevatedButton(
                   onPressed: _saveChanges,
