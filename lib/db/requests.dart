@@ -11,9 +11,7 @@ class RequestsDB {
 
   static Future<void> upsert(HelpRequest data) async {
     var result = await supabase.from('requests').upsert({
-      ...data.toData(),
-      'date_start': data.dateStart?.toString(),
-      'date_end': data.dateEnd?.toString()
+      ...data.toJSON(),
     }).execute();
     result.throwOnError();
   }

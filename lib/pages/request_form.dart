@@ -4,6 +4,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:pomagacze/db/db.dart';
 import 'package:pomagacze/models/help_request.dart';
+import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/snackbar.dart';
 
 class RequestForm extends StatefulWidget {
@@ -33,7 +34,11 @@ class _RequestFormState extends State<RequestForm> {
       _loading = true;
     });
 
-    var values = {..._formKey.currentState!.value, 'date_all_day': _allDay};
+    var values = {
+      ..._formKey.currentState!.value,
+      'date_all_day': _allDay,
+      'author_id': supabase.auth.currentUser?.id
+    };
 
     await RequestsDB.upsert(HelpRequest.fromData(values)).catchError((err) {
       context.showErrorSnackBar(message: err.toString());
@@ -64,7 +69,7 @@ class _RequestFormState extends State<RequestForm> {
             children: [
               FormBuilder(
                 key: _formKey,
-                initialValue: widget.initialData?.toData() ?? {},
+                initialValue: widget.initialData?.toJSON() ?? {},
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
@@ -100,7 +105,7 @@ class _RequestFormState extends State<RequestForm> {
                       const SizedBox(height: 10),
                       FormBuilderField(
                         name: 'date_start',
-                        initialValue: DateTime.now(),
+                        initialValue: DateTime.now().toString(),
                         builder: (field) {
                           return DateTimePicker(
                             type: _allDay
@@ -108,23 +113,23 @@ class _RequestFormState extends State<RequestForm> {
                                 : DateTimePickerType.dateTimeSeparate,
                             key: Key(field.value.toString()),
                             dateMask: 'EE, dd MMM yyyy',
-                            initialValue: field.value.toString(),
+                            initialValue: field.value,
                             firstDate: DateTime.now(),
                             lastDate: DateTime(2500),
                             onChanged: (dateTimeString) {
                               var date = DateTime.tryParse(dateTimeString);
                               if (date == null) return;
 
-                              field.didChange(date);
+                              field.didChange(dateTimeString);
 
-                              print(_formKey
-                                  .currentState!.fields['date_end']?.value);
+                              var endDate = DateTime.tryParse(_formKey
+                                  .currentState!
+                                  .fields['date_end']
+                                  ?.value as String);
 
-                              if (date.isAfter(_formKey.currentState!
-                                  .fields['date_end']?.value as DateTime)) {
-                                print('lol');
+                              if (endDate != null && date.isAfter(endDate)) {
                                 _formKey.currentState!.fields['date_end']
-                                    ?.didChange(date);
+                                    ?.didChange(dateTimeString);
                               }
                             },
                             dateLabelText: 'Data rozpoczęcia',
@@ -135,7 +140,8 @@ class _RequestFormState extends State<RequestForm> {
                       const SizedBox(height: 15),
                       FormBuilderField(
                         name: 'date_end',
-                        initialValue: DateTime.now().add(Duration(hours: 1)),
+                        initialValue:
+                            DateTime.now().add(Duration(hours: 1)).toString(),
                         builder: (field) {
                           return DateTimePicker(
                             type: _allDay
@@ -144,15 +150,12 @@ class _RequestFormState extends State<RequestForm> {
                             dateMask: 'EE, dd MMM yyyy',
                             initialValue: field.value.toString(),
                             key: Key(field.value.toString()),
-                            firstDate: _formKey.currentState
-                                    ?.fields['date_start']?.value ??
+                            firstDate: DateTime.tryParse(_formKey.currentState
+                                    ?.fields['date_start']?.value) ??
                                 DateTime.now(),
                             lastDate: DateTime(2500),
                             onChanged: (dateTimeString) {
-                              var date = DateTime.tryParse(dateTimeString);
-                              if (date == null) return;
-
-                              field.didChange(date);
+                              field.didChange(dateTimeString);
                             },
                             dateLabelText: 'Data zakończenia',
                             timeLabelText: 'Godzina',

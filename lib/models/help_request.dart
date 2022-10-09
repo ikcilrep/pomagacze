@@ -11,7 +11,6 @@ class HelpRequest {
   DateTime? dateStart;
   DateTime? dateEnd;
 
-
   HelpRequest.empty();
 
   HelpRequest.fromData(dynamic data) {
@@ -19,7 +18,8 @@ class HelpRequest {
       title = data['title'] ?? '';
       description = data['description'] ?? '';
       authorID = data['author_id'] ?? '';
-      if(data['author'] != null) author = UserProfile.fromData(data['author'] ?? {});
+      if (data['author'] != null)
+        author = UserProfile.fromData(data['author'] ?? {});
       id = data['id'] ?? '';
       locationLat = double.tryParse(data['location_lat']?.toString() ?? '');
       locationLng = double.tryParse(data['location_lng']?.toString() ?? '');
@@ -28,14 +28,14 @@ class HelpRequest {
     }
   }
 
-  Map<String, dynamic> toData() {
+  Map<String, dynamic> toJSON() {
     return {
-      'id': id,
+      ...(id?.isNotEmpty == true ? {'id': id} : {}),
       'author_id': authorID,
       'title': title,
       'description': description,
-      'date_start': dateStart,
-      'date_end': dateEnd,
+      'date_start': dateStart.toString(),
+      'date_end': dateEnd.toString(),
       'location_lat': locationLat,
       'location_lng': locationLng,
     };
