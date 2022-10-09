@@ -1,9 +1,11 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:pomagacze/components/fab_extended_animated.dart';
 import 'package:pomagacze/components/auth_required_state.dart';
 import 'package:pomagacze/components/request_card.dart';
 import 'package:pomagacze/db/db.dart';
 import 'package:pomagacze/models/help_request.dart';
+import 'package:pomagacze/pages/request_form.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({Key? key}) : super(key: key);
@@ -39,22 +41,52 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
     return Positioned(
         bottom: 15,
         right: 10,
-        child: ScrollingFabAnimated(
-          scrollController: _scrollController,
-          text: Text('Poproś o pomoc',
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle2
-                  ?.copyWith(color: Theme.of(context).colorScheme.onPrimary)),
-          icon: Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
-          onPress: () {
-            Navigator.of(context).pushNamed('/new');
-          },
-          radius: 18,
-          width: 180,
-          animateIcon: false,
-          color: Theme.of(context).colorScheme.primary,
-        ));
+        child: OpenContainer<bool>(
+            transitionType: ContainerTransitionType.fadeThrough,
+            openBuilder: (BuildContext context, VoidCallback _) {
+              return RequestForm();
+            },
+            tappable: false,
+            closedShape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+            closedElevation: 1.5,
+            // transitionDuration: const Duration(seconds: 2),
+            closedBuilder: (_, openContainer) {
+              return ScrollingFabAnimated(
+                scrollController: _scrollController,
+                text: Text('Poproś o pomoc',
+                    style: Theme.of(context).textTheme.subtitle2?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary)),
+                icon: Icon(Icons.add,
+                    color: Theme.of(context).colorScheme.onPrimary),
+                onPress: openContainer,
+                radius: 18,
+                width: 180,
+                elevation: 1.5,
+                animateIcon: false,
+                color: Theme.of(context).colorScheme.primary,
+              );
+            }));
+
+    // return Positioned(
+    // bottom: 15,
+    // right: 10,
+    // child: ScrollingFabAnimated(
+    //   scrollController: _scrollController,
+    //   text: Text('Poproś o pomoc',
+    //       style: Theme.of(context)
+    //           .textTheme
+    //           .subtitle2
+    //           ?.copyWith(color: Theme.of(context).colorScheme.onPrimary)),
+    //   icon: Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
+    //   onPress: () {
+    //     Navigator.of(context).pushNamed('/new');
+    //   },
+    //   radius: 18,
+    //   width: 180,
+    //   animateIcon: false,
+    //   color: Theme.of(context).colorScheme.primary,
+    // ));
   }
 
   Widget _buildList() {
