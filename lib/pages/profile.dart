@@ -2,6 +2,7 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:gender_picker/source/enums.dart';
 import 'package:pomagacze/components/auth_required_state.dart';
+import 'package:pomagacze/components/buttons.dart';
 import 'package:pomagacze/db/users.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/utils/constants.dart';
@@ -129,9 +130,7 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
         const SizedBox(height: 18),
         ElevatedButton(
           onPressed: _saveChanges,
-          style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Theme.of(context).colorScheme.onPrimary),
+          style: primaryButtonStyle(context),
           child: _isLoading
               ? Transform.scale(
                   scale: 0.7,

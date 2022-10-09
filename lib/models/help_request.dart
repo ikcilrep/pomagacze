@@ -1,13 +1,15 @@
 import 'user_profile.dart';
 
 class HelpRequest {
-  String id = '';
+  String? id;
   String authorID = '';
   UserProfile? author;
   String title = '';
   String description = '';
   double? locationLat;
   double? locationLng;
+  DateTime? dateStart;
+  DateTime? dateEnd;
 
 
   HelpRequest.empty();
@@ -19,8 +21,23 @@ class HelpRequest {
       authorID = data['author_id'] ?? '';
       if(data['author'] != null) author = UserProfile.fromData(data['author'] ?? {});
       id = data['id'] ?? '';
-      locationLat = double.tryParse(data['location_lat'].toString() ?? '');
-      locationLng = double.tryParse(data['location_lng'].toString() ?? '');
+      locationLat = double.tryParse(data['location_lat']?.toString() ?? '');
+      locationLng = double.tryParse(data['location_lng']?.toString() ?? '');
+      dateStart = DateTime.tryParse(data['date_start'] ?? '');
+      dateEnd = DateTime.tryParse(data['date_end'] ?? '');
     }
+  }
+
+  Map<String, dynamic> toData() {
+    return {
+      'id': id,
+      'author_id': authorID,
+      'title': title,
+      'description': description,
+      'date_start': dateStart,
+      'date_end': dateEnd,
+      'location_lat': locationLat,
+      'location_lng': locationLng,
+    };
   }
 }

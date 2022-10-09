@@ -41,6 +41,8 @@ dependencies:
   auth_buttons: ^3.0.0
   gender_picker: ^1.1.0
   dynamic_color: ^1.5.4
+  flutter_form_builder: ^7.7.0
+  form_builder_validators: ^8.3.0
 
 dev_dependencies:
   flutter_test:

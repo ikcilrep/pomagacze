@@ -14,19 +14,12 @@ class FeedPage extends StatefulWidget {
 
 class _FeedPageState extends AuthRequiredState<FeedPage> {
   late Future<List<HelpRequest>> _feedFuture;
-  bool _fabExtended = true;
   ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     _feedFuture = RequestsDB.getAll();
-    _scrollController.addListener(() {
-      setState(() {
-        _fabExtended = !_scrollController.hasClients ||
-            _scrollController.position.pixels == 0;
-      });
-    });
   }
 
   @override
@@ -48,9 +41,15 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
         right: 10,
         child: ScrollingFabAnimated(
           scrollController: _scrollController,
-          text: Text('Dodaj zgłoszenie', style: TextStyle(color: Theme.of(context).colorScheme.onPrimary)),
+          text: Text('Poproś o pomoc',
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle2
+                  ?.copyWith(color: Theme.of(context).colorScheme.onPrimary)),
           icon: Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
-          onPress: () {},
+          onPress: () {
+            Navigator.of(context).pushNamed('/new');
+          },
           radius: 18,
           width: 180,
           animateIcon: false,
@@ -59,23 +58,31 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
   }
 
   Widget _buildList() {
-    return FutureBuilder(
-        future: _feedFuture,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            print(snapshot.error);
-            return const Center(child: Text('Coś poszło nie tak'));
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          final data = snapshot.data as List<HelpRequest>;
-          return ListView.builder(
-              controller: _scrollController,
-              itemBuilder: (context, index) => RequestCard(data[index]),
-              itemCount: data.length);
+    return RefreshIndicator(
+      onRefresh: () async {
+        var result = await RequestsDB.getAll();
+        setState(() {
+          _feedFuture = Future.value(result);
         });
+      },
+      child: FutureBuilder(
+          future: _feedFuture,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              print(snapshot.error);
+              return const Center(child: Text('Coś poszło nie tak'));
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final data = snapshot.data as List<HelpRequest>;
+            return ListView.builder(
+                controller: _scrollController,
+                itemBuilder: (context, index) => RequestCard(data[index]),
+                itemCount: data.length);
+          }),
+    );
   }
 
   @override
