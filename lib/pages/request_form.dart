@@ -8,9 +8,9 @@ import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/snackbar.dart';
 
 class RequestForm extends StatefulWidget {
-  HelpRequest? initialData;
+  final HelpRequest? initialData;
 
-  RequestForm({Key? key, this.initialData}) : super(key: key);
+  const RequestForm({Key? key, this.initialData}) : super(key: key);
 
   @override
   State<RequestForm> createState() => _RequestFormState();
@@ -47,7 +47,9 @@ class _RequestFormState extends State<RequestForm> {
     setState(() {
       _loading = false;
     });
-    Navigator.of(context).pop();
+    if (mounted) {
+      Navigator.of(context).pop();
+    }
   }
 
   @override
@@ -60,7 +62,7 @@ class _RequestFormState extends State<RequestForm> {
             icon: _loading
                 ? Transform.scale(
                     scale: 0.6,
-                    child: CircularProgressIndicator(color: Colors.white))
+                    child: const CircularProgressIndicator(color: Colors.white))
                 : const Icon(Icons.send)),
         body: SingleChildScrollView(
           child: Column(
@@ -141,7 +143,7 @@ class _RequestFormState extends State<RequestForm> {
                       FormBuilderField(
                         name: 'date_end',
                         initialValue:
-                            DateTime.now().add(Duration(hours: 1)).toString(),
+                            DateTime.now().add(const Duration(hours: 1)).toString(),
                         builder: (field) {
                           return DateTimePicker(
                             type: _allDay

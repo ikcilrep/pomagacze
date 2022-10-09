@@ -92,10 +92,10 @@ class ScrollingFabAnimated extends StatefulWidget {
       : super(key: key);
 
   @override
-  _ScrollingFabAnimatedState createState() => _ScrollingFabAnimatedState();
+  ScrollingFabAnimatedState createState() => ScrollingFabAnimatedState();
 }
 
-class _ScrollingFabAnimatedState extends State<ScrollingFabAnimated> {
+class ScrollingFabAnimatedState extends State<ScrollingFabAnimated> {
   /// Double value for tween ending
   double _endTween = 100;
 
@@ -123,16 +123,16 @@ class _ScrollingFabAnimatedState extends State<ScrollingFabAnimated> {
 
   /// Function to add listener for scroll
   void _handleScroll() {
-    ScrollController _scrollController = widget.scrollController!;
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels > widget.limitIndicator! &&
-          _scrollController.position.userScrollDirection ==
+    ScrollController scrollController = widget.scrollController!;
+    scrollController.addListener(() {
+      if (scrollController.position.pixels > widget.limitIndicator! &&
+          scrollController.position.userScrollDirection ==
               ScrollDirection.reverse) {
         setState(() {
           _endTween = widget.inverted! ? 100 : 0;
         });
-      } else if (_scrollController.position.pixels <= widget.limitIndicator! &&
-          _scrollController.position.userScrollDirection ==
+      } else if (scrollController.position.pixels <= widget.limitIndicator! &&
+          scrollController.position.userScrollDirection ==
               ScrollDirection.forward) {
         setState(() {
           _endTween = widget.inverted! ? 0 : 100;
@@ -152,15 +152,15 @@ class _ScrollingFabAnimatedState extends State<ScrollingFabAnimated> {
           tween: Tween<double>(begin: 0, end: _endTween),
           duration: widget.duration!,
           builder: (BuildContext _, double size, Widget? child) {
-            double _widthPercent = (widget.width! - widget.height!).abs() / 100;
-            bool _isFull = _endTween == 100;
-            double _radius = widget.radius ?? (widget.height! / 2);
+            double widthPercent = (widget.width! - widget.height!).abs() / 100;
+            bool isFull = _endTween == 100;
+            double radius = widget.radius ?? (widget.height! / 2);
             return Container(
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(_radius)),
+                  borderRadius: BorderRadius.all(Radius.circular(radius)),
                   color: widget.color ?? Theme.of(context).primaryColor),
               height: widget.height,
-              width: widget.height! + _widthPercent * size,
+              width: widget.height! + widthPercent * size,
               child: ClipRRect(
                   borderRadius:
                       BorderRadius.circular((widget.radius ?? (widget.height! / 2))),
@@ -169,7 +169,7 @@ class _ScrollingFabAnimatedState extends State<ScrollingFabAnimated> {
                       child: InkWell(
                         onTap: widget.onPress,
                         child: Row(
-                          mainAxisAlignment: _isFull
+                          mainAxisAlignment: isFull
                               ? MainAxisAlignment.spaceEvenly
                               : MainAxisAlignment.center,
                           children: [
@@ -182,7 +182,7 @@ class _ScrollingFabAnimatedState extends State<ScrollingFabAnimated> {
                                       : 0,
                                   child: widget.icon,
                                 )),
-                            ...(_isFull
+                            ...(isFull
                                 ? [
                                     Expanded(
                                       child: AnimatedOpacity(

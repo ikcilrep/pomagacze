@@ -14,7 +14,7 @@ class FeedPage extends StatefulWidget {
 
 class _FeedPageState extends AuthRequiredState<FeedPage> {
   late Future<List<HelpRequest>> _feedFuture;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {

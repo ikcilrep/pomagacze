@@ -21,14 +21,14 @@ class _RequestCardState extends State<RequestCard> {
               debugPrint('Card tapped.');
             },
             child: Padding(
-                padding: EdgeInsets.all(18),
+                padding: const EdgeInsets.all(18),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.request.title ?? '',
+                    Text(widget.request.title,
                         style: Theme.of(context).textTheme.bodyLarge),
-                    Text(widget.request.description ?? '',
+                    Text(widget.request.description,
                         style: Theme.of(context).textTheme.bodyText2)
                   ],
                 ))));

@@ -18,8 +18,9 @@ class HelpRequest {
       title = data['title'] ?? '';
       description = data['description'] ?? '';
       authorID = data['author_id'] ?? '';
-      if (data['author'] != null)
-        author = UserProfile.fromData(data['author'] ?? {});
+      if (data['author'] != null) {
+        author = UserProfile.fromData(data['author']);
+      }
       id = data['id'] ?? '';
       locationLat = double.tryParse(data['location_lat']?.toString() ?? '');
       locationLng = double.tryParse(data['location_lng']?.toString() ?? '');

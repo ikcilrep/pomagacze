@@ -37,7 +37,7 @@ class LoginPageState extends AuthState<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Center(
+          title: const Center(
               child: Text('Pomagacze',
                   style: TextStyle(fontWeight: FontWeight.bold)))),
       body: Padding(
