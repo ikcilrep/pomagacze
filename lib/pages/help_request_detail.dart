@@ -19,13 +19,13 @@ class HelpRequestDetail extends StatelessWidget {
           children: [
             ListTile(
                 title: const Text("Miejsce zbiórki"),
-                subtitle: Text(_helpRequest.placeName!)),
+                subtitle: Text(_helpRequest.placeName ?? '')),
             ListTile(
                 title: const Text("Czas rozpoczęcia"),
-                subtitle: Text(dateFormat.format(_helpRequest.dateStart!))),
+                subtitle: Text(dateFormat.format(_helpRequest.dateStart ?? DateTime.now()))),
             ListTile(
                 title: const Text("Czas zakończenia"),
-                subtitle: Text(dateFormat.format(_helpRequest.dateEnd!))),
+                subtitle: Text(dateFormat.format(_helpRequest.dateEnd ?? DateTime.now()))),
             ListTile(
                 title: const Text("Opis"),
                 subtitle: Text(_helpRequest.description)),
