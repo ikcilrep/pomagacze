@@ -2,6 +2,7 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:open_location_picker/open_location_picker.dart';
 import 'package:pomagacze/db/db.dart';
 import 'package:pomagacze/models/help_request.dart';
 import 'package:pomagacze/utils/constants.dart';
@@ -21,6 +22,8 @@ class _RequestFormState extends State<RequestForm> {
 
   bool _loading = false;
 
+  FormattedLocation? _location;
+
   @override
   void initState() {
     super.initState();
@@ -35,8 +38,12 @@ class _RequestFormState extends State<RequestForm> {
 
     var values = {
       ..._formKey.currentState!.value,
-      'author_id': supabase.auth.currentUser?.id
+      'author_id': supabase.auth.currentUser?.id,
+      'place_name': _location?.displayName,
+      'latitude': _location?.lat,
+      'longitude': _location?.lon,
     };
+
 
     await RequestsDB.upsert(HelpRequest.fromData(values)).catchError((err) {
       context.showErrorSnackBar(message: err.toString());
@@ -93,6 +100,14 @@ class _RequestFormState extends State<RequestForm> {
                             errorText: 'Opis nie może być pusty'),
                       ),
                       const SizedBox(height: 25),
+                      OpenMapPicker(
+                        decoration: const InputDecoration(
+                          hintText: "Miejsce zbiórki",
+                        ),
+                        onChanged: (FormattedLocation? newValue) {
+                          _location = newValue;
+                        },
+                      ),
                       const SizedBox(height: 10),
                       FormBuilderField(
                         name: 'date_start',

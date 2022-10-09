@@ -6,10 +6,12 @@ class HelpRequest {
   UserProfile? author;
   String title = '';
   String description = '';
-  double? locationLat;
-  double? locationLng;
   DateTime? dateStart;
   DateTime? dateEnd;
+
+  double? latitude;
+  double? longitude;
+  String? placeName;
 
   HelpRequest.empty();
 
@@ -22,8 +24,9 @@ class HelpRequest {
         author = UserProfile.fromData(data['author']);
       }
       id = data['id'] ?? '';
-      locationLat = double.tryParse(data['location_lat']?.toString() ?? '');
-      locationLng = double.tryParse(data['location_lng']?.toString() ?? '');
+      latitude = data['latitude'];
+      longitude = data['longitude'];
+      placeName = data['place_name'];
       dateStart = DateTime.tryParse(data['date_start'] ?? '');
       dateEnd = DateTime.tryParse(data['date_end'] ?? '');
     }
@@ -37,8 +40,9 @@ class HelpRequest {
       'description': description,
       'date_start': dateStart.toString(),
       'date_end': dateEnd.toString(),
-      'location_lat': locationLat,
-      'location_lng': locationLng,
+      'latitude': latitude.toString(),
+      'longitude': longitude.toString(),
+      'place_name': placeName,
     };
   }
 }
