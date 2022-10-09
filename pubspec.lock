@@ -329,13 +329,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.1"
-  map_picker_free:
-    dependency: "direct main"
-    description:
-      name: map_picker_free
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.1"
   matcher:
     dependency: transitive
     description:
