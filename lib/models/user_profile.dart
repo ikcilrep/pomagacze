@@ -25,7 +25,8 @@ class UserProfile {
 
   FormattedLocation? get location {
     if (latitude != null && longitude != null && placeName != null) {
-      return FormattedLocation.fromLatLng(lat: latitude!, lon: longitude!, displayName: placeName!);
+      return FormattedLocation.fromLatLng(
+          lat: latitude!, lon: longitude!, displayName: placeName!);
     }
     return null;
   }
@@ -42,4 +43,13 @@ class UserProfile {
       placeName = data['place_name'];
     }
   }
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'birth_date': birthDate?.toIso8601String().toString(),
+        'gender': gender?.serialize().toString(),
+        'latitude': latitude,
+        'longitude': longitude,
+        'place_name': placeName,
+      };
 }
