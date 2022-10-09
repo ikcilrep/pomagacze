@@ -54,6 +54,7 @@ class MyApp extends StatelessWidget {
       getLocationStream: () => location.onLocationChanged
           .map((event) => LatLng(event.latitude!, event.longitude!)),
       child: _buildRoutes(),
+      searchHint: (context) => 'Wyszukaj...',
     );
   }
 

@@ -65,6 +65,7 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
                 elevation: 1.5,
                 animateIcon: false,
                 color: Theme.of(context).colorScheme.primary,
+                duration: Duration(milliseconds: 150),
               );
             }));
 
