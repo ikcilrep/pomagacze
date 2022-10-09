@@ -54,56 +54,40 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
             closedBuilder: (_, openContainer) {
               return ScrollingFabAnimated(
                 scrollController: _scrollController,
-                text: Text('Poproś o pomoc',
+                text: Text('Nowe wydarzenie',
                     style: Theme.of(context).textTheme.subtitle2?.copyWith(
                         color: Theme.of(context).colorScheme.onPrimary)),
                 icon: Icon(Icons.add,
                     color: Theme.of(context).colorScheme.onPrimary),
                 onPress: openContainer,
                 radius: 18,
-                width: 180,
+                width: 185,
                 elevation: 1.5,
                 animateIcon: false,
                 color: Theme.of(context).colorScheme.primary,
                 duration: const Duration(milliseconds: 150),
               );
             }));
-
-    // return Positioned(
-    // bottom: 15,
-    // right: 10,
-    // child: ScrollingFabAnimated(
-    //   scrollController: _scrollController,
-    //   text: Text('Poproś o pomoc',
-    //       style: Theme.of(context)
-    //           .textTheme
-    //           .subtitle2
-    //           ?.copyWith(color: Theme.of(context).colorScheme.onPrimary)),
-    //   icon: Icon(Icons.add, color: Theme.of(context).colorScheme.onPrimary),
-    //   onPress: () {
-    //     Navigator.of(context).pushNamed('/new');
-    //   },
-    //   radius: 18,
-    //   width: 180,
-    //   animateIcon: false,
-    //   color: Theme.of(context).colorScheme.primary,
-    // ));
   }
 
   Widget _buildList() {
     return RefreshIndicator(
-      onRefresh: () async {
-        var result = await RequestsDB.getAll();
-        setState(() {
-          _feedFuture = Future.value(result);
-        });
-      },
+      onRefresh: _refresh,
       child: FutureBuilder(
           future: _feedFuture,
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               print(snapshot.error);
-              return const Center(child: Text('Coś poszło nie tak'));
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Coś poszło nie tak'),
+                    SizedBox(height: 5),
+                    ElevatedButton(onPressed: _refresh, child: Text('Odśwież'))
+                  ],
+                ),
+              );
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
@@ -116,6 +100,13 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
                 itemCount: data.length);
           }),
     );
+  }
+
+  Future<void> _refresh() async {
+    var result = await RequestsDB.getAll();
+    setState(() {
+      _feedFuture = Future.value(result);
+    });
   }
 
   @override
