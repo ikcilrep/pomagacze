@@ -24,8 +24,12 @@ class HelpRequest {
         author = UserProfile.fromData(data['author']);
       }
       id = data['id'] ?? '';
-      latitude = data['latitude'];
-      longitude = data['longitude'];
+      latitude = data['latitude'] is int
+          ? data['latitude'].toDouble()
+          : data['latitude'];
+      longitude = data['longitude'] is int
+          ? data['longitude'].toDouble()
+          : data['longitude'];
       placeName = data['place_name'];
       dateStart = DateTime.tryParse(data['date_start'] ?? '');
       dateEnd = DateTime.tryParse(data['date_end'] ?? '');
