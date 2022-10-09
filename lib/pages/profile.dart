@@ -132,7 +132,7 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
         OpenMapPicker(
           initialValue: userProfile.location,
           decoration: const InputDecoration(
-            hintText: "Miejsce zamieszkania",
+            labelText: "Miejsce zamieszkania",
           ),
           onChanged: (FormattedLocation? newValue) {
             userProfile.location = newValue;

@@ -60,7 +60,7 @@ class _RequestFormState extends State<RequestForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Nowa prośba o pomoc')),
+        appBar: AppBar(title: const Text('Nowe wydarzenie')),
         floatingActionButton: FloatingActionButton.extended(
             onPressed: _submit,
             label: const Text('Opublikuj'),
