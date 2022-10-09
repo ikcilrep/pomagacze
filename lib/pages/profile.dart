@@ -130,11 +130,12 @@ class ProfilePageState extends AuthRequiredState<ProfilePage> {
         ),
         const SizedBox(height: 12),
         OpenMapPicker(
+          initialValue: userProfile.location,
           decoration: const InputDecoration(
             hintText: "Miejsce zamieszkania",
           ),
-          onSaved: (FormattedLocation? newValue) {
-            /// save new value
+          onChanged: (FormattedLocation? newValue) {
+            userProfile.location = newValue;
           },
         ),
         const SizedBox(height: 18),

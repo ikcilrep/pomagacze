@@ -26,6 +26,9 @@ class UsersDB {
       'birth_date': profile.birthDate?.toIso8601String().toString(),
       'gender': profile.gender?.serialize().toString(),
       'updated_at': DateTime.now().toIso8601String(),
+      'latitude': profile.latitude,
+      'longitude': profile.longitude,
+      'placeName': profile.placeName,
     };
     final response = await supabase.from('profiles').upsert(updates).execute();
     response.throwOnError();
