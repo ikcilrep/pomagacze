@@ -1,5 +1,6 @@
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:location/location.dart';
 import 'package:open_location_picker/open_location_picker.dart';
 import 'package:pomagacze/pages/request_form.dart';
@@ -19,7 +20,7 @@ Future<void> main() async {
 
   initializeDateFormatting('pl');
 
-  runApp(MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {

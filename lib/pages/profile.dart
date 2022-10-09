@@ -1,46 +1,22 @@
 import 'package:age_calculator/age_calculator.dart';
 import 'package:avatars/avatars.dart';
 import 'package:flutter/material.dart';
-import 'package:pomagacze/components/auth_required_state.dart';
-import 'package:pomagacze/db/db.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/pages/edit_profile.dart';
+import 'package:pomagacze/state/user.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/gender_serializing.dart';
 import 'package:pomagacze/utils/snackbar.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProfilePage extends StatefulWidget {
+class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  ProfilePageState createState() => ProfilePageState();
 }
 
-class _ProfilePageState extends AuthRequiredState<ProfilePage> {
-  var _isInitialized = false;
-  late UserProfile userProfile;
-
-  Future<void> _fetchProfile(String userId) async {
-    userProfile = await UsersDB.getById(userId).catchError((err) {
-      if (mounted) {
-        context.showErrorSnackBar(message: (err as PostgrestError).message);
-      }
-    });
-
-    setState(() {
-      _isInitialized = true;
-    });
-  }
-
-  @override
-  void onAuthenticated(Session session) {
-    final user = session.user;
-    if (user != null) {
-      _fetchProfile(user.id);
-    }
-  }
-
+class ProfilePageState extends ConsumerState<ProfilePage> {
   Future<void> _signOut() async {
     final response = await supabase.auth.signOut();
     final error = response.error;
@@ -51,10 +27,14 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    if (!_isInitialized) {
-      return const Center(child: CircularProgressIndicator());
-    }
+    var currentUser = ref.watch(userProfileProvider);
+    return currentUser.when(
+        data: (data) => buildSuccess(context, data),
+        error: (err, stack) => const Center(child: Text('Błąd!')),
+        loading: () => const Center(child: CircularProgressIndicator()));
+  }
 
+  Widget buildSuccess(BuildContext context, UserProfile userProfile) {
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
@@ -73,7 +53,8 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
                 children: [
                   Text(userProfile.name!,
                       style: Theme.of(context).textTheme.headline6),
-                  Text('${userProfile.gender?.display()} • ${AgeCalculator.age(userProfile.birthDate!).years} l.')
+                  Text(
+                      '${userProfile.gender?.display()} • ${AgeCalculator.age(userProfile.birthDate!).years} l.')
                 ],
               ),
               Expanded(child: Container()),
@@ -83,8 +64,8 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
                         context: context,
                         isScrollControlled: true,
                         builder: (context) {
-                          return Wrap(children: [
-                            EditProfilePage(userProfile: userProfile)
+                          return Wrap(children: const [
+                            EditProfilePage()
                           ]);
                         });
                   },

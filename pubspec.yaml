@@ -51,6 +51,7 @@ dependencies:
   avatars: ^3.0.2
   age_calculator: ^1.0.0
   geocode: 1.0.2
+  flutter_riverpod: ^2.0.2
 
 dev_dependencies:
   flutter_test:
