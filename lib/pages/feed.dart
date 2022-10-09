@@ -33,7 +33,10 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(constraints: BoxConstraints.expand(), child: _buildList()),
+        Positioned.fill(
+          child: Container(),
+        ),
+        _buildList(),
         _buildFAB(),
       ],
     );
