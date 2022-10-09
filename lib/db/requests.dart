@@ -9,7 +9,7 @@ class RequestsDB {
     return (result.data as List<dynamic>).map((e) => HelpRequest.fromData(e)).toList();
   }
 
-  static Future<void> upsert(HelpRequest data) async {
+  static Future<void> update(HelpRequest data) async {
     var result = await supabase.from('requests').upsert({
       ...data.toJSON(),
     }).execute();

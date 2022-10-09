@@ -45,7 +45,7 @@ class _RequestFormState extends State<RequestForm> {
     };
 
 
-    await RequestsDB.upsert(HelpRequest.fromData(values)).catchError((err) {
+    await RequestsDB.update(HelpRequest.fromData(values)).catchError((err) {
       context.showErrorSnackBar(message: err.toString());
     });
 
