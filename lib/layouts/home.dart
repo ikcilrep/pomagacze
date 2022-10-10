@@ -32,7 +32,7 @@ class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(destinations[_index].label)),
+      appBar: AppBar(title: Text(destinations[_index].label), scrolledUnderElevation: 0),
       body: _buildBody(),
       bottomNavigationBar: NavigationBar(
         destinations: destinations,

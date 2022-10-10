@@ -80,11 +80,14 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                         isScrollControlled: true,
                         builder: (context) {
                           return Wrap(children: [
-                            EditProfile(
-                              title: 'Edytuj profil',
-                              onSubmit: () {
-                                Navigator.of(context).pop();
-                              },
+                            Padding(
+                              padding: MediaQuery.of(context).viewInsets,
+                              child: EditProfile(
+                                title: 'Edytuj profil',
+                                onSubmit: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
                             )
                           ]);
                         });
@@ -158,11 +161,17 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
               ),
             ],
           ),
-          const SizedBox(height: 70),
+          const SizedBox(height: 40),
+          Divider(color: Theme.of(context).dividerColor.withAlpha(100)),
+          const ListTile(
+            title: Text('Archiwum wydarzeń'),
+            trailing: Icon(Icons.arrow_forward),
+          ),
           const ListTile(
             title: Text('Moje wydarzenia'),
             trailing: Icon(Icons.arrow_forward),
           ),
+          Divider(color: Theme.of(context).dividerColor.withAlpha(100)),
           const ListTile(
             title: Text('Opcje'),
             trailing: Icon(Icons.arrow_forward),
