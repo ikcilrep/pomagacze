@@ -1,4 +1,3 @@
-import 'package:age_calculator/age_calculator.dart';
 import 'package:avatars/avatars.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -70,7 +69,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                   Text(userProfile.name ?? '',
                       style: Theme.of(context).textTheme.headline6),
                   Text(
-                      '${userProfile.gender?.display()} • ${AgeCalculator.age(userProfile.birthDate ?? DateTime.now()).years} l.')
+                      '${userProfile.gender?.display()} • ${userProfile.age} l.')
                 ],
               ),
               Expanded(child: Container()),
