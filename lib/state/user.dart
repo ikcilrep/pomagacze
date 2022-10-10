@@ -4,5 +4,6 @@ import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/utils/constants.dart';
 
 final userProfileProvider = FutureProvider<UserProfile>((ref) async {
-  return UsersDB.getById(supabase.auth.currentUser?.id ?? '');
+  if(supabase.auth.currentUser == null) throw 'not logged in';
+  return UsersDB.getById(supabase.auth.user()?.id ?? '');
 });

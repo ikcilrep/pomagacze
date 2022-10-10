@@ -53,10 +53,10 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(userProfile.name!,
+                  Text(userProfile.name ?? '',
                       style: Theme.of(context).textTheme.headline6),
                   Text(
-                      '${userProfile.gender?.display()} • ${AgeCalculator.age(userProfile.birthDate!).years} l.')
+                      '${userProfile.gender?.display()} • ${AgeCalculator.age(userProfile.birthDate ?? DateTime.now()).years} l.')
                 ],
               ),
               Expanded(child: Container()),
