@@ -165,7 +165,9 @@ class _RequestFormState extends State<RequestForm> {
                               color: Theme.of(context).colorScheme.onSurface),
                           onChanged: (FormattedLocation? newValue) {
                             _location = newValue;
-                          }),
+                          },
+                          validator: FormBuilderValidators.required(errorText: "Miejsce zbiórki nie może być puste"),
+                      ),
                       const SizedBox(height: 20),
                       FormBuilderTextField(
                           name: 'minimal_age',
