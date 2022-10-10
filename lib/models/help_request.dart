@@ -33,14 +33,16 @@ class HelpRequest {
       placeName = data['place_name'];
       dateStart = DateTime.tryParse(data['date_start'] ?? '');
       dateEnd = DateTime.tryParse(data['date_end'] ?? '');
-      minimalAge = data['minimal_age'] is int?
-          ? data['minimal_age']
-          : int.tryParse(data['minimal_age']);
-      maximalAge = data['maximal_age'] is int?
-          ? data['maximal_age']
-          : int.tryParse(data['maximal_age']);
+      minimalAge = parseIntIfString(data['minimalAge']);
+      maximalAge = parseIntIfString(data['maximalAge']);
+      minimalNumberOfVolunteers = parseIntIfString(data['minimal_number_of_volunteers']);
+      maximalNumberOfVolunteers = parseIntIfString(data['maximal_number_of_volunteers']);
     }
   }
+
+  int? parseIntIfString(number) => number is int?
+        ?number
+        : int.tryParse(number);
 
   double? castToDoubleIfInteger(number) =>
       number is int ? number.toDouble() : number;
@@ -57,6 +59,8 @@ class HelpRequest {
       'longitude': longitude.toString(),
       'minimal_age': minimalAge,
       'maximal_age': maximalAge,
+      'minimal_number_of_volunteers': minimalNumberOfVolunteers,
+      'maximal_number_of_volunteers': maximalNumberOfVolunteers,
       'place_name': placeName,
     };
   }
