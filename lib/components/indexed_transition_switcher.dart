@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 /// animations whilst maintaining their state.
 class IndexedTransitionSwitcher extends StatefulWidget {
   /// Creates an [IndexedTransitionSwitcher].
-  const IndexedTransitionSwitcher({
+  const IndexedTransitionSwitcher({super.key,
     required this.index,
     required this.children,
     required this.transitionBuilder,
@@ -42,10 +42,10 @@ class IndexedTransitionSwitcher extends StatefulWidget {
   final bool reverse;
 
   @override
-  _IndexedTransitionSwitcherState createState() => _IndexedTransitionSwitcherState();
+  IndexedTransitionSwitcherState createState() => IndexedTransitionSwitcherState();
 }
 
-class _IndexedTransitionSwitcherState extends State<IndexedTransitionSwitcher>
+class IndexedTransitionSwitcherState extends State<IndexedTransitionSwitcher>
     with TickerProviderStateMixin {
 
   late List<_ChildEntry> _childEntries;
@@ -54,7 +54,7 @@ class _IndexedTransitionSwitcherState extends State<IndexedTransitionSwitcher>
   void initState() {
     super.initState();
     // Create the page entries
-    this._childEntries = widget.children
+    _childEntries = widget.children
       .asMap().entries
       .map((entry) => _createPageEntry(entry.key, entry.value))
       .toList();

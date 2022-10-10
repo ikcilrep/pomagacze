@@ -70,8 +70,8 @@ class EditProfilePageState extends ConsumerState<EditProfilePage> {
   Widget build(BuildContext context) {
     var userProfileAsync = ref.watch(userProfileProvider);
 
-    if(userProfileAsync.hasError) return Text('Coś poszło nie tak');
-    if(userProfileAsync.isLoading) return Center(child: CircularProgressIndicator());
+    if(userProfileAsync.hasError) return const Text('Coś poszło nie tak');
+    if(userProfileAsync.isLoading) return const Center(child: CircularProgressIndicator());
 
     var userProfile = userProfileAsync.value!;
 
