@@ -9,7 +9,7 @@ class SetupProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Tworzenie profilu')),
+      appBar: AppBar(title: const Text('Tworzenie profilu')),
       body: EditProfile(
         initialData: UserProfile.fromData({
           'name': supabase.auth.currentUser?.userMetadata['name'],

@@ -33,8 +33,8 @@ class HelpEvent {
       placeName = data['place_name'];
       dateStart = DateTime.tryParse(data['date_start'] ?? '');
       dateEnd = DateTime.tryParse(data['date_end'] ?? '');
-      minimalAge = parseIntIfString(data['minimalAge']);
-      maximalAge = parseIntIfString(data['maximalAge']);
+      minimalAge = parseIntIfString(data['minimal_age']);
+      maximalAge = parseIntIfString(data['maximal_age']);
       minimalNumberOfVolunteers = parseIntIfString(data['minimal_number_of_volunteers']);
       maximalNumberOfVolunteers = parseIntIfString(data['maximal_number_of_volunteers']);
     }

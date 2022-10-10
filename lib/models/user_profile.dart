@@ -1,3 +1,4 @@
+import 'package:age_calculator/age_calculator.dart';
 import 'package:gender_picker/source/enums.dart';
 import 'package:open_location_picker/open_location_picker.dart';
 import 'package:pomagacze/utils/gender_serializing.dart';
@@ -11,6 +12,8 @@ class UserProfile {
   double? longitude;
   String? placeName;
   int xp = 0;
+
+  int get age => AgeCalculator.age(birthDate ?? DateTime.now()).years;
 
   set location(FormattedLocation? value) {
     if (value != null) {
