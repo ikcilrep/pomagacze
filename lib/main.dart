@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:location/location.dart';
 import 'package:open_location_picker/open_location_picker.dart';
-import 'package:pomagacze/pages/request_form.dart';
+import 'package:pomagacze/pages/event_form.dart';
 import 'package:pomagacze/pages/login.dart';
 import 'package:pomagacze/pages/setup_profile.dart';
 import 'package:pomagacze/pages/splash.dart';
@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
                 '/': (_) => const SplashPage(),
                 '/login': (_) => const LoginPage(),
                 '/home': (_) => const HomeLayout(),
-                '/new': (_) => const RequestForm(),
+                '/new': (_) => const EventForm(),
                 '/setup-profile': (_) => const SetupProfilePage(),
               },
             ));

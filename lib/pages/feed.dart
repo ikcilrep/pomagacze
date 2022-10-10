@@ -1,27 +1,24 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomagacze/components/fab_extended_animated.dart';
-import 'package:pomagacze/components/auth_required_state.dart';
-import 'package:pomagacze/components/request_card.dart';
-import 'package:pomagacze/db/db.dart';
-import 'package:pomagacze/models/help_request.dart';
-import 'package:pomagacze/pages/request_form.dart';
+import 'package:pomagacze/components/event_card.dart';
+import 'package:pomagacze/pages/event_form.dart';
+import 'package:pomagacze/state/feed.dart';
 
-class FeedPage extends StatefulWidget {
+class FeedPage extends ConsumerStatefulWidget {
   const FeedPage({Key? key}) : super(key: key);
 
   @override
-  State<FeedPage> createState() => _FeedPageState();
+  FeedPageState createState() => FeedPageState();
 }
 
-class _FeedPageState extends AuthRequiredState<FeedPage> {
-  late Future<List<HelpRequest>> _feedFuture;
+class FeedPageState extends ConsumerState<FeedPage> {
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    _feedFuture = RequestsDB.getAll();
   }
 
   @override
@@ -44,7 +41,7 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
         child: OpenContainer<bool>(
             transitionType: ContainerTransitionType.fadeThrough,
             openBuilder: (BuildContext context, VoidCallback _) {
-              return const RequestForm();
+              return const EventForm();
             },
             tappable: false,
             closedShape:
@@ -71,42 +68,31 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
   }
 
   Widget _buildList() {
+    var future = ref.watch(feedFutureProvider);
+
     return RefreshIndicator(
-      onRefresh: _refresh,
-      child: FutureBuilder(
-          future: _feedFuture,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              print(snapshot.error);
-              return Center(
+      onRefresh: () => ref.refresh(feedFutureProvider.future),
+      child: future.when(
+          data: (data) => ListView.builder(
+              controller: _scrollController,
+              itemBuilder: (context, index) => EventCard(data[index]),
+              itemCount: data.length),
+          error: (err, stack) => Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text('Coś poszło nie tak...'),
-                    SizedBox(height: 5),
-                    ElevatedButton(onPressed: _refresh, child: Text('Odśwież'))
+                    const SizedBox(height: 5),
+                    ElevatedButton(
+                        onPressed: () {
+                          ref.invalidate(feedFutureProvider);
+                        },
+                        child: Text('Odśwież'))
                   ],
                 ),
-              );
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            final data = snapshot.data as List<HelpRequest>;
-            return ListView.builder(
-                controller: _scrollController,
-                itemBuilder: (context, index) => RequestCard(data[index]),
-                itemCount: data.length);
-          }),
+              ),
+          loading: () => const Center(child: CircularProgressIndicator())),
     );
-  }
-
-  Future<void> _refresh() async {
-    var result = await RequestsDB.getAll();
-    setState(() {
-      _feedFuture = Future.value(result);
-    });
   }
 
   @override

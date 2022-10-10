@@ -2,23 +2,26 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:open_location_picker/open_location_picker.dart';
 import 'package:pomagacze/db/db.dart';
-import 'package:pomagacze/models/help_request.dart';
+import 'package:pomagacze/models/help_event.dart';
+import 'package:pomagacze/pages/event_details.dart';
+import 'package:pomagacze/state/feed.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/snackbar.dart';
 
-class RequestForm extends StatefulWidget {
-  final HelpRequest? initialData;
+class EventForm extends ConsumerStatefulWidget {
+  final HelpEvent? initialData;
 
-  const RequestForm({Key? key, this.initialData}) : super(key: key);
+  const EventForm({Key? key, this.initialData}) : super(key: key);
 
   @override
-  State<RequestForm> createState() => _RequestFormState();
+  EventFormState createState() => EventFormState();
 }
 
-class _RequestFormState extends State<RequestForm> {
+class EventFormState extends ConsumerState<EventForm> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   bool _loading = false;
@@ -45,15 +48,20 @@ class _RequestFormState extends State<RequestForm> {
       'longitude': _location?.lon,
     };
 
-    await RequestsDB.update(HelpRequest.fromData(values)).catchError((err) {
+    var data = HelpEvent.fromData(values);
+    await EventsDB.upsert(data).catchError((err) {
       context.showErrorSnackBar(message: err.toString());
     });
 
     setState(() {
       _loading = false;
     });
+
+    ref.invalidate(feedFutureProvider);
+
     if (mounted) {
-      Navigator.of(context).pop();
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => EventDetails(data)));
     }
   }
 
@@ -158,15 +166,16 @@ class _RequestFormState extends State<RequestForm> {
                       ),
                       const SizedBox(height: 20),
                       OpenMapPicker(
-                          decoration: const InputDecoration(
-                            labelText: "Lokalizacja",
-                          ),
-                          removeIcon: Icon(Icons.clear,
-                              color: Theme.of(context).colorScheme.onSurface),
-                          onChanged: (FormattedLocation? newValue) {
-                            _location = newValue;
-                          },
-                          validator: FormBuilderValidators.required(errorText: "Lokalizacja nie może być pusta"),
+                        decoration: const InputDecoration(
+                          labelText: "Lokalizacja",
+                        ),
+                        removeIcon: Icon(Icons.clear,
+                            color: Theme.of(context).colorScheme.onSurface),
+                        onChanged: (FormattedLocation? newValue) {
+                          _location = newValue;
+                        },
+                        validator: FormBuilderValidators.required(
+                            errorText: "Lokalizacja nie może być pusta"),
                       ),
                       const SizedBox(height: 20),
                       FormBuilderTextField(

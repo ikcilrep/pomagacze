@@ -1,2 +1,2 @@
-export 'requests.dart';
+export 'events.dart';
 export 'users.dart';
