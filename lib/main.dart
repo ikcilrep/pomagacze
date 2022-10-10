@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:location/location.dart';
 import 'package:open_location_picker/open_location_picker.dart';
 import 'package:pomagacze/pages/request_form.dart';
 import 'package:pomagacze/pages/login.dart';
+import 'package:pomagacze/pages/setup_profile.dart';
 import 'package:pomagacze/pages/splash.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/theme.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:pomagacze/layouts/home.dart';
-import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future<void> main() async {
   await Supabase.initialize(
@@ -18,7 +20,8 @@ Future<void> main() async {
     anonKey: supabaseAnonKey,
   );
 
-  initializeDateFormatting('pl');
+  // await initializeDateFormatting('pl_PL');
+
 
   runApp(ProviderScope(child: MyApp()));
 }
@@ -32,6 +35,12 @@ class MyApp extends StatelessWidget {
     return DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MaterialApp(
               title: 'Pomagacze',
+              localizationsDelegates: const [
+                FormBuilderLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+              ],
+              supportedLocales: [Locale('pl'), Locale('en')],
               theme: getTheme(),
               // darkTheme: getTheme(dark: true),
               initialRoute: '/',
@@ -41,6 +50,7 @@ class MyApp extends StatelessWidget {
                 '/login': (_) => const LoginPage(),
                 '/home': (_) => const HomeLayout(),
                 '/new': (_) => const RequestForm(),
+                '/setup-profile': (_) => const SetupProfilePage(),
               },
             ));
   }

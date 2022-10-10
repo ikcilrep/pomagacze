@@ -82,7 +82,7 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Coś poszło nie tak'),
+                    const Text('Coś poszło nie tak...'),
                     SizedBox(height: 5),
                     ElevatedButton(onPressed: _refresh, child: Text('Odśwież'))
                   ],
