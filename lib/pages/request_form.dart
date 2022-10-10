@@ -159,14 +159,14 @@ class _RequestFormState extends State<RequestForm> {
                       const SizedBox(height: 20),
                       OpenMapPicker(
                           decoration: const InputDecoration(
-                            labelText: "Miejsce zbiórki",
+                            labelText: "Lokalizacja",
                           ),
                           removeIcon: Icon(Icons.clear,
                               color: Theme.of(context).colorScheme.onSurface),
                           onChanged: (FormattedLocation? newValue) {
                             _location = newValue;
                           },
-                          validator: FormBuilderValidators.required(errorText: "Miejsce zbiórki nie może być puste"),
+                          validator: FormBuilderValidators.required(errorText: "Lokalizacja nie może być pusta"),
                       ),
                       const SizedBox(height: 20),
                       FormBuilderTextField(

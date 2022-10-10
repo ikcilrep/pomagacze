@@ -34,7 +34,7 @@ class HelpRequestDetail extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ListTile(
-                title: const Text("Miejsce zbiórki"),
+                title: const Text("Lokalizacja"),
                 subtitle: Text(_helpRequest.placeName ?? '')),
             ListTile(
                 title: const Text("Czas rozpoczęcia"),
