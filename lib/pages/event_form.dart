@@ -168,6 +168,9 @@ class EventFormState extends ConsumerState<EventForm> {
                       OpenMapPicker(
                         decoration: const InputDecoration(
                           labelText: "Lokalizacja",
+                          prefixIconConstraints: BoxConstraints(maxWidth: 0),
+                          prefixIcon: Icon(null),
+                          suffixIcon: Icon(Icons.location_pin),
                         ),
                         removeIcon: Icon(Icons.clear,
                             color: Theme.of(context).colorScheme.onSurface),

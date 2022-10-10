@@ -133,8 +133,12 @@ class EditProfilePageState extends ConsumerState<EditProfile> {
             const SizedBox(height: 12),
             OpenMapPicker(
               initialValue: userProfile.location,
-              decoration:
-                  const InputDecoration(labelText: "Miejsce zamieszkania"),
+              decoration: const InputDecoration(
+                labelText: "Miejsce zamieszkania",
+                prefixIconConstraints: BoxConstraints(maxWidth: 0),
+                prefixIcon: Icon(null),
+                suffixIcon: Icon(Icons.location_pin),
+              ),
               removeIcon: Icon(Icons.clear,
                   color: Theme.of(context).colorScheme.onSurface),
               onChanged: (FormattedLocation? newValue) {
