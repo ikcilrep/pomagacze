@@ -35,22 +35,25 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
         error: (err, stack) => Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Coś poszło nie tak...'),
-                SizedBox(height: 10),
-                ElevatedButton(onPressed: _signOut, child: Text('Wyloguj się'))
+                const Text('Coś poszło nie tak...'),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                    onPressed: _signOut, child: const Text('Wyloguj się'))
               ],
             ),
         loading: () => const Center(child: CircularProgressIndicator()));
   }
 
   Widget buildSuccess(BuildContext context, UserProfile userProfile) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-      child: Column(
+    return RefreshIndicator(
+      onRefresh: () => ref.refresh(userProfileProvider.future),
+      child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
         children: [
           Row(
             children: [
               Avatar(
+                  useCache: true,
                   shape: AvatarShape.circle(25),
                   name: userProfile.name,
                   sources: [
@@ -157,36 +160,31 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
             ],
           ),
           const SizedBox(height: 70),
-          ListView(
-            shrinkWrap: true,
-            children: [
-              const ListTile(
-                title: Text('Moje wydarzenia'),
-                trailing: Icon(Icons.arrow_forward),
-              ),
-              const ListTile(
-                title: Text('Opcje'),
-                trailing: Icon(Icons.arrow_forward),
-              ),
-              const ListTile(
-                title: Text('O aplikacji'),
-                trailing: Icon(Icons.arrow_forward),
-              ),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(50),
-                child: Material(
-                  child: InkWell(
-                    onTap: _signOut,
-                    child: ListTile(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(50)),
-                      title: const Text('Wyloguj się'),
-                      trailing: const Icon(Icons.logout),
-                    ),
-                  ),
+          const ListTile(
+            title: Text('Moje wydarzenia'),
+            trailing: Icon(Icons.arrow_forward),
+          ),
+          const ListTile(
+            title: Text('Opcje'),
+            trailing: Icon(Icons.arrow_forward),
+          ),
+          const ListTile(
+            title: Text('O aplikacji'),
+            trailing: Icon(Icons.arrow_forward),
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Material(
+              child: InkWell(
+                onTap: _signOut,
+                child: ListTile(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50)),
+                  title: const Text('Wyloguj się'),
+                  trailing: const Icon(Icons.logout),
                 ),
-              )
-            ],
+              ),
+            ),
           )
         ],
       ),
