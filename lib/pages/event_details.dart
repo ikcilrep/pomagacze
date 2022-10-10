@@ -3,50 +3,50 @@ import 'package:intl/intl.dart';
 import 'package:pomagacze/models/help_event.dart';
 
 class EventDetails extends StatelessWidget {
-  final HelpEvent _helpEvent;
+  final HelpEvent _helpRequest;
 
-  const EventDetails(this._helpEvent, {super.key});
+  const EventDetails(this._helpRequest, {super.key});
 
   String get ageRangeString {
-    if (_helpEvent.minimalAge == null && _helpEvent.maximalAge == null) {
+    if (_helpRequest.minimalAge == null && _helpRequest.maximalAge == null) {
       return "Brak";
     }
 
-    if (_helpEvent.minimalAge == null) {
-      return 'Maksymalnie ${_helpEvent.maximalAge} lat';
+    if (_helpRequest.minimalAge == null) {
+      return 'Maksymalnie ${_helpRequest.maximalAge} lat';
     }
 
-    if (_helpEvent.maximalAge == null) {
-      return 'Przynajmniej ${_helpEvent.minimalAge} lat';
+    if (_helpRequest.maximalAge == null) {
+      return 'Przynajmniej ${_helpRequest.minimalAge} lat';
     }
 
-    return '${_helpEvent.minimalAge} - ${_helpEvent.maximalAge} lat';
+    return '${_helpRequest.minimalAge} - ${_helpRequest.maximalAge} lat';
   }
 
   @override
   Widget build(BuildContext context) {
     final DateFormat dateFormat = DateFormat('dd.MM.yyyy - kk:mm');
     return Scaffold(
-      appBar: AppBar(title: Text(_helpEvent.title)),
+      appBar: AppBar(title: Text(_helpRequest.title)),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ListTile(
-                title: const Text("Lokalizacja"),
-                subtitle: Text(_helpEvent.placeName ?? '')),
+                title: const Text("Miejsce zbiórki"),
+                subtitle: Text(_helpRequest.placeName ?? '')),
             ListTile(
                 title: const Text("Czas rozpoczęcia"),
                 subtitle: Text(dateFormat
-                    .format(_helpEvent.dateStart ?? DateTime.now()))),
+                    .format(_helpRequest.dateStart ?? DateTime.now()))),
             ListTile(
                 title: const Text("Czas zakończenia"),
                 subtitle: Text(
-                    dateFormat.format(_helpEvent.dateEnd ?? DateTime.now()))),
+                    dateFormat.format(_helpRequest.dateEnd ?? DateTime.now()))),
             ListTile(
                 title: const Text("Opis"),
-                subtitle: Text(_helpEvent.description)),
+                subtitle: Text(_helpRequest.description)),
             ListTile(
                 title: const Text("Wymagany wiek wolontariusza"),
                 subtitle: Text(ageRangeString)),
