@@ -29,4 +29,16 @@ class VolunteersDB {
         .map((e) => Volunteer.fromData(e))
         .toList();
   }
+
+  static Future<List<Volunteer>> getAllByEventId(String userId) async {
+    var result = await supabase
+        .from('volunteers')
+        .select()
+        .eq('event_id', userId)
+        .execute();
+    result.throwOnError();
+    return (result.data as List<dynamic>)
+        .map((e) => Volunteer.fromData(e))
+        .toList();
+  }
 }

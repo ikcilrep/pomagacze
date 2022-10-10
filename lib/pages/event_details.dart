@@ -6,7 +6,7 @@ import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/models/volunteer.dart';
 import 'package:pomagacze/state/user.dart';
-import 'package:pomagacze/state/user_events.dart';
+import 'package:pomagacze/state/volunteers.dart';
 import 'package:pomagacze/utils/constants.dart';
 
 class EventDetails extends ConsumerStatefulWidget {
@@ -36,8 +36,8 @@ class EventDetailsState extends ConsumerState<EventDetails> {
     return '${widget.helpEvent.minimalAge} - ${widget.helpEvent.maximalAge} lat';
   }
 
-  bool canJoin(UserProfile userProfile) {
-    return widget.helpEvent.minimalNumberOfVolunteers! <
+  bool canJoin(UserProfile userProfile, List<Volunteer> eventVolunteers) {
+    return eventVolunteers.length <
             widget.helpEvent.maximalNumberOfVolunteers! &&
         isYoungEnough(userProfile) &&
         isOldEnough(userProfile);
@@ -66,6 +66,8 @@ class EventDetailsState extends ConsumerState<EventDetails> {
   Widget build(BuildContext context) {
     final userProfile = ref.watch(userProfileProvider);
     final userEvents = ref.watch(userEventsProvider);
+    final eventVolunteers =
+        ref.watch(eventVolunteersProvider(widget.helpEvent.id!));
     final DateFormat dateFormat = DateFormat('dd.MM.yyyy - kk:mm');
 
     return Scaffold(
@@ -73,16 +75,17 @@ class EventDetailsState extends ConsumerState<EventDetails> {
       floatingActionButton: Visibility(
           visible: userEvents.hasValue &&
               userProfile.hasValue &&
-              canJoin(userProfile.value!),
+              eventVolunteers.hasValue &&
+              canJoin(userProfile.value!, eventVolunteers.value!),
           child: FloatingActionButton.extended(
               onPressed: () async {
-                await switchMembershipState(
-                    userEvents.value, userProfile.value!);
+                await switchMembershipState(userEvents.value,
+                    eventVolunteers.value!, userProfile.value!);
                 ref.refresh(userEventsProvider);
+                ref.refresh(eventVolunteersProvider(widget.helpEvent.id!));
               },
-              label: !hasJoinedTheEvent(userEvents.value)
-                  ? const Text('Dołącz')
-                  : const Text("Opuść"),
+              label: Text(
+                  !hasJoinedTheEvent(userEvents.value) ? 'Dołącz' : "Opuść"),
               icon: !userProfile.hasValue
                   ? Transform.scale(
                       scale: 0.6,
@@ -114,7 +117,14 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                 title: const Text("Wymagany wiek wolontariusza"),
                 subtitle: Text(ageRangeString)),
             Visibility(
-                visible: userProfile.hasValue && !canJoin(userProfile.value!),
+                visible: eventVolunteers.hasValue,
+                child: ListTile(
+                    title: const Text("Zgłoszeni wolontariusze"),
+                    subtitle: Text(numberOfVolunteersText(eventVolunteers)))),
+            Visibility(
+                visible: userProfile.hasValue &&
+                    eventVolunteers.hasValue &&
+                    !canJoin(userProfile.value!, eventVolunteers.value!),
                 child: const ListTile(
                     title: Text(
                         "Nie spełniasz wymagań potrzebnych, żeby dołączyć do tego wydarzenia."))),
@@ -124,10 +134,13 @@ class EventDetailsState extends ConsumerState<EventDetails> {
     );
   }
 
-  Future<void> switchMembershipState(
-      List<Volunteer>? userEvents, UserProfile userProfile) async {
+  String numberOfVolunteersText(AsyncValue<List<Volunteer>> eventVolunteers) =>
+      "${!eventVolunteers.hasValue ? 0 : eventVolunteers.value!.length}/${widget.helpEvent.maximalNumberOfVolunteers}";
+
+  Future<void> switchMembershipState(List<Volunteer>? userEvents,
+      List<Volunteer> eventVolunteers, UserProfile userProfile) async {
     if (!hasJoinedTheEvent(userEvents)) {
-      if (canJoin(userProfile)) {
+      if (canJoin(userProfile, eventVolunteers)) {
         await joinEvent(userProfile);
       }
     } else {
