@@ -165,6 +165,31 @@ class EventFormState extends ConsumerState<EventForm> {
                         },
                       ),
                       const SizedBox(height: 20),
+                      FormBuilderTextField(
+                        name: 'minimal_number_of_volunteers',
+                        decoration: const InputDecoration(
+                            labelText: 'Minimalna liczba wolontariuszy'),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        // Only numbers can be entered
+                        validator: FormBuilderValidators.required(
+                            errorText: "Minimalna licba wolontariuszy nie może być pusta"),
+                      ),
+                      const SizedBox(height: 20),
+                      FormBuilderTextField(
+                        name: 'maximal_number_of_volunteers',
+                        decoration: const InputDecoration(
+                            labelText: 'Maksymalna liczba wolontariuszy'),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        validator: FormBuilderValidators.required(
+                            errorText: "Maksymalna licba wolontariuszy nie może być pusta"),                       // Only numbers can be entered
+                      ),
+                      const SizedBox(height: 20),
                       OpenMapPicker(
                         decoration: const InputDecoration(
                           labelText: "Lokalizacja",

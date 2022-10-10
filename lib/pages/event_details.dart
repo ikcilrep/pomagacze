@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:pomagacze/models/help_request.dart';
+import 'package:pomagacze/models/help_event.dart';
 
-class HelpRequestDetail extends StatelessWidget {
-  final HelpRequest _helpRequest;
+class EventDetails extends StatelessWidget {
+  final HelpEvent _helpRequest;
 
-  const HelpRequestDetail(this._helpRequest, {super.key});
+  const EventDetails(this._helpRequest, {super.key});
 
   String get ageRangeString {
     if (_helpRequest.minimalAge == null && _helpRequest.maximalAge == null) {
