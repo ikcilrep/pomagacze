@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/user_profile.dart';
+import 'package:pomagacze/models/volunteer.dart';
 import 'package:pomagacze/state/user.dart';
+import 'package:pomagacze/state/user_events.dart';
+import 'package:pomagacze/utils/constants.dart';
 
 class EventDetails extends ConsumerStatefulWidget {
   final HelpEvent helpEvent;
@@ -47,27 +51,46 @@ class EventDetailsState extends ConsumerState<EventDetails> {
       widget.helpEvent.maximalAge == null ||
       widget.helpEvent.maximalAge! >= userProfile.age;
 
-  void joinEvent(UserProfile userProfile) {}
+  Future<void> joinEvent(UserProfile userProfile) async {
+    final volunteer = Volunteer(
+        userId: supabase.auth.user()!.id, eventId: widget.helpEvent.id!);
+    await VolunteersDB.upsert(volunteer);
+  }
+
+  bool hasJoinedTheEvent(List<Volunteer>? userEvents) {
+    return userEvents != null &&
+        userEvents.any((volunteer) => volunteer.eventId == widget.helpEvent.id);
+  }
 
   @override
   Widget build(BuildContext context) {
     final userProfile = ref.watch(userProfileProvider);
+    final userEvents = ref.watch(userEventsProvider);
     final DateFormat dateFormat = DateFormat('dd.MM.yyyy - kk:mm');
+
     return Scaffold(
       appBar: AppBar(title: Text(widget.helpEvent.title)),
       floatingActionButton: Visibility(
-          visible: userProfile.hasValue && canJoin(userProfile.value!),
+          visible: userEvents.hasValue &&
+              userProfile.hasValue &&
+              canJoin(userProfile.value!),
           child: FloatingActionButton.extended(
-              onPressed: () {
-                joinEvent(userProfile.value!);
+              onPressed: () async {
+                await switchMembershipState(
+                    userEvents.value, userProfile.value!);
+                ref.refresh(userEventsProvider);
               },
-              label: const Text('Dołącz'),
+              label: !hasJoinedTheEvent(userEvents.value)
+                  ? const Text('Dołącz')
+                  : const Text("Opuść"),
               icon: !userProfile.hasValue
                   ? Transform.scale(
                       scale: 0.6,
                       child:
                           const CircularProgressIndicator(color: Colors.white))
-                  : const Icon(Icons.check))),
+                  : Icon(!hasJoinedTheEvent(userEvents.value)
+                      ? Icons.check
+                      : Icons.logout))),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,9 +113,25 @@ class EventDetailsState extends ConsumerState<EventDetails> {
             ListTile(
                 title: const Text("Wymagany wiek wolontariusza"),
                 subtitle: Text(ageRangeString)),
+            Visibility(
+                visible: userProfile.hasValue && !canJoin(userProfile.value!),
+                child: const ListTile(
+                    title: Text(
+                        "Nie spełniasz wymagań potrzebnych, żeby dołączyć do tego wydarzenia."))),
           ],
         ),
       ),
     );
+  }
+
+  Future<void> switchMembershipState(
+      List<Volunteer>? userEvents, UserProfile userProfile) async {
+    if (!hasJoinedTheEvent(userEvents)) {
+      if (canJoin(userProfile)) {
+        await joinEvent(userProfile);
+      }
+    } else {
+      await VolunteersDB.deleteByUserId(userEvents![0].userId);
+    }
   }
 }
