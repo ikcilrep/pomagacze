@@ -16,10 +16,11 @@ class _EventCardState extends State<EventCard> {
   @override
   Widget build(BuildContext context) {
     return OpenContainer<bool>(
+        tappable: false,
         transitionType: ContainerTransitionType.fadeThrough,
+        transitionDuration: Duration(milliseconds: 350),
         openBuilder: (BuildContext context, VoidCallback _) =>
             EventDetails(widget.request),
-        tappable: false,
         closedShape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         closedElevation: 1.5,
