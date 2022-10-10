@@ -163,7 +163,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
             ],
           ),
           const SizedBox(height: 40),
-          Divider(color: Theme.of(context).dividerColor.withAlpha(100)),
+          Divider(color: Theme.of(context).dividerColor.withAlpha(80)),
           const ListTile(
             title: Text('Archiwum wydarzeń'),
             trailing: Icon(Icons.arrow_forward),
@@ -172,7 +172,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
             title: Text('Moje wydarzenia'),
             trailing: Icon(Icons.arrow_forward),
           ),
-          Divider(color: Theme.of(context).dividerColor.withAlpha(100)),
+          Divider(color: Theme.of(context).dividerColor.withAlpha(80)),
           const ListTile(
             title: Text('Opcje'),
             trailing: Icon(Icons.arrow_forward),
