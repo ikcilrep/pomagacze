@@ -19,7 +19,7 @@ class _EventCardState extends State<EventCard> {
         transitionType: ContainerTransitionType.fadeThrough,
         openBuilder: (BuildContext context, VoidCallback _) =>
             EventDetails(widget.request),
-        tappable: true,
+        tappable: false,
         closedShape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         closedElevation: 1.5,
@@ -27,20 +27,23 @@ class _EventCardState extends State<EventCard> {
         closedBuilder: (_, openContainer) {
           return Card(
               elevation: 1.5,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               child: InkWell(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Padding(
-                      padding: const EdgeInsets.all(18),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(widget.request.title,
-                              style: Theme.of(context).textTheme.bodyLarge),
-                          Text(widget.request.description,
-                              style: Theme.of(context).textTheme.bodyText2)
-                        ],
-                      ))));
+                borderRadius: BorderRadius.circular(10),
+                onTap: openContainer,
+                child: Padding(
+                    padding: const EdgeInsets.all(18),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(widget.request.title,
+                            style: Theme.of(context).textTheme.bodyLarge),
+                        Text(widget.request.description,
+                            style: Theme.of(context).textTheme.bodyText2)
+                      ],
+                    )),
+              ));
         });
   }
 }
