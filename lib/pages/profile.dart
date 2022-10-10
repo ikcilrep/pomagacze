@@ -81,11 +81,14 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                         isScrollControlled: true,
                         builder: (context) {
                           return Wrap(children: [
-                            EditProfile(
-                              title: 'Edytuj profil',
-                              onSubmit: () {
-                                Navigator.of(context).pop();
-                              },
+                            Padding(
+                              padding: MediaQuery.of(context).viewInsets,
+                              child: EditProfile(
+                                title: 'Edytuj profil',
+                                onSubmit: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
                             )
                           ]);
                         });
