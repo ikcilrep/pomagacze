@@ -28,11 +28,6 @@ class HelpRequestDetail extends StatelessWidget {
     final DateFormat dateFormat = DateFormat('dd.MM.yyyy - kk:mm');
     return Scaffold(
       appBar: AppBar(title: Text(_helpRequest.title)),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
-        label: const Text('Dołącz'),
-        icon: const Icon(Icons.check),
-      ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

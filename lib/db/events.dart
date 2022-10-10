@@ -1,17 +1,17 @@
 import 'package:pomagacze/db/helpers.dart';
-import 'package:pomagacze/models/help_request.dart';
+import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/utils/constants.dart';
 
-class RequestsDB {
-  static Future<List<HelpRequest>> getAll() async {
+class EventsDB {
+  static Future<List<HelpEvent>> getAll() async {
     var result = await supabase.from('requests').select().execute();
     result.throwOnError();
     return (result.data as List<dynamic>)
-        .map((e) => HelpRequest.fromData(e))
+        .map((e) => HelpEvent.fromData(e))
         .toList();
   }
 
-  static Future<void> update(HelpRequest data) async {
+  static Future<void> upsert(HelpEvent data) async {
     var result =
         await supabase.from('requests').upsert(data.toJson()).execute();
     result.throwOnError();

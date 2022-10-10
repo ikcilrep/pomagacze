@@ -12,7 +12,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends AuthState<LoginPage> {
-  final bool _isLoading = false;
+  bool _isLoading = false;
   late final TextEditingController _emailController;
 
   Future<void> _signIn() async {
@@ -31,6 +31,15 @@ class LoginPageState extends AuthState<LoginPage> {
   void dispose() {
     _emailController.dispose();
     super.dispose();
+  }
+
+  @override
+  void onAuthenticated(Session session) async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    super.onAuthenticated(session);
   }
 
   @override

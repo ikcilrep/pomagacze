@@ -42,7 +42,7 @@ class UserProfile {
       latitude = data['latitude'];
       longitude = data['latitude'];
       placeName = data['place_name'];
-      xp = data['xp'];
+      xp = data['xp'] ?? 0;
     }
   }
 

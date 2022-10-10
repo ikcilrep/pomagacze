@@ -1,6 +1,6 @@
 import 'user_profile.dart';
 
-class HelpRequest {
+class HelpEvent {
   String? id;
   String authorId = '';
   UserProfile? author;
@@ -17,9 +17,9 @@ class HelpRequest {
   double? longitude;
   String? placeName;
 
-  HelpRequest.empty();
+  HelpEvent.empty();
 
-  HelpRequest.fromData(dynamic data) {
+  HelpEvent.fromData(dynamic data) {
     if (data != null) {
       title = data['title'] ?? '';
       description = data['description'] ?? '';
@@ -53,10 +53,10 @@ class HelpRequest {
       'author_id': authorId,
       'title': title,
       'description': description,
-      'date_start': dateStart.toString(),
-      'date_end': dateEnd.toString(),
-      'latitude': latitude.toString(),
-      'longitude': longitude.toString(),
+      'date_start': dateStart?.toString(),
+      'date_end': dateEnd?.toString(),
+      'latitude': latitude?.toString(),
+      'longitude': longitude?.toString(),
       'minimal_age': minimalAge,
       'maximal_age': maximalAge,
       'minimal_number_of_volunteers': minimalNumberOfVolunteers,

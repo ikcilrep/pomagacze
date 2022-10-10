@@ -55,6 +55,7 @@ dependencies:
   flutter_riverpod: ^2.0.2
   powers: ^1.0.0+2
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

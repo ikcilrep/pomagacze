@@ -1,24 +1,24 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:pomagacze/models/help_request.dart';
-import 'package:pomagacze/pages/help_request_detail.dart';
+import 'package:pomagacze/models/help_event.dart';
+import 'package:pomagacze/pages/event_details.dart';
 
-class RequestCard extends StatefulWidget {
-  final HelpRequest request;
+class EventCard extends StatefulWidget {
+  final HelpEvent request;
 
-  const RequestCard(this.request, {Key? key}) : super(key: key);
+  const EventCard(this.request, {Key? key}) : super(key: key);
 
   @override
-  State<RequestCard> createState() => _RequestCardState();
+  State<EventCard> createState() => _EventCardState();
 }
 
-class _RequestCardState extends State<RequestCard> {
+class _EventCardState extends State<EventCard> {
   @override
   Widget build(BuildContext context) {
     return OpenContainer<bool>(
         transitionType: ContainerTransitionType.fadeThrough,
         openBuilder: (BuildContext context, VoidCallback _) =>
-            HelpRequestDetail(widget.request),
+            EventDetails(widget.request),
         tappable: true,
         closedShape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
