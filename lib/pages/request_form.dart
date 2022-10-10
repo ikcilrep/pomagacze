@@ -1,5 +1,6 @@
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:open_location_picker/open_location_picker.dart';
@@ -43,7 +44,6 @@ class _RequestFormState extends State<RequestForm> {
       'latitude': _location?.lat,
       'longitude': _location?.lon,
     };
-
 
     await RequestsDB.update(HelpRequest.fromData(values)).catchError((err) {
       context.showErrorSnackBar(message: err.toString());
@@ -135,8 +135,9 @@ class _RequestFormState extends State<RequestForm> {
                       const SizedBox(height: 15),
                       FormBuilderField(
                         name: 'date_end',
-                        initialValue:
-                            DateTime.now().add(const Duration(hours: 1)).toString(),
+                        initialValue: DateTime.now()
+                            .add(const Duration(hours: 1))
+                            .toString(),
                         builder: (field) {
                           return DateTimePicker(
                             type: DateTimePickerType.dateTimeSeparate,
@@ -157,14 +158,40 @@ class _RequestFormState extends State<RequestForm> {
                       ),
                       const SizedBox(height: 20),
                       OpenMapPicker(
-                        decoration: const InputDecoration(
-                          labelText: "Miejsce zbiórki",
-                        ),
-                        removeIcon: Icon(Icons.clear, color: Theme.of(context).colorScheme.onSurface),
-                        onChanged: (FormattedLocation? newValue) {
-                          _location = newValue;
-                        },
+                          decoration: const InputDecoration(
+                            labelText: "Miejsce zbiórki",
+                          ),
+                          removeIcon: Icon(Icons.clear,
+                              color: Theme.of(context).colorScheme.onSurface),
+                          onChanged: (FormattedLocation? newValue) {
+                            _location = newValue;
+                          },
+                          validator: FormBuilderValidators.required(errorText: "Miejsce zbiórki nie może być puste"),
                       ),
+                      const SizedBox(height: 20),
+                      FormBuilderTextField(
+                          name: 'minimal_age',
+                          decoration: const InputDecoration(
+                              labelText: 'Minimalny wiek wolontariusza'),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          // Only numbers can be entered
+                          validator: FormBuilderValidators.max(130,
+                              errorText: 'Wiek musi być mniejszy niż 130')),
+                      const SizedBox(height: 20),
+                      FormBuilderTextField(
+                          name: 'maximal_age',
+                          decoration: const InputDecoration(
+                              labelText: 'Maksymalny wiek wolontariusza'),
+                          keyboardType: TextInputType.number,
+                          inputFormatters: <TextInputFormatter>[
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          // Only numbers can be entered
+                          validator: FormBuilderValidators.max(130,
+                              errorText: 'Wiek musi być mniejszy niż 130')),
                     ],
                   ),
                 ),

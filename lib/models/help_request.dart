@@ -8,6 +8,10 @@ class HelpRequest {
   String description = '';
   DateTime? dateStart;
   DateTime? dateEnd;
+  int? minimalNumberOfVolunteers;
+  int? maximalNumberOfVolunteers;
+  int? minimalAge;
+  int? maximalAge;
 
   double? latitude;
   double? longitude;
@@ -29,6 +33,12 @@ class HelpRequest {
       placeName = data['place_name'];
       dateStart = DateTime.tryParse(data['date_start'] ?? '');
       dateEnd = DateTime.tryParse(data['date_end'] ?? '');
+      minimalAge = data['minimal_age'] is int?
+          ? data['minimal_age']
+          : int.tryParse(data['minimal_age']);
+      maximalAge = data['maximal_age'] is int?
+          ? data['maximal_age']
+          : int.tryParse(data['maximal_age']);
     }
   }
 
@@ -45,6 +55,8 @@ class HelpRequest {
       'date_end': dateEnd.toString(),
       'latitude': latitude.toString(),
       'longitude': longitude.toString(),
+      'minimal_age': minimalAge,
+      'maximal_age': maximalAge,
       'place_name': placeName,
     };
   }
