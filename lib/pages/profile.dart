@@ -164,7 +164,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
           const SizedBox(height: 40),
           Divider(color: Theme.of(context).dividerColor.withAlpha(80)),
           const ListTile(
-            title: Text('Wydarzenia w których uczestniczę'),
+            title: Text('Wydarzenia, w których uczestniczę'),
             trailing: Icon(Icons.arrow_forward),
           ),
           const ListTile(
