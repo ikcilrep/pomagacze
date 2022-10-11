@@ -83,6 +83,7 @@ class FeedPageState extends ConsumerState<FeedPage> {
       child: future.when(
           data: (data) => ListView.builder(
                 physics: const AlwaysScrollableScrollPhysics(),
+                padding: EdgeInsets.only(bottom: 100),
                 controller: _scrollController,
                 itemBuilder: (context, index) => EventCard(data[index]),
                 itemCount: data.length,
