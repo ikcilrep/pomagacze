@@ -5,6 +5,7 @@ import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/models/volunteer.dart';
+import 'package:pomagacze/state/feed.dart';
 import 'package:pomagacze/state/user.dart';
 import 'package:pomagacze/state/volunteers.dart';
 import 'package:pomagacze/utils/constants.dart';
@@ -100,7 +101,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ListTile(
-                title: const Text("Miejsce zbiórki"),
+                title: const Text("Lokalizacja"),
                 subtitle: Text(widget.helpEvent.placeName ?? '')),
             ListTile(
                 title: const Text("Czas rozpoczęcia"),
@@ -146,5 +147,6 @@ class EventDetailsState extends ConsumerState<EventDetails> {
     } else {
       await VolunteersDB.deleteByUserId(userEvents![0].userId);
     }
+    ref.invalidate(feedFutureProvider);
   }
 }

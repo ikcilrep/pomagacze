@@ -43,7 +43,7 @@ class EventFormState extends ConsumerState<EventForm> {
     var values = {
       ..._formKey.currentState!.value,
       'author_id': supabase.auth.currentUser?.id,
-      'place_name': _location?.displayName,
+      'place_name': _location != null ? '${_location!.address.road}, ${_location!.address.city}' : '',
       'latitude': _location?.lat,
       'longitude': _location?.lon,
     };

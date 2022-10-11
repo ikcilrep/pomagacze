@@ -5,6 +5,7 @@ class NotFoundError extends Error {}
 extension PostgresResponseThrow<T> on PostgrestResponse<T> {
   void throwOnError({bool expectData = false}) {
     if (hasError && status != 406) {
+      print(error);
       throw error!;
     }
     if(expectData && data == null) {
