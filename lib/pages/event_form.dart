@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:intl/intl.dart';
 import 'package:open_location_picker/open_location_picker.dart';
 import 'package:pomagacze/db/db.dart';
 import 'package:pomagacze/models/help_event.dart';
@@ -40,15 +41,21 @@ class EventFormState extends ConsumerState<EventForm> {
       _loading = true;
     });
 
-    var values = {
+    final ageRange = _formKey.currentState!.value['age_range'] as RangeValues?;
+
+    final values = {
       ..._formKey.currentState!.value,
       'author_id': supabase.auth.currentUser?.id,
       'place_name': _location?.displayName,
       'latitude': _location?.lat,
       'longitude': _location?.lon,
+      'minimal_age': ageRange?.start.floor(),
+      'maximal_age': ageRange?.end.floor(),
     };
 
-    var data = HelpEvent.fromData(values);
+    values.remove('age_range');
+
+    final data = HelpEvent.fromData(values);
     await EventsDB.upsert(data).catchError((err) {
       context.showErrorSnackBar(message: err.toString());
     });
@@ -165,6 +172,21 @@ class EventFormState extends ConsumerState<EventForm> {
                         },
                       ),
                       const SizedBox(height: 20),
+
+                      FormBuilderRangeSlider(
+                        name: 'age_range',
+                          decoration: const InputDecoration(
+                              labelText: 'Wymagany wiek wolontariusza'),
+                        min: minimalVolunteerAge.toDouble(),
+                        max: maximalVolunteerAge.toDouble(),
+                        divisions:
+                            maximalVolunteerAge - minimalVolunteerAge + 1,
+                        initialValue: RangeValues(minimalVolunteerAge.toDouble(), maximalVolunteerAge.toDouble()),
+                        numberFormat: NumberFormat("###"),
+                        labels: const RangeLabels(
+                            "$minimalVolunteerAge lat",
+                            "$maximalVolunteerAge lat",)
+                      ),
                       FormBuilderTextField(
                         name: 'minimal_number_of_volunteers',
                         decoration: const InputDecoration(
@@ -175,7 +197,8 @@ class EventFormState extends ConsumerState<EventForm> {
                         ],
                         // Only numbers can be entered
                         validator: FormBuilderValidators.required(
-                            errorText: "Minimalna licba wolontariuszy nie może być pusta"),
+                            errorText:
+                                "Minimalna licba wolontariuszy nie może być pusta"),
                       ),
                       const SizedBox(height: 20),
                       FormBuilderTextField(
@@ -187,7 +210,8 @@ class EventFormState extends ConsumerState<EventForm> {
                           FilteringTextInputFormatter.digitsOnly
                         ],
                         validator: FormBuilderValidators.required(
-                            errorText: "Maksymalna licba wolontariuszy nie może być pusta"),                       // Only numbers can be entered
+                            errorText:
+                                "Maksymalna licba wolontariuszy nie może być pusta"), // Only numbers can be entered
                       ),
                       const SizedBox(height: 20),
                       OpenMapPicker(
