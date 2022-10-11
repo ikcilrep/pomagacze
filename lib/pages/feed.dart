@@ -40,7 +40,8 @@ class FeedPageState extends ConsumerState<FeedPage> {
         right: 10,
         child: Card(
           elevation: 3,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
           child: OpenContainer<bool>(
               tappable: false,
               transitionType: ContainerTransitionType.fadeThrough,
@@ -49,10 +50,10 @@ class FeedPageState extends ConsumerState<FeedPage> {
               openBuilder: (BuildContext context, VoidCallback _) {
                 return const EventForm();
               },
-              openShape:
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-              closedShape:
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+              openShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(5)),
+              closedShape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18)),
               closedColor: Theme.of(context).colorScheme.primary,
               closedBuilder: (_, openContainer) {
                 return ScrollingFabAnimated(
@@ -81,9 +82,11 @@ class FeedPageState extends ConsumerState<FeedPage> {
       onRefresh: () => ref.refresh(feedFutureProvider.future),
       child: future.when(
           data: (data) => ListView.builder(
-              controller: _scrollController,
-              itemBuilder: (context, index) => EventCard(data[index]),
-              itemCount: data.length),
+                physics: const AlwaysScrollableScrollPhysics(),
+                controller: _scrollController,
+                itemBuilder: (context, index) => EventCard(data[index]),
+                itemCount: data.length,
+              ),
           error: (err, stack) => Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

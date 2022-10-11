@@ -20,9 +20,6 @@ Future<void> main() async {
     anonKey: supabaseAnonKey,
   );
 
-  // await initializeDateFormatting('pl_PL');
-
-
   runApp(ProviderScope(child: MyApp()));
 }
 
@@ -40,7 +37,7 @@ class MyApp extends StatelessWidget {
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
               ],
-              supportedLocales: [Locale('pl'), Locale('en')],
+              supportedLocales: const [Locale('pl'), Locale('en')],
               theme: getTheme(),
               // darkTheme: getTheme(dark: true),
               initialRoute: '/',
