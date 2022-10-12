@@ -21,6 +21,7 @@ Future<void> main() async {
     anonKey: supabaseAnonKey,
   );
 
+
   runApp(ProviderScope(child: MyApp()));
 }
 

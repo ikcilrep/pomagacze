@@ -55,6 +55,8 @@ dependencies:
   flutter_riverpod: ^2.0.2
   powers: ^1.0.0+2
   http: ^0.13.5
+  fluttertoast: ^8.0.9
+  maps_launcher: ^2.0.1
 
 
 dev_dependencies:

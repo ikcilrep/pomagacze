@@ -77,8 +77,6 @@ class EventFormState extends ConsumerState<EventForm> {
       'longitude': _location?.lon,
     };
 
-    print(values['id']);
-
     var data = HelpEvent.fromData(values);
     await EventsDB.upsert(data).catchError((err) {
       context.showErrorSnackBar(message: err.toString());

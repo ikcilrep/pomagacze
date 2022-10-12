@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/user_profile.dart';
@@ -30,8 +33,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
   List<Volunteer> get eventVolunteers =>
       ref.read(eventProvider).valueOrNull?.volunteers ?? [];
 
-  HelpEvent? get event =>
-      ref.read(eventProvider).valueOrNull;
+  HelpEvent? get event => ref.read(eventProvider).valueOrNull;
 
   UserProfile? get userProfile => ref.read(userProfileProvider).valueOrNull;
 
@@ -42,7 +44,8 @@ class EventDetailsState extends ConsumerState<EventDetails> {
     var data = ref.watch(eventProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(event?.title ?? widget.helpEvent.title), actions: [
+      appBar:
+          AppBar(title: Text(event?.title ?? widget.helpEvent.title), actions: [
         Visibility(
           visible: data.hasValue &&
               data.value?.authorId == supabase.auth.currentUser?.id,
@@ -64,7 +67,8 @@ class EventDetailsState extends ConsumerState<EventDetails> {
               canJoin(userProfile!, data.valueOrNull?.volunteers ?? []),
           child: _buildFAB()),
       body: data.when(
-          data: (data) => buildSuccess(context, data),
+          data: (data) =>
+              Builder(builder: (context) => buildSuccess(context, data)),
           error: (err, stack) {
             print(err);
             print(stack);
@@ -84,7 +88,36 @@ class EventDetailsState extends ConsumerState<EventDetails> {
         children: [
           ListTile(
               title: const Text("Lokalizacja"),
-              subtitle: Text(event.addressFull ?? '')),
+              subtitle: Text(event.addressFull ?? ''),
+              trailing: const Icon(Icons.open_in_new),
+              onTap: () async {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (context) => ListView(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          children: [
+                            ListTile(
+                                leading: const Icon(Icons.copy),
+                                title: const Text('Skopiuj do schowka'),
+                                onTap: () async {
+                                  Navigator.of(context).pop();
+                                  await Clipboard.setData(ClipboardData(
+                                      text: event.addressFull ?? ''));
+                                  Fluttertoast.showToast(
+                                      msg: 'Skopiowano do schowka!');
+                                }),
+                            ListTile(
+                                leading: const Icon(Icons.open_in_new),
+                                title: const Text('Otwórz w mapach'),
+                                onTap: () async {
+                                  Navigator.of(context).pop();
+                                  MapsLauncher.launchCoordinates(event.latitude!, event.longitude!, '${event.addressShort} - ${event.title}');
+                                })
+                          ],
+                        ));
+              }),
           ListTile(
               title: const Text("Czas rozpoczęcia"),
               subtitle:
