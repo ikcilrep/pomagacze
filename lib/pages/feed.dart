@@ -1,8 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pomagacze/components/event_list.dart';
 import 'package:pomagacze/components/fab_extended_animated.dart';
-import 'package:pomagacze/components/event_card.dart';
 import 'package:pomagacze/pages/event_form.dart';
 import 'package:pomagacze/state/events.dart';
 
@@ -45,7 +45,7 @@ class FeedPageState extends ConsumerState<FeedPage> {
           child: OpenContainer<bool>(
               tappable: false,
               transitionType: ContainerTransitionType.fadeThrough,
-              transitionDuration: Duration(milliseconds: 350),
+              transitionDuration: const Duration(milliseconds: 350),
               closedElevation: 1.5,
               openBuilder: (BuildContext context, VoidCallback _) {
                 return const EventForm();
@@ -76,34 +76,8 @@ class FeedPageState extends ConsumerState<FeedPage> {
   }
 
   Widget _buildList() {
-    var future = ref.watch(feedFutureProvider);
-
-    return RefreshIndicator(
-      onRefresh: () => ref.refresh(feedFutureProvider.future),
-      child: future.when(
-          data: (data) => ListView.builder(
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.only(bottom: 100),
-                controller: _scrollController,
-                itemBuilder: (context, index) => EventCard(data[index]),
-                itemCount: data.length,
-              ),
-          error: (err, stack) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Coś poszło nie tak...'),
-                    const SizedBox(height: 5),
-                    ElevatedButton(
-                        onPressed: () {
-                          ref.invalidate(feedFutureProvider);
-                        },
-                        child: Text('Odśwież'))
-                  ],
-                ),
-              ),
-          loading: () => const Center(child: CircularProgressIndicator())),
-    );
+    return EventList(
+        provider: feedFutureProvider, scrollController: _scrollController);
   }
 
   @override

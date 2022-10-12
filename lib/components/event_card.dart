@@ -119,7 +119,7 @@ class _EventCardState extends State<EventCard> {
   String? _getInfoMessage() {
     if (widget.event.volunteers.any((x) => x.userId == supabase.auth.currentUser!.id) ==
         true) {
-      return 'Już bierzesz w tym udział';
+      return 'Bierzesz udział w tym wydarzeniu';
     }
   }
 

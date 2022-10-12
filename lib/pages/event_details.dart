@@ -30,8 +30,8 @@ class EventDetailsState extends ConsumerState<EventDetails> {
   List<Volunteer> get eventVolunteers =>
       ref.read(eventProvider).valueOrNull?.volunteers ?? [];
 
-  HelpEvent get event =>
-      ref.read(eventProvider).valueOrNull ?? HelpEvent.empty();
+  HelpEvent? get event =>
+      ref.read(eventProvider).valueOrNull;
 
   UserProfile? get userProfile => ref.read(userProfileProvider).valueOrNull;
 
@@ -42,7 +42,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
     var data = ref.watch(eventProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text(widget.helpEvent.title), actions: [
+      appBar: AppBar(title: Text(event?.title ?? widget.helpEvent.title), actions: [
         Visibility(
           visible: data.hasValue &&
               data.value?.authorId == supabase.auth.currentUser?.id,
@@ -142,7 +142,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
   }
 
   String numberOfVolunteersText() {
-    return "${eventVolunteers.length}/${event.maximalNumberOfVolunteers}";
+    return "${eventVolunteers.length}/${event!.maximalNumberOfVolunteers}";
   }
 
   Future<void> switchMembershipState(
@@ -158,33 +158,33 @@ class EventDetailsState extends ConsumerState<EventDetails> {
   }
 
   String get ageRangeString {
-    if (event.minimalAge == null && event.maximalAge == null) {
+    if (event!.minimalAge == null && event!.maximalAge == null) {
       return "Brak";
     }
 
-    if (event.minimalAge == null) {
-      return 'Maksymalnie ${event.maximalAge} lat';
+    if (event!.minimalAge == null) {
+      return 'Maksymalnie ${event!.maximalAge} lat';
     }
 
-    if (event.maximalAge == null) {
-      return 'Przynajmniej ${event.minimalAge} lat';
+    if (event!.maximalAge == null) {
+      return 'Przynajmniej ${event!.minimalAge} lat';
     }
 
-    return '${event.minimalAge} - ${event.maximalAge} lat';
+    return '${event!.minimalAge} - ${event!.maximalAge} lat';
   }
 
   bool canJoin(UserProfile userProfile, List<Volunteer> eventVolunteers) {
-    return (event.maximalNumberOfVolunteers == null ||
-            eventVolunteers.length < event.maximalNumberOfVolunteers!) &&
+    return (event!.maximalNumberOfVolunteers == null ||
+            eventVolunteers.length < event!.maximalNumberOfVolunteers!) &&
         isYoungEnough(userProfile) &&
         isOldEnough(userProfile);
   }
 
   bool isOldEnough(UserProfile userProfile) =>
-      event.minimalAge == null || event.minimalAge! <= userProfile.age;
+      event!.minimalAge == null || event!.minimalAge! <= userProfile.age;
 
   bool isYoungEnough(UserProfile userProfile) =>
-      event.maximalAge == null || event.maximalAge! >= userProfile.age;
+      event!.maximalAge == null || event!.maximalAge! >= userProfile.age;
 
   Future<void> joinEvent(UserProfile userProfile) async {
     final volunteer = Volunteer(

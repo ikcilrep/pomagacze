@@ -16,6 +16,28 @@ class EventsDB {
         .toList();
   }
 
+  static Future<List<HelpEvent>> getFiltered(EventFilters filters) async {
+    var query = supabase.from('events').select(select);
+
+    if(filters.state == EventState.active) {
+      query = query.gt('date_end', DateTime.now().toUtc());
+    } else if(filters.state == EventState.past) {
+      query = query.lte('date_end', DateTime.now().toUtc());
+    }
+
+    if(filters.authorId != null) {
+      query = query.eq('author_id', filters.authorId);
+    }
+
+    var result = await query.execute();
+
+    result.throwOnError();
+
+    return (result.data as List<dynamic>)
+        .map((e) => HelpEvent.fromData(e))
+        .toList();
+  }
+
   static Future<HelpEvent> getById(String id) async {
     var result = await supabase
         .from('events')
@@ -33,4 +55,15 @@ class EventsDB {
     var result = await supabase.from('events').upsert(data.toJson()).execute();
     result.throwOnError();
   }
+}
+
+enum EventState {
+  active, past
+}
+
+class EventFilters {
+  EventState? state;
+  String? authorId;
+
+  EventFilters({this.state, this.authorId});
 }

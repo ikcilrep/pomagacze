@@ -10,6 +10,7 @@ import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/pages/event_details.dart';
 import 'package:pomagacze/state/events.dart';
 import 'package:pomagacze/utils/constants.dart';
+import 'package:pomagacze/utils/location_utils.dart';
 import 'package:pomagacze/utils/snackbar.dart';
 
 class EventForm extends ConsumerStatefulWidget {
@@ -28,6 +29,29 @@ class EventFormState extends ConsumerState<EventForm> {
   FormattedLocation? _location;
 
   bool get isEditing => widget.initialData != null;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialData?.longitude != null) {
+      _location = FormattedLocation.fromLatLng(
+          lat: widget.initialData!.latitude ?? 0,
+          lon: widget.initialData!.longitude ?? 0,
+          displayName: widget.initialData!.addressFull);
+
+      reverseLocation(
+              locale: const Locale('pl'),
+              location: LatLng(widget.initialData!.latitude ?? 0,
+                  widget.initialData!.longitude ?? 0))
+          .then((value) {
+        if (mounted) {
+          setState(() {
+            _location = value;
+          });
+        }
+      });
+    }
+  }
 
   void _submit() async {
     if (!_formKey.currentState!.saveAndValidate()) {
@@ -64,7 +88,7 @@ class EventFormState extends ConsumerState<EventForm> {
       _loading = false;
     });
 
-    ref.invalidate(feedFutureProvider);
+    await ref.refresh(feedFutureProvider.future);
     await ref.refresh(eventFutureProvider(data.id!).future);
 
     if (mounted) {
@@ -204,12 +228,7 @@ class EventFormState extends ConsumerState<EventForm> {
                       // ),
                       const SizedBox(height: 20),
                       OpenMapPicker(
-                        initialValue: widget.initialData?.longitude != null
-                            ? FormattedLocation.fromLatLng(
-                                lat: widget.initialData!.latitude ?? 0,
-                                lon: widget.initialData!.longitude ?? 0,
-                                displayName: widget.initialData!.addressFull)
-                            : null,
+                        initialValue: _location,
                         options: OpenMapOptions(
                             center: LatLng(
                                 widget.initialData?.latitude ?? wroclawLat,
