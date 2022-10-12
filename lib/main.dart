@@ -5,6 +5,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:location/location.dart';
 import 'package:open_location_picker/open_location_picker.dart';
 import 'package:pomagacze/pages/event_form.dart';
+import 'package:pomagacze/pages/events_joined.dart';
 import 'package:pomagacze/pages/login.dart';
 import 'package:pomagacze/pages/my_events.dart';
 import 'package:pomagacze/pages/setup_profile.dart';
@@ -53,6 +54,7 @@ class MyApp extends StatelessWidget {
                 '/new': (_) => const EventForm(),
                 '/setup-profile': (_) => const SetupProfilePage(),
                 '/my-events': (_) => const MyEvents(),
+                '/events-joined': (_) => const EventsJoined(),
               },
             ));
   }

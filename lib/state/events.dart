@@ -14,6 +14,14 @@ final filteredEventsFutureProvider =
   return await EventsDB.getFiltered(filters);
 });
 
+final eventsWithVolunteerFutureProvider =
+FutureProvider.family<List<HelpEvent>, EventFilters>((ref, filters) async {
+
+  await ref.watch(feedFutureProvider.future);
+
+  return await EventsDB.getByVolunteer(filters);
+});
+
 final eventFutureProvider =
     FutureProvider.family<HelpEvent, String>((ref, id) async {
   return await EventsDB.getById(id);

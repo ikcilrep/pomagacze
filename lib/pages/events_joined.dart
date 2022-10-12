@@ -4,14 +4,14 @@ import 'package:pomagacze/db/db.dart';
 import 'package:pomagacze/state/events.dart';
 import 'package:pomagacze/utils/constants.dart';
 
-class MyEvents extends StatefulWidget {
-  const MyEvents({Key? key}) : super(key: key);
+class EventsJoined extends StatefulWidget {
+  const EventsJoined({Key? key}) : super(key: key);
 
   @override
-  State<MyEvents> createState() => _MyEventsState();
+  State<EventsJoined> createState() => _EventsJoinedState();
 }
 
-class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
+class _EventsJoinedState extends State<EventsJoined> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
@@ -23,7 +23,7 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-            title: const Text('Moje wydarzenia'),
+            title: const Text('Wydarzenia, w których uczestniczę'),
             bottom: TabBar(
               tabs: const [
                 Tab(
@@ -38,12 +38,12 @@ class _MyEventsState extends State<MyEvents> with TickerProviderStateMixin {
             )),
         body: TabBarView(children: [
           EventList(
-              provider: filteredEventsFutureProvider(EventFilters(
-                  authorId: supabase.auth.currentUser?.id,
+              provider: eventsWithVolunteerFutureProvider(EventFilters(
+                  volunteerId: supabase.auth.currentUser?.id,
                   state: EventState.active))),
           EventList(
-              provider: filteredEventsFutureProvider(EventFilters(
-                  authorId: supabase.auth.currentUser?.id,
+              provider: eventsWithVolunteerFutureProvider(EventFilters(
+                  volunteerId: supabase.auth.currentUser?.id,
                   state: EventState.past)))
         ]),
       ),
