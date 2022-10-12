@@ -114,18 +114,14 @@ class EventFormState extends ConsumerState<EventForm> {
                     scale: 0.6,
                     child: const CircularProgressIndicator(color: Colors.white))
                 : Icon(isEditing ? Icons.save : Icons.send)),
-        body: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              FormBuilder(
+        body: Container(
+              child: FormBuilder(
                 key: _formKey,
                 initialValue: widget.initialData?.toJson() ?? {},
                 child: Padding(
                   padding: const EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                  child: ListView(
+                    padding: const EdgeInsets.only(bottom: 100),
                     children: [
                       FormBuilderTextField(
                         name: 'title',
@@ -201,7 +197,7 @@ class EventFormState extends ConsumerState<EventForm> {
                           );
                         },
                       ),
-                      const SizedBox(height: 20),
+                      // const SizedBox(height: 20),
                       // FormBuilderTextField(
                       //   name: 'minimal_number_of_volunteers',
                       //   decoration: const InputDecoration(
@@ -275,8 +271,6 @@ class EventFormState extends ConsumerState<EventForm> {
                   ),
                 ),
               )
-            ],
-          ),
         ));
   }
 }
