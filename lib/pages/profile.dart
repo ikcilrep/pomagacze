@@ -163,13 +163,32 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
           ),
           const SizedBox(height: 40),
           Divider(color: Theme.of(context).dividerColor.withAlpha(80)),
-          const ListTile(
-            title: Text('Wydarzenia, w których uczestniczę'),
-            trailing: Icon(Icons.arrow_forward),
+          Material(
+            child: InkWell(
+              child: ListTile(
+                onTap: () {
+                  Navigator.of(context).pushNamed('/events-joined');
+                },
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50)),
+                title: const Text('Wydarzenia, w których uczestniczę'),
+                trailing: const Icon(Icons.arrow_forward),
+              ),
+            ),
           ),
-          const ListTile(
-            title: Text('Moje wydarzenia'),
-            trailing: Icon(Icons.arrow_forward),
+
+          Material(
+            child: InkWell(
+              child: ListTile(
+                onTap: () {
+                  Navigator.of(context).pushNamed('/my-events');
+                },
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50)),
+                title: const Text('Moje wydarzenia'),
+                trailing: const Icon(Icons.arrow_forward),
+              ),
+            ),
           ),
           Divider(color: Theme.of(context).dividerColor.withAlpha(80)),
           const ListTile(
@@ -180,20 +199,17 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
             title: Text('O aplikacji'),
             trailing: Icon(Icons.arrow_forward),
           ),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(50),
-            child: Material(
-              child: InkWell(
+          Material(
+            child: InkWell(
+              child: ListTile(
                 onTap: _signOut,
-                child: ListTile(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50)),
-                  title: const Text('Wyloguj się'),
-                  trailing: const Icon(Icons.logout),
-                ),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50)),
+                title: const Text('Wyloguj się'),
+                trailing: const Icon(Icons.logout),
               ),
             ),
-          )
+          ),
         ],
       ),
     );

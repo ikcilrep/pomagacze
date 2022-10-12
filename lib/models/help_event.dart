@@ -17,9 +17,10 @@ class HelpEvent {
 
   double? latitude;
   double? longitude;
-  String? placeName;
+  String? addressShort;
+  String? addressFull;
 
-  List<Volunteer>? volunteers;
+  List<Volunteer> volunteers = [];
 
   HelpEvent.empty();
 
@@ -35,7 +36,8 @@ class HelpEvent {
       id = data['id'] ?? '';
       latitude = castToDoubleIfInteger(data['latitude']);
       longitude = castToDoubleIfInteger(data['longitude']);
-      placeName = data['place_name'];
+      addressShort = data['address_short'];
+      addressFull = data['address_full'];
       dateStart = DateTime.tryParse(data['date_start'] ?? '');
       dateEnd = DateTime.tryParse(data['date_end'] ?? '');
       minimalAge = parseIntIfString(data['minimal_age']);
@@ -47,6 +49,8 @@ class HelpEvent {
       points = parseIntIfString(data['points']) ?? 0;
       if(data['volunteers'] is List) {
         volunteers = (data['volunteers'] as List).map((x) => Volunteer.fromData(x)).toList();
+      } else {
+        volunteers = [];
       }
     }
   }
@@ -67,13 +71,15 @@ class HelpEvent {
       'description': description,
       'date_start': dateStart?.toString(),
       'date_end': dateEnd?.toString(),
-      'latitude': latitude?.toString(),
-      'longitude': longitude?.toString(),
+      'latitude': latitude,
+      'longitude': longitude,
       'minimal_age': minimalAge,
       'maximal_age': maximalAge,
       'minimal_number_of_volunteers': minimalNumberOfVolunteers,
       'maximal_number_of_volunteers': maximalNumberOfVolunteers,
-      'place_name': placeName,
+      'address_short': addressShort,
+      'address_full': addressFull,
+      'points': points
     };
   }
 }

@@ -146,8 +146,9 @@ class EditProfilePageState extends ConsumerState<EditProfile> {
               onChanged: (FormattedLocation? newValue) {
                 userProfile.location = newValue;
               },
+              options: OpenMapOptions(center: LatLng(wroclawLat, wroclawLng)),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 25),
             Row(
               children: [
                 if (widget.showCancelButton)
