@@ -6,6 +6,7 @@ import 'package:location/location.dart';
 import 'package:open_location_picker/open_location_picker.dart';
 import 'package:pomagacze/pages/event_form.dart';
 import 'package:pomagacze/pages/login.dart';
+import 'package:pomagacze/pages/my_events.dart';
 import 'package:pomagacze/pages/setup_profile.dart';
 import 'package:pomagacze/pages/splash.dart';
 import 'package:pomagacze/utils/constants.dart';
@@ -19,9 +20,6 @@ Future<void> main() async {
     url: supabaseURL,
     anonKey: supabaseAnonKey,
   );
-
-  // await initializeDateFormatting('pl_PL');
-
 
   runApp(ProviderScope(child: MyApp()));
 }
@@ -39,8 +37,10 @@ class MyApp extends StatelessWidget {
                 FormBuilderLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
               ],
-              supportedLocales: [Locale('pl'), Locale('en')],
+              locale: const Locale('pl'),
+              supportedLocales: const [Locale('pl'), Locale('en')],
               theme: getTheme(),
               // darkTheme: getTheme(dark: true),
               initialRoute: '/',
@@ -51,6 +51,7 @@ class MyApp extends StatelessWidget {
                 '/home': (_) => const HomeLayout(),
                 '/new': (_) => const EventForm(),
                 '/setup-profile': (_) => const SetupProfilePage(),
+                '/my-events': (_) => const MyEvents(),
               },
             ));
   }
@@ -64,8 +65,11 @@ class MyApp extends StatelessWidget {
       reverseZoom: ReverseZoom.building,
       getLocationStream: () => location.onLocationChanged
           .map((event) => LatLng(event.latitude!, event.longitude!)),
-      child: _buildRoutes(),
       searchHint: (context) => 'Wyszukaj...',
+      defaultOptions: OpenMapOptions(
+        center: LatLng(wroclawLat, wroclawLng),
+      ),
+      child: _buildRoutes(),
     );
   }
 

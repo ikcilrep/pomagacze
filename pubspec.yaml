@@ -54,6 +54,7 @@ dependencies:
   geocode: 1.0.2
   flutter_riverpod: ^2.0.2
   powers: ^1.0.0+2
+  http: ^0.13.5
 
 
 dev_dependencies:

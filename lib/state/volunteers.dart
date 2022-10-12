@@ -14,14 +14,3 @@ final userEventsProvider = FutureProvider<List<Volunteer>>((ref) async {
     rethrow;
   }
 });
-
-final eventVolunteersProvider = FutureProvider.family<List<Volunteer>, String>((ref, eventId) async {
-  try {
-    return await VolunteersDB.getAllByEventId(eventId);
-  } catch (err) {
-    if (err is NotFoundError) {
-      return [];
-    }
-    rethrow;
-  }
-});
