@@ -23,7 +23,7 @@ class _EventsJoinedState extends State<EventsJoined> with TickerProviderStateMix
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-            title: const Text('Wydarzenia, w których uczestniczę'),
+            title: const Text('Wydarzenia dołączone'),
             bottom: TabBar(
               tabs: const [
                 Tab(
