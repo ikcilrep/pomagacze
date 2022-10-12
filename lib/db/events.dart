@@ -3,18 +3,30 @@ import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/utils/constants.dart';
 
 class EventsDB {
-  static Future<List<HelpEvent>> getAll() async {
-    var result = await supabase
-        .from('events')
-        .select(
-            '*, author:author_id(name, avatar_url), volunteers( user_id, profile:user_id ( id, name ) )')
-        .execute();
+  static const String select =
+      '*, author:author_id(name, avatar_url), volunteers( user_id, profile:user_id ( id, name ) )';
 
-    print(result.data);
+  static Future<List<HelpEvent>> getAll() async {
+    var result = await supabase.from('events').select(select).execute();
+
+    result.throwOnError();
 
     return (result.data as List<dynamic>)
         .map((e) => HelpEvent.fromData(e))
         .toList();
+  }
+
+  static Future<HelpEvent> getById(String id) async {
+    var result = await supabase
+        .from('events')
+        .select(select)
+        .eq('id', id)
+        .single()
+        .execute();
+
+    result.throwOnError();
+
+    return HelpEvent.fromData(result.data);
   }
 
   static Future<void> upsert(HelpEvent data) async {

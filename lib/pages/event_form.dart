@@ -8,7 +8,7 @@ import 'package:open_location_picker/open_location_picker.dart';
 import 'package:pomagacze/db/db.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/pages/event_details.dart';
-import 'package:pomagacze/state/feed.dart';
+import 'package:pomagacze/state/events.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/snackbar.dart';
 
@@ -25,28 +25,35 @@ class EventFormState extends ConsumerState<EventForm> {
   final _formKey = GlobalKey<FormBuilderState>();
 
   bool _loading = false;
-
   FormattedLocation? _location;
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  bool get isEditing => widget.initialData != null;
 
   void _submit() async {
-    if (!_formKey.currentState!.saveAndValidate()) return;
+    if (!_formKey.currentState!.saveAndValidate()) {
+      context.showErrorSnackBar(message: 'Nie wszystkie pola są poprawne!');
+      return;
+    }
 
     setState(() {
       _loading = true;
     });
 
+    print(widget.initialData?.id);
+
     var values = {
+      ...(widget.initialData?.toJson() ?? {}),
       ..._formKey.currentState!.value,
       'author_id': supabase.auth.currentUser?.id,
-      'place_name': _location != null ? '${_location!.address.road}, ${_location!.address.city}' : '',
+      'address_short': _location != null
+          ? '${_location!.address.road}, ${_location!.address.city}'
+          : '',
+      'address_full': _location?.displayName,
       'latitude': _location?.lat,
       'longitude': _location?.lon,
     };
+
+    print(values['id']);
 
     var data = HelpEvent.fromData(values);
     await EventsDB.upsert(data).catchError((err) {
@@ -58,25 +65,31 @@ class EventFormState extends ConsumerState<EventForm> {
     });
 
     ref.invalidate(feedFutureProvider);
+    await ref.refresh(eventFutureProvider(data.id!).future);
 
     if (mounted) {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => EventDetails(data)));
+      if (isEditing) {
+        Navigator.of(context).pop();
+      } else {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => EventDetails(data)));
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text('Nowe wydarzenie')),
+        appBar: AppBar(
+            title: Text(isEditing ? 'Edytuj wydarzenie' : 'Nowe wydarzenie')),
         floatingActionButton: FloatingActionButton.extended(
             onPressed: _submit,
-            label: const Text('Opublikuj'),
+            label: Text(isEditing ? 'Zapisz' : 'Opublikuj'),
             icon: _loading
                 ? Transform.scale(
                     scale: 0.6,
                     child: const CircularProgressIndicator(color: Colors.white))
-                : const Icon(Icons.send)),
+                : Icon(isEditing ? Icons.save : Icons.send)),
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -165,32 +178,42 @@ class EventFormState extends ConsumerState<EventForm> {
                         },
                       ),
                       const SizedBox(height: 20),
-                      FormBuilderTextField(
-                        name: 'minimal_number_of_volunteers',
-                        decoration: const InputDecoration(
-                            labelText: 'Minimalna liczba wolontariuszy'),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        // Only numbers can be entered
-                        validator: FormBuilderValidators.required(
-                            errorText: "Minimalna licba wolontariuszy nie może być pusta"),
-                      ),
-                      const SizedBox(height: 20),
-                      FormBuilderTextField(
-                        name: 'maximal_number_of_volunteers',
-                        decoration: const InputDecoration(
-                            labelText: 'Maksymalna liczba wolontariuszy'),
-                        keyboardType: TextInputType.number,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        validator: FormBuilderValidators.required(
-                            errorText: "Maksymalna licba wolontariuszy nie może być pusta"),                       // Only numbers can be entered
-                      ),
+                      // FormBuilderTextField(
+                      //   name: 'minimal_number_of_volunteers',
+                      //   decoration: const InputDecoration(
+                      //       labelText: 'Minimalna liczba wolontariuszy'),
+                      //   keyboardType: TextInputType.number,
+                      //   inputFormatters: <TextInputFormatter>[
+                      //     FilteringTextInputFormatter.digitsOnly
+                      //   ],
+                      //   // Only numbers can be entered
+                      //   validator: FormBuilderValidators.required(
+                      //       errorText: "Minimalna licba wolontariuszy nie może być pusta"),
+                      // ),
+                      // const SizedBox(height: 20),
+                      // FormBuilderTextField(
+                      //   name: 'maximal_number_of_volunteers',
+                      //   decoration: const InputDecoration(
+                      //       labelText: 'Maksymalna liczba wolontariuszy'),
+                      //   keyboardType: TextInputType.number,
+                      //   inputFormatters: <TextInputFormatter>[
+                      //     FilteringTextInputFormatter.digitsOnly
+                      //   ],
+                      //   validator: FormBuilderValidators.required(
+                      //       errorText: "Maksymalna licba wolontariuszy nie może być pusta"),                       // Only numbers can be entered
+                      // ),
                       const SizedBox(height: 20),
                       OpenMapPicker(
+                        initialValue: widget.initialData?.longitude != null
+                            ? FormattedLocation.fromLatLng(
+                                lat: widget.initialData!.latitude ?? 0,
+                                lon: widget.initialData!.longitude ?? 0,
+                                displayName: widget.initialData!.addressFull)
+                            : null,
+                        options: OpenMapOptions(
+                            center: LatLng(
+                                widget.initialData?.latitude ?? wroclawLat,
+                                widget.initialData?.longitude ?? wroclawLng)),
                         decoration: const InputDecoration(
                           labelText: "Lokalizacja",
                           prefixIconConstraints: BoxConstraints(maxWidth: 0),

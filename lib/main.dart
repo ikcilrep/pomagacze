@@ -61,8 +61,11 @@ class MyApp extends StatelessWidget {
       reverseZoom: ReverseZoom.building,
       getLocationStream: () => location.onLocationChanged
           .map((event) => LatLng(event.latitude!, event.longitude!)),
-      child: _buildRoutes(),
       searchHint: (context) => 'Wyszukaj...',
+      defaultOptions: OpenMapOptions(
+        center: LatLng(wroclawLat, wroclawLng)
+      ),
+      child: _buildRoutes(),
     );
   }
 

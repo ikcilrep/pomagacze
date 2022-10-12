@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomagacze/components/fab_extended_animated.dart';
 import 'package:pomagacze/components/event_card.dart';
 import 'package:pomagacze/pages/event_form.dart';
-import 'package:pomagacze/state/feed.dart';
+import 'package:pomagacze/state/events.dart';
 
 class FeedPage extends ConsumerStatefulWidget {
   const FeedPage({Key? key}) : super(key: key);

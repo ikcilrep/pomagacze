@@ -80,7 +80,7 @@ class _EventCardState extends State<EventCard> {
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
-                              widget.event.placeName.orDefault('???'),
+                              widget.event.addressShort.orDefault('???'),
                               style: Theme.of(context).textTheme.caption,
                               overflow: TextOverflow.ellipsis,
                               softWrap: false,
@@ -117,8 +117,7 @@ class _EventCardState extends State<EventCard> {
   }
 
   String? _getInfoMessage() {
-    if (widget.event.volunteers
-            ?.any((x) => x.userId == supabase.auth.currentUser!.id) ==
+    if (widget.event.volunteers.any((x) => x.userId == supabase.auth.currentUser!.id) ==
         true) {
       return 'Już bierzesz w tym udział';
     }

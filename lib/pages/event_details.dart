@@ -5,7 +5,8 @@ import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/models/volunteer.dart';
-import 'package:pomagacze/state/feed.dart';
+import 'package:pomagacze/pages/event_form.dart';
+import 'package:pomagacze/state/events.dart';
 import 'package:pomagacze/state/user.dart';
 import 'package:pomagacze/state/volunteers.dart';
 import 'package:pomagacze/utils/constants.dart';
@@ -20,37 +21,170 @@ class EventDetails extends ConsumerStatefulWidget {
 }
 
 class EventDetailsState extends ConsumerState<EventDetails> {
+  bool _isFABLoading = false;
+
+  FutureProvider<HelpEvent> get eventProvider {
+    return eventFutureProvider(widget.helpEvent.id!);
+  }
+
+  List<Volunteer> get eventVolunteers =>
+      ref.read(eventProvider).valueOrNull?.volunteers ?? [];
+
+  HelpEvent get event =>
+      ref.read(eventProvider).valueOrNull ?? HelpEvent.empty();
+
+  UserProfile? get userProfile => ref.read(userProfileProvider).valueOrNull;
+
+  List<Volunteer>? get userEvents => ref.read(userEventsProvider).valueOrNull;
+
+  @override
+  Widget build(BuildContext context) {
+    var data = ref.watch(eventProvider);
+
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.helpEvent.title), actions: [
+        Visibility(
+          visible: data.hasValue &&
+              data.value?.authorId == supabase.auth.currentUser?.id,
+          child: IconButton(
+            icon: const Icon(Icons.edit),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return EventForm(
+                    initialData: HelpEvent.fromData(data.value?.toJson()));
+              }));
+            },
+          ),
+        )
+      ]),
+      floatingActionButton: Visibility(
+          visible: data.hasValue &&
+              userEvents != null &&
+              userProfile != null &&
+              canJoin(userProfile!, data.valueOrNull?.volunteers ?? []),
+          child: _buildFAB()),
+      body: data.when(
+          data: (data) => buildSuccess(context, data),
+          error: (err, stack) {
+            print(err);
+            print(stack);
+            return const Center(child: Text('Coś poszło nie tak...'));
+          },
+          loading: () => const Center(child: CircularProgressIndicator())),
+    );
+  }
+
+  Widget buildSuccess(BuildContext context, HelpEvent event) {
+    final DateFormat dateFormat = DateFormat('dd.MM.yyyy - kk:mm');
+
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ListTile(
+              title: const Text("Lokalizacja"),
+              subtitle: Text(event.addressFull ?? '')),
+          ListTile(
+              title: const Text("Czas rozpoczęcia"),
+              subtitle:
+                  Text(dateFormat.format(event.dateStart ?? DateTime.now()))),
+          ListTile(
+              title: const Text("Czas zakończenia"),
+              subtitle:
+                  Text(dateFormat.format(event.dateEnd ?? DateTime.now()))),
+          ListTile(
+              title: const Text("Opis"), subtitle: Text(event.description)),
+          ListTile(
+              title: const Text("Wymagany wiek wolontariusza"),
+              subtitle: Text(ageRangeString)),
+          ListTile(
+              title: const Text("Zgłoszeni wolontariusze"),
+              subtitle: Text(numberOfVolunteersText())),
+          Visibility(
+              visible: userProfile != null &&
+                  !canJoin(userProfile!, event.volunteers),
+              child: const ListTile(
+                  title: Text(
+                      "Nie spełniasz wymagań potrzebnych, żeby dołączyć do tego wydarzenia."))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFAB() {
+    return FloatingActionButton.extended(
+        onPressed: () async {
+          if (_isFABLoading) return;
+
+          setState(() {
+            _isFABLoading = true;
+          });
+          await switchMembershipState(userEvents, userProfile!);
+
+          await Future.wait(<Future>[
+            ref.refresh(userEventsProvider.future),
+            ref.refresh(feedFutureProvider.future),
+            ref.refresh(eventProvider.future),
+          ]);
+
+          setState(() {
+            _isFABLoading = false;
+          });
+        },
+        label: Text(!hasJoinedTheEvent(userEvents) ? 'Dołącz' : "Opuść"),
+        icon: (userProfile == null || _isFABLoading)
+            ? Transform.scale(
+                scale: 0.6,
+                child: const CircularProgressIndicator(color: Colors.white))
+            : Icon(
+                !hasJoinedTheEvent(userEvents) ? Icons.check : Icons.logout));
+  }
+
+  String numberOfVolunteersText() {
+    return "${eventVolunteers.length}/${event.maximalNumberOfVolunteers}";
+  }
+
+  Future<void> switchMembershipState(
+      List<Volunteer>? userEvents, UserProfile userProfile) async {
+    if (!hasJoinedTheEvent(userEvents)) {
+      if (canJoin(userProfile, eventVolunteers)) {
+        await joinEvent(userProfile);
+      }
+    } else {
+      await VolunteersDB.deleteByUserId(userEvents![0].userId);
+    }
+    ref.invalidate(feedFutureProvider);
+  }
+
   String get ageRangeString {
-    if (widget.helpEvent.minimalAge == null &&
-        widget.helpEvent.maximalAge == null) {
+    if (event.minimalAge == null && event.maximalAge == null) {
       return "Brak";
     }
 
-    if (widget.helpEvent.minimalAge == null) {
-      return 'Maksymalnie ${widget.helpEvent.maximalAge} lat';
+    if (event.minimalAge == null) {
+      return 'Maksymalnie ${event.maximalAge} lat';
     }
 
-    if (widget.helpEvent.maximalAge == null) {
-      return 'Przynajmniej ${widget.helpEvent.minimalAge} lat';
+    if (event.maximalAge == null) {
+      return 'Przynajmniej ${event.minimalAge} lat';
     }
 
-    return '${widget.helpEvent.minimalAge} - ${widget.helpEvent.maximalAge} lat';
+    return '${event.minimalAge} - ${event.maximalAge} lat';
   }
 
   bool canJoin(UserProfile userProfile, List<Volunteer> eventVolunteers) {
-    return eventVolunteers.length <
-            widget.helpEvent.maximalNumberOfVolunteers! &&
+    return (event.maximalNumberOfVolunteers == null ||
+            eventVolunteers.length < event.maximalNumberOfVolunteers!) &&
         isYoungEnough(userProfile) &&
         isOldEnough(userProfile);
   }
 
   bool isOldEnough(UserProfile userProfile) =>
-      widget.helpEvent.minimalAge == null ||
-      widget.helpEvent.minimalAge! <= userProfile.age;
+      event.minimalAge == null || event.minimalAge! <= userProfile.age;
 
   bool isYoungEnough(UserProfile userProfile) =>
-      widget.helpEvent.maximalAge == null ||
-      widget.helpEvent.maximalAge! >= userProfile.age;
+      event.maximalAge == null || event.maximalAge! >= userProfile.age;
 
   Future<void> joinEvent(UserProfile userProfile) async {
     final volunteer = Volunteer(
@@ -61,92 +195,5 @@ class EventDetailsState extends ConsumerState<EventDetails> {
   bool hasJoinedTheEvent(List<Volunteer>? userEvents) {
     return userEvents != null &&
         userEvents.any((volunteer) => volunteer.eventId == widget.helpEvent.id);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final userProfile = ref.watch(userProfileProvider);
-    final userEvents = ref.watch(userEventsProvider);
-    final eventVolunteers =
-        ref.watch(eventVolunteersProvider(widget.helpEvent.id!));
-    final DateFormat dateFormat = DateFormat('dd.MM.yyyy - kk:mm');
-
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.helpEvent.title)),
-      floatingActionButton: Visibility(
-          visible: userEvents.hasValue &&
-              userProfile.hasValue &&
-              eventVolunteers.hasValue &&
-              canJoin(userProfile.value!, eventVolunteers.value!),
-          child: FloatingActionButton.extended(
-              onPressed: () async {
-                await switchMembershipState(userEvents.value,
-                    eventVolunteers.value!, userProfile.value!);
-                ref.refresh(userEventsProvider);
-                ref.refresh(eventVolunteersProvider(widget.helpEvent.id!));
-              },
-              label: Text(
-                  !hasJoinedTheEvent(userEvents.value) ? 'Dołącz' : "Opuść"),
-              icon: !userProfile.hasValue
-                  ? Transform.scale(
-                      scale: 0.6,
-                      child:
-                          const CircularProgressIndicator(color: Colors.white))
-                  : Icon(!hasJoinedTheEvent(userEvents.value)
-                      ? Icons.check
-                      : Icons.logout))),
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            ListTile(
-                title: const Text("Lokalizacja"),
-                subtitle: Text(widget.helpEvent.placeName ?? '')),
-            ListTile(
-                title: const Text("Czas rozpoczęcia"),
-                subtitle: Text(dateFormat
-                    .format(widget.helpEvent.dateStart ?? DateTime.now()))),
-            ListTile(
-                title: const Text("Czas zakończenia"),
-                subtitle: Text(dateFormat
-                    .format(widget.helpEvent.dateEnd ?? DateTime.now()))),
-            ListTile(
-                title: const Text("Opis"),
-                subtitle: Text(widget.helpEvent.description)),
-            ListTile(
-                title: const Text("Wymagany wiek wolontariusza"),
-                subtitle: Text(ageRangeString)),
-            Visibility(
-                visible: eventVolunteers.hasValue,
-                child: ListTile(
-                    title: const Text("Zgłoszeni wolontariusze"),
-                    subtitle: Text(numberOfVolunteersText(eventVolunteers)))),
-            Visibility(
-                visible: userProfile.hasValue &&
-                    eventVolunteers.hasValue &&
-                    !canJoin(userProfile.value!, eventVolunteers.value!),
-                child: const ListTile(
-                    title: Text(
-                        "Nie spełniasz wymagań potrzebnych, żeby dołączyć do tego wydarzenia."))),
-          ],
-        ),
-      ),
-    );
-  }
-
-  String numberOfVolunteersText(AsyncValue<List<Volunteer>> eventVolunteers) =>
-      "${!eventVolunteers.hasValue ? 0 : eventVolunteers.value!.length}/${widget.helpEvent.maximalNumberOfVolunteers}";
-
-  Future<void> switchMembershipState(List<Volunteer>? userEvents,
-      List<Volunteer> eventVolunteers, UserProfile userProfile) async {
-    if (!hasJoinedTheEvent(userEvents)) {
-      if (canJoin(userProfile, eventVolunteers)) {
-        await joinEvent(userProfile);
-      }
-    } else {
-      await VolunteersDB.deleteByUserId(userEvents![0].userId);
-    }
-    ref.invalidate(feedFutureProvider);
   }
 }
