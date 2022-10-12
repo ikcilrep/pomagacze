@@ -54,6 +54,7 @@ dependencies:
   geocode: 1.0.2
   flutter_riverpod: ^2.0.2
   powers: ^1.0.0+2
+  google_fonts: ^3.0.1
 
 
 dev_dependencies:
@@ -77,6 +78,8 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  assets:
+    - assets/
 
   # To add assets to your application, add an assets section, like this:
   # assets:

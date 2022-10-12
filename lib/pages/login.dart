@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pomagacze/components/auth_state.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -45,27 +46,32 @@ class LoginPageState extends AuthState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      /*appBar: AppBar(
+        backgroundColor: Colors.transparent,
           title: const Center(
               child: Text('Pomagacze',
-                  style: TextStyle(fontWeight: FontWeight.bold)))),
+                  style: TextStyle(fontWeight: FontWeight.bold)))),*/
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/images/shakeIcon.png"),
-            fit: BoxFit.cover,
+            image: AssetImage("assets/loginBGgren.png"),
+            fit: BoxFit.fitHeight,
           ),
         ),
         child: Padding(
-            padding: const EdgeInsets.only(bottom: 50),
+            padding: const EdgeInsets.only(bottom: 50, top: 100),
             child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
                 children: [
+                  Text("POMAGACZE", style: GoogleFonts.oswald(textStyle: Theme.of(context).textTheme.headline2?.copyWith(color: Colors.black) )),
                   Center(
                     child: GoogleAuthButton(
                         style: AuthButtonStyle(
-                          textStyle: Theme.of(context).typography.englishLike.bodyText2,
+                          textStyle: Theme.of(context)
+                              .typography
+                              .englishLike
+                              .bodyText2,
                           height: 50,
                         ),
                         isLoading: _isLoading,
