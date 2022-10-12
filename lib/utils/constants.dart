@@ -8,5 +8,8 @@ const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
 const minimalVolunteerAge = 0;
 const maximalVolunteerAge = 130;
 
+const minimalVolunteerCount = 1;
+const maximalVolunteerCount = 100;
+
 const wroclawLat = 51.107883;
 const wroclawLng = 17.038538;

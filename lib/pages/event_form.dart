@@ -121,165 +121,128 @@ class EventFormState extends ConsumerState<EventForm> {
           key: _formKey,
           initialValue: widget.initialData?.toJson() ?? {},
           child: Padding(
-            padding: const EdgeInsets.all(15),
-            child: ListView(
-              padding: const EdgeInsets.only(bottom: 100),
-              children: [
-                FormBuilderTextField(
-                  name: 'title',
-                  validator: FormBuilderValidators.required(
-                      errorText: 'Tytuł nie może być pusty'),
-                  decoration: const InputDecoration(labelText: 'Tytuł'),
-                ),
-                const SizedBox(height: 15),
-                FormBuilderTextField(
-                  name: 'description',
-                  minLines: 1,
-                  // any number you need (It works as the rows for the textarea)
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 8,
-                  decoration: const InputDecoration(labelText: 'Opis'),
-                  validator: FormBuilderValidators.required(
-                      errorText: 'Opis nie może być pusty'),
-                ),
-                const SizedBox(height: 15),
-                FormBuilderField(
-                  name: 'date_start',
-                  initialValue: DateTime.now().toString(),
-                  builder: (field) {
-                    return DateTimePicker(
-                      type: DateTimePickerType.dateTimeSeparate,
-                      key: Key(field.value.toString()),
-                      dateMask: 'EE, dd MMM yyyy',
-                      initialValue: field.value,
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime(2500),
-                      onChanged: (dateTimeString) {
-                        var date = DateTime.tryParse(dateTimeString);
-                        if (date == null) return;
+              padding: const EdgeInsets.all(15),
+              child: ListView(
+                  padding: const EdgeInsets.only(bottom: 100),
+                  children: [
+                    FormBuilderTextField(
+                      name: 'title',
+                      validator: FormBuilderValidators.required(
+                          errorText: 'Tytuł nie może być pusty'),
+                      decoration: const InputDecoration(labelText: 'Tytuł'),
+                    ),
+                    const SizedBox(height: 15),
+                    FormBuilderTextField(
+                      name: 'description',
+                      minLines: 1,
+                      // any number you need (It works as the rows for the textarea)
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 8,
+                      decoration: const InputDecoration(labelText: 'Opis'),
+                      validator: FormBuilderValidators.required(
+                          errorText: 'Opis nie może być pusty'),
+                    ),
+                    const SizedBox(height: 15),
+                    FormBuilderField(
+                      name: 'date_start',
+                      initialValue: DateTime.now().toString(),
+                      builder: (field) {
+                        return DateTimePicker(
+                          type: DateTimePickerType.dateTimeSeparate,
+                          key: Key(field.value.toString()),
+                          dateMask: 'EE, dd MMM yyyy',
+                          initialValue: field.value,
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(2500),
+                          onChanged: (dateTimeString) {
+                            var date = DateTime.tryParse(dateTimeString);
+                            if (date == null) return;
 
-                        field.didChange(dateTimeString);
+                            field.didChange(dateTimeString);
 
-                        var endDate = DateTime.tryParse(_formKey
-                            .currentState!.fields['date_end']?.value as String);
+                            var endDate = DateTime.tryParse(_formKey
+                                .currentState!
+                                .fields['date_end']
+                                ?.value as String);
 
-                        if (endDate != null && date.isAfter(endDate)) {
-                          _formKey.currentState!.fields['date_end']
-                              ?.didChange(dateTimeString);
-                        }
+                            if (endDate != null && date.isAfter(endDate)) {
+                              _formKey.currentState!.fields['date_end']
+                                  ?.didChange(dateTimeString);
+                            }
+                          },
+                          dateLabelText: 'Data rozpoczęcia',
+                          timeLabelText: 'Godzina',
+                        );
                       },
-                      dateLabelText: 'Data rozpoczęcia',
-                      timeLabelText: 'Godzina',
-                    );
-                  },
-                ),
-                const SizedBox(height: 15),
-                FormBuilderField(
-                  name: 'date_end',
-                  initialValue:
-                      DateTime.now().add(const Duration(hours: 1)).toString(),
-                  builder: (field) {
-                    return DateTimePicker(
-                      type: DateTimePickerType.dateTimeSeparate,
-                      dateMask: 'EE, dd MMM yyyy',
-                      initialValue: field.value.toString(),
-                      key: Key(field.value.toString()),
-                      firstDate: DateTime.tryParse(_formKey
-                              .currentState?.fields['date_start']?.value) ??
-                          DateTime.now(),
-                      lastDate: DateTime(2500),
-                      onChanged: (dateTimeString) {
-                        field.didChange(dateTimeString);
+                    ),
+                    const SizedBox(height: 15),
+                    FormBuilderField(
+                      name: 'date_end',
+                      initialValue: DateTime.now()
+                          .add(const Duration(hours: 1))
+                          .toString(),
+                      builder: (field) {
+                        return DateTimePicker(
+                          type: DateTimePickerType.dateTimeSeparate,
+                          dateMask: 'EE, dd MMM yyyy',
+                          initialValue: field.value.toString(),
+                          key: Key(field.value.toString()),
+                          firstDate: DateTime.tryParse(_formKey
+                                  .currentState?.fields['date_start']?.value) ??
+                              DateTime.now(),
+                          lastDate: DateTime(2500),
+                          onChanged: (dateTimeString) {
+                            field.didChange(dateTimeString);
+                          },
+                          dateLabelText: 'Data zakończenia',
+                          timeLabelText: 'Godzina',
+                        );
                       },
-                      dateLabelText: 'Data zakończenia',
-                      timeLabelText: 'Godzina',
-                    );
-                  },
-                ),
-                const SizedBox(height: 20),
-                FormBuilderRangeSlider(
-                    name: 'age_range',
-                    decoration: const InputDecoration(
-                        labelText: 'Wymagany wiek wolontariusza'),
-                    min: minimalVolunteerAge.toDouble(),
-                    max: maximalVolunteerAge.toDouble(),
-                    divisions: maximalVolunteerAge - minimalVolunteerAge + 1,
-                    initialValue: RangeValues(minimalVolunteerAge.toDouble(),
-                        maximalVolunteerAge.toDouble()),
-                    numberFormat: NumberFormat("###"),
-                    labels: const RangeLabels(
-                      "$minimalVolunteerAge lat",
-                      "$maximalVolunteerAge lat",
-                    )),
-                FormBuilderTextField(
-                  name: 'minimal_number_of_volunteers',
-                  decoration: const InputDecoration(
-                      labelText: 'Minimalna liczba wolontariuszy'),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
-                  // Only numbers can be entered
-                  validator: FormBuilderValidators.required(
-                      errorText:
-                          "Minimalna licba wolontariuszy nie może być pusta"),
-                ),
-                const SizedBox(height: 20),
-                FormBuilderTextField(
-                  name: 'maximal_number_of_volunteers',
-                  decoration: const InputDecoration(
-                      labelText: 'Maksymalna liczba wolontariuszy'),
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
-                  validator: FormBuilderValidators.required(
-                      errorText:
-                          "Maksymalna licba wolontariuszy nie może być pusta"), // Only numbers can be entered
-                ),
-                const SizedBox(height: 20),
-                OpenMapPicker(
-                  decoration: const InputDecoration(
-                    labelText: "Lokalizacja",
-                    prefixIconConstraints: BoxConstraints(maxWidth: 0),
-                    prefixIcon: Icon(null),
-                    suffixIcon: Icon(Icons.location_pin),
-                  ),
-                  removeIcon: Icon(Icons.clear,
-                      color: Theme.of(context).colorScheme.onSurface),
-                  onChanged: (FormattedLocation? newValue) {
-                    _location = newValue;
-                  },
-                  validator: FormBuilderValidators.required(
-                      errorText: "Lokalizacja nie może być pusta"),
-                ),
-                const SizedBox(height: 20),
-                FormBuilderTextField(
-                    name: 'minimal_age',
-                    decoration: const InputDecoration(
-                        labelText: 'Minimalny wiek wolontariusza'),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    // Only numbers can be entered
-                    validator: FormBuilderValidators.max(130,
-                        errorText: 'Wiek musi być mniejszy niż 130')),
-                const SizedBox(height: 20),
-                FormBuilderTextField(
-                    name: 'maximal_age',
-                    decoration: const InputDecoration(
-                        labelText: 'Maksymalny wiek wolontariusza'),
-                    keyboardType: TextInputType.number,
-                    inputFormatters: <TextInputFormatter>[
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
-                    // Only numbers can be entered
-                    validator: FormBuilderValidators.max(130,
-                        errorText: 'Wiek musi być mniejszy niż 130')),
-              ],
-            ),
-          ),
+                    ),
+                    const SizedBox(height: 20),
+                    OpenMapPicker(
+                      decoration: const InputDecoration(
+                        labelText: "Lokalizacja",
+                        prefixIconConstraints: BoxConstraints(maxWidth: 0),
+                        prefixIcon: Icon(null),
+                        suffixIcon: Icon(Icons.location_pin),
+                      ),
+                      removeIcon: Icon(Icons.clear,
+                          color: Theme.of(context).colorScheme.onSurface),
+                      onChanged: (FormattedLocation? newValue) {
+                        _location = newValue;
+                      },
+                      validator: FormBuilderValidators.required(
+                          errorText: "Lokalizacja nie może być pusta"),
+                    ),
+                    const SizedBox(height: 20),
+                    FormBuilderRangeSlider(
+                      name: 'age_range',
+                      decoration: const InputDecoration(
+                          labelText: 'Wymagany wiek wolontariusza'),
+                      min: minimalVolunteerAge.toDouble(),
+                      max: maximalVolunteerAge.toDouble(),
+                      divisions: maximalVolunteerAge - minimalVolunteerAge + 1,
+                      initialValue: RangeValues(minimalVolunteerAge.toDouble(),
+                          maximalVolunteerAge.toDouble()),
+                      numberFormat: NumberFormat('### lat'),
+                    ),
+                    const SizedBox(height: 20),
+                    FormBuilderRangeSlider(
+                      name: 'volunteer_count_range',
+                      decoration: const InputDecoration(
+                          labelText: 'Ilość wolontariuszy'),
+                      min: minimalVolunteerCount.toDouble(),
+                      max: maximalVolunteerCount.toDouble(),
+                      divisions:
+                          maximalVolunteerCount - minimalVolunteerCount + 1,
+                      initialValue: RangeValues(
+                          minimalVolunteerCount.toDouble(),
+                          maximalVolunteerCount.toDouble()),
+                      numberFormat: NumberFormat('###'),
+                    ),
+                    const SizedBox(height: 20),
+                  ])),
         )));
   }
 }
