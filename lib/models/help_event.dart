@@ -1,6 +1,7 @@
 import 'user_profile.dart';
+import 'volunteer.dart';
 
-class HelpRequest {
+class HelpEvent {
   String? id;
   String authorId = '';
   UserProfile? author;
@@ -12,18 +13,22 @@ class HelpRequest {
   int? maximalNumberOfVolunteers;
   int? minimalAge;
   int? maximalAge;
+  int points = 0;
 
   double? latitude;
   double? longitude;
   String? placeName;
 
-  HelpRequest.empty();
+  List<Volunteer>? volunteers;
 
-  HelpRequest.fromData(dynamic data) {
+  HelpEvent.empty();
+
+  HelpEvent.fromData(dynamic data) {
     if (data != null) {
       title = data['title'] ?? '';
       description = data['description'] ?? '';
       authorId = data['author_id'] ?? '';
+      author = UserProfile.fromData(data['author']);
       if (data['author'] != null) {
         author = UserProfile.fromData(data['author']);
       }
@@ -33,14 +38,23 @@ class HelpRequest {
       placeName = data['place_name'];
       dateStart = DateTime.tryParse(data['date_start'] ?? '');
       dateEnd = DateTime.tryParse(data['date_end'] ?? '');
-      minimalAge = data['minimal_age'] is int?
-          ? data['minimal_age']
-          : int.tryParse(data['minimal_age']);
-      maximalAge = data['maximal_age'] is int?
-          ? data['maximal_age']
-          : int.tryParse(data['maximal_age']);
+      minimalAge = parseIntIfString(data['minimal_age']);
+      maximalAge = parseIntIfString(data['maximal_age']);
+      minimalNumberOfVolunteers =
+          parseIntIfString(data['minimal_number_of_volunteers']);
+      maximalNumberOfVolunteers =
+          parseIntIfString(data['maximal_number_of_volunteers']);
+      points = parseIntIfString(data['points']) ?? 0;
+      if(data['volunteers'] is List) {
+        volunteers = (data['volunteers'] as List).map((x) => Volunteer.fromData(x)).toList();
+      }
     }
   }
+
+  int? parseIntIfString(number) =>
+      (number is int?) || number is int
+          ? number
+          : int.tryParse(number);
 
   double? castToDoubleIfInteger(number) =>
       number is int ? number.toDouble() : number;
@@ -51,12 +65,14 @@ class HelpRequest {
       'author_id': authorId,
       'title': title,
       'description': description,
-      'date_start': dateStart.toString(),
-      'date_end': dateEnd.toString(),
-      'latitude': latitude.toString(),
-      'longitude': longitude.toString(),
+      'date_start': dateStart?.toString(),
+      'date_end': dateEnd?.toString(),
+      'latitude': latitude?.toString(),
+      'longitude': longitude?.toString(),
       'minimal_age': minimalAge,
       'maximal_age': maximalAge,
+      'minimal_number_of_volunteers': minimalNumberOfVolunteers,
+      'maximal_number_of_volunteers': maximalNumberOfVolunteers,
       'place_name': placeName,
     };
   }

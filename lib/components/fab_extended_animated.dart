@@ -144,7 +144,7 @@ class ScrollingFabAnimatedState extends State<ScrollingFabAnimated> {
   @override
   Widget build(BuildContext context) {
     return Card(
-        elevation: widget.elevation,
+        margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
                 Radius.circular(widget.radius ?? (widget.height! / 2)))),
@@ -162,8 +162,8 @@ class ScrollingFabAnimatedState extends State<ScrollingFabAnimated> {
               height: widget.height,
               width: widget.height! + widthPercent * size,
               child: ClipRRect(
-                  borderRadius:
-                      BorderRadius.circular((widget.radius ?? (widget.height! / 2))),
+                  borderRadius: BorderRadius.circular(
+                      (widget.radius ?? (widget.height! / 2))),
                   child: Material(
                       color: Colors.transparent,
                       child: InkWell(

@@ -1,9 +1,8 @@
-import 'package:age_calculator/age_calculator.dart';
 import 'package:avatars/avatars.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pomagacze/models/user_profile.dart';
-import 'package:pomagacze/pages/edit_profile.dart';
+import 'package:pomagacze/components/edit_profile.dart';
 import 'package:pomagacze/state/user.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/gender_serializing.dart';
@@ -32,20 +31,34 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
     var currentUser = ref.watch(userProfileProvider);
     return currentUser.when(
         data: (data) => buildSuccess(context, data),
-        error: (err, stack) => const Center(child: Text('Błąd!')),
+        error: (err, stack) => Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Coś poszło nie tak...'),
+                const SizedBox(height: 10),
+                ElevatedButton(
+                    onPressed: _signOut, child: const Text('Wyloguj się'))
+              ],
+            ),
         loading: () => const Center(child: CircularProgressIndicator()));
   }
 
   Widget buildSuccess(BuildContext context, UserProfile userProfile) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
-      child: Column(
+    return RefreshIndicator(
+      onRefresh: () => ref.refresh(userProfileProvider.future),
+      child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
         children: [
           Row(
             children: [
               Avatar(
+                  useCache: true,
                   shape: AvatarShape.circle(25),
                   name: userProfile.name,
+                  sources: [
+                    NetworkSource(
+                        supabase.auth.currentUser?.userMetadata['avatar_url'])
+                  ],
                   placeholderColors: [
                     Theme.of(context).colorScheme.primary,
                   ]),
@@ -56,7 +69,7 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                   Text(userProfile.name ?? '',
                       style: Theme.of(context).textTheme.headline6),
                   Text(
-                      '${userProfile.gender?.display()} • ${AgeCalculator.age(userProfile.birthDate ?? DateTime.now()).years} l.')
+                      '${userProfile.gender?.display()} • ${userProfile.age} l.')
                 ],
               ),
               Expanded(child: Container()),
@@ -66,7 +79,17 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
                         context: context,
                         isScrollControlled: true,
                         builder: (context) {
-                          return Wrap(children: const [EditProfilePage()]);
+                          return Wrap(children: [
+                            Padding(
+                              padding: MediaQuery.of(context).viewInsets,
+                              child: EditProfile(
+                                title: 'Edytuj profil',
+                                onSubmit: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            )
+                          ]);
                         });
                   },
                   icon: const Icon(Icons.edit))
@@ -138,36 +161,38 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
               ),
             ],
           ),
-          const SizedBox(height: 70),
-          ListView(
-            shrinkWrap: true,
-            children: [
-              const ListTile(
-                title: Text('Moje wydarzenia'),
-                trailing: Icon(Icons.arrow_forward),
+          const SizedBox(height: 40),
+          Divider(color: Theme.of(context).dividerColor.withAlpha(80)),
+          const ListTile(
+            title: Text('Wydarzenia, w których uczestniczę'),
+            trailing: Icon(Icons.arrow_forward),
+          ),
+          const ListTile(
+            title: Text('Moje wydarzenia'),
+            trailing: Icon(Icons.arrow_forward),
+          ),
+          Divider(color: Theme.of(context).dividerColor.withAlpha(80)),
+          const ListTile(
+            title: Text('Opcje'),
+            trailing: Icon(Icons.arrow_forward),
+          ),
+          const ListTile(
+            title: Text('O aplikacji'),
+            trailing: Icon(Icons.arrow_forward),
+          ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: Material(
+              child: InkWell(
+                onTap: _signOut,
+                child: ListTile(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50)),
+                  title: const Text('Wyloguj się'),
+                  trailing: const Icon(Icons.logout),
+                ),
               ),
-              const ListTile(
-                title: Text('Opcje'),
-                trailing: Icon(Icons.arrow_forward),
-              ),
-              const ListTile(
-                title: Text('O aplikacji'),
-                trailing: Icon(Icons.arrow_forward),
-              ),
-              ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Material(
-                    child: InkWell(
-                      onTap: _signOut,
-                      child: ListTile(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                        title: const Text('Wyloguj się'),
-                        trailing: const Icon(Icons.logout),
-                      ),
-                    ),
-                  ),
-              )
-            ],
+            ),
           )
         ],
       ),

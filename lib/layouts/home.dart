@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pomagacze/components/auth_required_state.dart';
 import 'package:pomagacze/components/indexed_transition_switcher.dart';
 import 'package:pomagacze/pages/community.dart';
 import 'package:pomagacze/pages/feed.dart';
@@ -18,7 +19,7 @@ const destinations = [
   NavigationDestination(icon: Icon(Icons.account_circle), label: 'Profil'),
 ];
 
-class _HomeLayoutState extends State<HomeLayout> {
+class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
   int _index = 0;
   bool _reversed = false;
 
@@ -31,7 +32,7 @@ class _HomeLayoutState extends State<HomeLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(destinations[_index].label)),
+      appBar: AppBar(title: Text(destinations[_index].label), scrolledUnderElevation: 0),
       body: _buildBody(),
       bottomNavigationBar: NavigationBar(
         destinations: destinations,
