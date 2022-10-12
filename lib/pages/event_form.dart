@@ -201,6 +201,11 @@ class EventFormState extends ConsumerState<EventForm> {
                     ),
                     const SizedBox(height: 20),
                     OpenMapPicker(
+                      initialValue: _location,
+                      options: OpenMapOptions(
+                          center: LatLng(
+                              widget.initialData?.latitude ?? wroclawLat,
+                              widget.initialData?.longitude ?? wroclawLng)),
                       decoration: const InputDecoration(
                         labelText: "Lokalizacja",
                         prefixIconConstraints: BoxConstraints(maxWidth: 0),
