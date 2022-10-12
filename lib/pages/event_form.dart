@@ -77,8 +77,9 @@ class EventFormState extends ConsumerState<EventForm> {
       'address_full': _location?.displayName,
       'latitude': _location?.lat,
       'longitude': _location?.lon,
-      'minimal_age': ageRange?.start.floor(),
-      'maximal_age': ageRange?.end.floor(),
+      'minimal_age': ageRange?.start.round(),
+      'maximal_age': ageRange?.end.round(),
+      'points': (_formKey.currentState!.value['points'] as double).round()
     };
 
     var data = HelpEvent.fromData(values);
@@ -219,6 +220,15 @@ class EventFormState extends ConsumerState<EventForm> {
                       },
                       validator: FormBuilderValidators.required(
                           errorText: "Lokalizacja nie może być pusta"),
+                    ),
+                    const SizedBox(height: 20),
+                    FormBuilderSlider(
+                      name: 'points',
+                      initialValue: minimalPoints.toDouble(),
+                      min: minimalPoints.toDouble(),
+                      max: maximalPoints.toDouble(),
+                      numberFormat: NumberFormat('###'),
+                      decoration: const InputDecoration(labelText: 'Punkty'),
                     ),
                     const SizedBox(height: 20),
                     FormBuilderRangeSlider(

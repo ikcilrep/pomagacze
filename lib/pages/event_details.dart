@@ -129,6 +129,9 @@ class EventDetailsState extends ConsumerState<EventDetails> {
           ListTile(
               title: const Text("Opis"), subtitle: Text(event.description)),
           ListTile(
+            title: const Text("Punkty"), subtitle: Text(event.points.toString())
+          ),
+          ListTile(
               title: const Text("Wymagany wiek wolontariusza"),
               subtitle: Text(ageRangeString)),
           ListTile(

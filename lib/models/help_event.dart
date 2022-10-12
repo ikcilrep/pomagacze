@@ -79,6 +79,7 @@ class HelpEvent {
       'maximal_number_of_volunteers': maximalNumberOfVolunteers,
       'address_short': addressShort,
       'address_full': addressFull,
+      'points': points
     };
   }
 }

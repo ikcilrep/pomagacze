@@ -11,5 +11,8 @@ const maximalVolunteerAge = 130;
 const minimalVolunteerCount = 1;
 const maximalVolunteerCount = 100;
 
+const minimalPoints = 5;
+const maximalPoints = 100;
+
 const wroclawLat = 51.107883;
 const wroclawLng = 17.038538;
