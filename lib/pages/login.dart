@@ -40,24 +40,32 @@ class LoginPageState extends AuthState<LoginPage> {
           title: const Center(
               child: Text('Pomagacze',
                   style: TextStyle(fontWeight: FontWeight.bold)))),
-      body: Padding(
-          padding: const EdgeInsets.only(bottom: 50),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Center(
-                  child: GoogleAuthButton(
-                      style: AuthButtonStyle(
-                        textStyle: Theme.of(context).typography.englishLike.bodyText2,
-                        height: 50,
-                      ),
-                      isLoading: _isLoading,
-                      onPressed: _signIn,
-                      themeMode: ThemeMode.light,
-                      text: 'Zaloguj się z Google'),
-                )
-              ])),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/shakeIcon.png"),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Padding(
+            padding: const EdgeInsets.only(bottom: 50),
+            child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Center(
+                    child: GoogleAuthButton(
+                        style: AuthButtonStyle(
+                          textStyle: Theme.of(context).typography.englishLike.bodyText2,
+                          height: 50,
+                        ),
+                        isLoading: _isLoading,
+                        onPressed: _signIn,
+                        themeMode: ThemeMode.light,
+                        text: 'Zaloguj się z Google'),
+                  )
+                ])),
+      ),
     );
   }
 }
