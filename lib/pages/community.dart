@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:pomagacze/models/user_profile.dart';
+import 'package:pomagacze/state/friendships.dart';
 import 'package:pomagacze/state/user.dart';
 
 class CommunityPage extends ConsumerStatefulWidget {
@@ -34,6 +35,8 @@ class CommunityPageState extends ConsumerState<CommunityPage> {
   @override
   Widget build(BuildContext context) {
     final userProfiles = ref.watch(userProfilesProvider);
+    final friendsAndUserProfiles = ref.watch(friendsAndUserProfilesProvider);
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -52,8 +55,8 @@ class CommunityPageState extends ConsumerState<CommunityPage> {
               indicatorColor: Theme.of(context).colorScheme.primary,
             )),
         body: TabBarView(children: [
-          userProfiles.hasValue
-              ? _buildUserLeaderboard(userProfiles.value!)
+          userProfiles.hasValue && friendsAndUserProfiles.hasValue
+              ? _buildUserLeaderboard(userProfiles.value!, friendsAndUserProfiles.value!)
               : Container(),
           Container()
         ]),
@@ -61,17 +64,19 @@ class CommunityPageState extends ConsumerState<CommunityPage> {
     );
   }
 
-  ListView _buildUserLeaderboard(List<UserProfile> userProfiles) {
+  ListView _buildUserLeaderboard(List<UserProfile> userProfiles, List<UserProfile> friendsAndUserProfiles) {
     userProfiles.sort((a, b) => b.xp.compareTo(a.xp));
+    friendsAndUserProfiles.sort((a, b) => b.xp.compareTo(a.xp));
+    final usersToShow = _currentSelection == _LeaderboardType.world ? userProfiles : friendsAndUserProfiles;
     return ListView.builder(
       padding: const EdgeInsets.only(top: 10),
-        itemCount: userProfiles.length + 1,
+        itemCount: usersToShow.length + 1,
         itemBuilder: (_, index) {
           if (index == 0) {
             return _buildLeaderboardTypeChooser();
           }
 
-          return _buildUserTile(index, userProfiles[index - 1]);
+          return _buildUserTile(index, usersToShow[index - 1]);
         });
   }
 
