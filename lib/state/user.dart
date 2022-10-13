@@ -16,11 +16,9 @@ final userProfileProvider = FutureProvider<UserProfile>((ref) async {
   }
 });
 
-final mostExperiencedUsersProvider =
-    FutureProvider.family<List<UserProfile>, int>(
-        (ref, numberOfUsersToGet) async {
+final userProfilesProvider = FutureProvider<List<UserProfile>>((ref) async {
   try {
-    return await UsersDB.getMostExperienced(numberOfUsersToGet);
+    return await UsersDB.getAll();
   } catch (err) {
     if (err is NotFoundError) {
       return [];

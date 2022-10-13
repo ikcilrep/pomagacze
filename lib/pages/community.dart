@@ -15,7 +15,7 @@ class CommunityPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mostExperiencedUsers = ref.watch(mostExperiencedUsersProvider(10));
+    final userProfiles = ref.watch(userProfilesProvider);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -34,15 +34,20 @@ class CommunityPage extends ConsumerWidget {
               indicatorColor: Theme.of(context).colorScheme.primary,
             )),
         body: TabBarView(children: [
-          mostExperiencedUsers.hasValue
-              ? ListView.builder(
-                  itemCount: mostExperiencedUsers.value!.length,
-                  itemBuilder: (_, index) =>
-                      _buildUserTile(index + 1, mostExperiencedUsers.value![index]))
+          userProfiles.hasValue
+              ? _buildUserLeaderboard(userProfiles.value!)
               : Container(),
           Container()
         ]),
       ),
     );
+  }
+
+  ListView _buildUserLeaderboard(List<UserProfile> userProfiles) {
+    userProfiles.sort((a, b) => b.xp.compareTo(a.xp));
+    return ListView.builder(
+        itemCount: userProfiles.length,
+        itemBuilder: (_, index) =>
+            _buildUserTile(index + 1, userProfiles[index]));
   }
 }
