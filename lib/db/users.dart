@@ -33,4 +33,19 @@ class UsersDB {
     final response = await supabase.from('profiles').upsert(updates).execute();
     response.throwOnError();
   }
+
+  static Future<List<UserProfile>> getMostExperienced(int numberOfUsersToGet) async {
+    final response = await supabase
+        .from('profiles')
+        .select()
+        .order('xp', ascending: false)
+        .limit(numberOfUsersToGet)
+        .execute();
+
+    response.throwOnError();
+
+    return (response.data as List<dynamic>)
+        .map((e) => UserProfile.fromData(e))
+        .toList();
+  }
 }

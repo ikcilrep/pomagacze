@@ -6,14 +6,25 @@ import 'package:pomagacze/utils/constants.dart';
 
 final userProfileProvider = FutureProvider<UserProfile>((ref) async {
   try {
-    return await UsersDB.getById(supabase.auth
-        .user()
-        ?.id ?? '');
-  } catch(err) {
-    if(err is NotFoundError) {
+    return await UsersDB.getById(supabase.auth.user()?.id ?? '');
+  } catch (err) {
+    if (err is NotFoundError) {
       return UserProfile.empty();
     } else {
       rethrow;
     }
+  }
+});
+
+final mostExperiencedUsersProvider =
+    FutureProvider.family<List<UserProfile>, int>(
+        (ref, numberOfUsersToGet) async {
+  try {
+    return await UsersDB.getMostExperienced(numberOfUsersToGet);
+  } catch (err) {
+    if (err is NotFoundError) {
+      return [];
+    }
+    rethrow;
   }
 });
