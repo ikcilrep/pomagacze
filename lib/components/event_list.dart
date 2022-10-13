@@ -23,7 +23,7 @@ class EventListState extends ConsumerState<EventList> {
     return RefreshIndicator(
       onRefresh: () => ref.refresh(widget.provider.future),
       child: future.when(
-          data: (data) => data.length > 0
+          data: (data) => data.isNotEmpty
               ? ListView.builder(
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.only(bottom: 100),
