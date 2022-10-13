@@ -1,3 +1,5 @@
+import 'package:pomagacze/utils/constants.dart';
+
 import 'user_profile.dart';
 import 'volunteer.dart';
 
@@ -19,6 +21,9 @@ class HelpEvent {
   double? longitude;
   String? addressShort;
   String? addressFull;
+
+  bool get isMinimalAgeSpecified => minimalAge != null && minimalAge != minimalVolunteerAge;
+  bool get isMaximalAgeSpecified => maximalAge != null && maximalAge != maximalVolunteerAge;
 
   List<Volunteer> volunteers = [];
 

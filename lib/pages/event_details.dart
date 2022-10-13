@@ -194,15 +194,15 @@ class EventDetailsState extends ConsumerState<EventDetails> {
   }
 
   String get ageRangeString {
-    if (event!.minimalAge == null && event!.maximalAge == null) {
+    if (!event!.isMinimalAgeSpecified && !event!.isMaximalAgeSpecified) {
       return "Brak";
     }
 
-    if (event!.minimalAge == null) {
+    if (event!.isMaximalAgeSpecified) {
       return 'Maksymalnie ${event!.maximalAge} lat';
     }
 
-    if (event!.maximalAge == null) {
+    if (event!.isMinimalAgeSpecified) {
       return 'Przynajmniej ${event!.minimalAge} lat';
     }
 
