@@ -17,7 +17,7 @@ class EventCard extends StatefulWidget {
 }
 
 class _EventCardState extends State<EventCard> {
-  var _dateFormat = DateFormat('dd MMM');
+  final _dateFormat = DateFormat('dd MMM');
   final _dateFormatHour = DateFormat('dd MMM HH:mm');
 
   @override
@@ -121,6 +121,7 @@ class _EventCardState extends State<EventCard> {
         true) {
       return 'Bierzesz udział w tym wydarzeniu';
     }
+    return null;
   }
 
   Widget _buildInfoMessage() {
