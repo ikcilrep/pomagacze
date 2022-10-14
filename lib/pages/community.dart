@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pomagacze/pages/activities.dart';
 import 'package:pomagacze/pages/leaderboard.dart';
 
 class CommunityPage extends ConsumerStatefulWidget {
@@ -27,8 +28,8 @@ class CommunityPageState extends ConsumerState<CommunityPage> {
           labelColor: Theme.of(context).colorScheme.onSurface,
           indicatorColor: Theme.of(context).colorScheme.primary,
         ),
-        Expanded(
-            child: TabBarView(children: [const LeaderboardPage(), Container()]))
+        const Expanded(
+            child: TabBarView(children: [LeaderboardPage(), ActivitiesPage()]))
       ]),
     );
   }

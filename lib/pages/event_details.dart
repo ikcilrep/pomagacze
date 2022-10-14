@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:intl/intl.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
@@ -13,6 +12,7 @@ import 'package:pomagacze/state/events.dart';
 import 'package:pomagacze/state/user.dart';
 import 'package:pomagacze/state/volunteers.dart';
 import 'package:pomagacze/utils/constants.dart';
+import 'package:pomagacze/utils/date_extensions.dart';
 
 class EventDetails extends ConsumerStatefulWidget {
   final HelpEvent helpEvent;
@@ -79,7 +79,6 @@ class EventDetailsState extends ConsumerState<EventDetails> {
   }
 
   Widget buildSuccess(BuildContext context, HelpEvent event) {
-    final DateFormat dateFormat = DateFormat('dd.MM.yyyy - kk:mm');
 
     return SingleChildScrollView(
       child: Column(
@@ -121,11 +120,11 @@ class EventDetailsState extends ConsumerState<EventDetails> {
           ListTile(
               title: const Text("Czas rozpoczęcia"),
               subtitle:
-                  Text(dateFormat.format(event.dateStart ?? DateTime.now()))),
+                  Text(event.dateStart!.displayable())),
           ListTile(
               title: const Text("Czas zakończenia"),
               subtitle:
-                  Text(dateFormat.format(event.dateEnd ?? DateTime.now()))),
+                  Text(event.dateEnd!.displayable())),
           ListTile(
               title: const Text("Opis"), subtitle: Text(event.description)),
           ListTile(

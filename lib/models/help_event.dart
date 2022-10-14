@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:pomagacze/utils/constants.dart';
 
 import 'user_profile.dart';
@@ -11,6 +12,8 @@ class HelpEvent {
   String description = '';
   DateTime? dateStart;
   DateTime? dateEnd;
+
+
   int? minimalNumberOfVolunteers;
   int? maximalNumberOfVolunteers;
   int? minimalAge;
@@ -22,10 +25,18 @@ class HelpEvent {
   String? addressShort;
   String? addressFull;
 
+  List<Volunteer> volunteers = [];
+
   bool get isMinimalAgeSpecified => minimalAge != null && minimalAge != minimalVolunteerAge;
   bool get isMaximalAgeSpecified => maximalAge != null && maximalAge != maximalVolunteerAge;
 
-  List<Volunteer> volunteers = [];
+  String? get formattedDateStart => dateStart == null ? null : _formatDate(dateStart!);
+  String? get formattedDateEnd => dateStart == null ? null : _formatDate(dateEnd!);
+
+  String _formatDate(DateTime date) {
+    return DateFormat('dd.MM.yyyy - kk:mm').format(date);
+  }
+
 
   HelpEvent.empty();
 
