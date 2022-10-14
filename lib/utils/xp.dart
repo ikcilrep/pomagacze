@@ -9,6 +9,6 @@ int levelFromXP(int xp) {
 }
 
 String formatXP(int xp) {
-  return NumberFormat.compact(locale: 'en')
+  return xp < 10000 ? xp.toString() : NumberFormat.compact(locale: 'en')
       .format(xp);
 }
