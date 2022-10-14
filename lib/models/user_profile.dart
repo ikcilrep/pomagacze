@@ -4,6 +4,7 @@ import 'package:open_location_picker/open_location_picker.dart';
 import 'package:pomagacze/utils/gender_serializing.dart';
 
 class UserProfile {
+  String id = '';
   String? name;
   String? avatarURL;
   DateTime? birthDate;
@@ -39,7 +40,9 @@ class UserProfile {
 
   UserProfile.fromData(dynamic data) {
     if (data != null) {
+      id = data['id'] ?? '';
       name = data['name'];
+      avatarURL = data['avatar_url'];
       gender = GenderSerializing.deserialize(data['gender']);
       birthDate = DateTime.tryParse(data['birth_date'] ?? '');
       latitude = data['latitude'];
@@ -51,6 +54,7 @@ class UserProfile {
 
   Map<String, dynamic> toJson() => {
         'name': name,
+        'avatar_url': avatarURL,
         'birth_date': birthDate?.toIso8601String().toString(),
         'gender': gender?.serialize().toString(),
         'latitude': latitude,

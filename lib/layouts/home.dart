@@ -3,7 +3,7 @@ import 'package:pomagacze/components/auth_required_state.dart';
 import 'package:pomagacze/components/indexed_transition_switcher.dart';
 import 'package:pomagacze/pages/community.dart';
 import 'package:pomagacze/pages/feed.dart';
-import 'package:pomagacze/pages/profile.dart';
+import 'package:pomagacze/pages/my_profile.dart';
 import 'package:animations/animations.dart';
 
 class HomeLayout extends StatefulWidget {
@@ -26,7 +26,7 @@ class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
   final List<Widget> _pages = [
     const FeedPage(key: PageStorageKey('feed')),
     const CommunityPage(key: PageStorageKey('community')),
-    const ProfilePage(key: PageStorageKey('profile'))
+    const MyProfilePage(key: PageStorageKey('profile'))
   ];
 
   @override

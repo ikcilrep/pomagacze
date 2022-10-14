@@ -17,12 +17,5 @@ final userProfileProvider = FutureProvider<UserProfile>((ref) async {
 });
 
 final userProfilesProvider = FutureProvider<List<UserProfile>>((ref) async {
-  try {
-    return await UsersDB.getAll();
-  } catch (err) {
-    if (err is NotFoundError) {
-      return [];
-    }
-    rethrow;
-  }
+  return await UsersDB.getAll();
 });

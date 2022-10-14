@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 
-ColorScheme defaultLightScheme = ColorScheme.fromSwatch(
-    primarySwatch: Colors.teal);
-ColorScheme defaultDarkScheme = ColorScheme.fromSwatch(
-    primarySwatch: Colors.teal, brightness: Brightness.dark);
-
 /* PALETTE 1
 252, 222, 190
 0, 150, 136
@@ -22,8 +17,8 @@ ColorScheme defaultDarkScheme = ColorScheme.fromSwatch(
 
 223, 247, 241 - light gray azure
 */
-/*
-ColorScheme customLightScheme = const ColorScheme(brightness: Brightness.light,
+
+/*ColorScheme customLightScheme = const ColorScheme(brightness: Brightness.light,
     primary: Color.fromRGBO(46, 178, 145, 1),
     onPrimary: Color.fromRGBO(254, 245, 236, 1),
     secondary: Color.fromRGBO(16, 16, 73, 1),
@@ -32,9 +27,16 @@ ColorScheme customLightScheme = const ColorScheme(brightness: Brightness.light,
     onError: Color.fromRGBO(54, 34, 44, 1),
     background: Color.fromRGBO(148, 138, 163 , 1),
     onBackground: Color.fromRGBO(0, 150, 136, 1),
-    surface: Color.fromRGBO(223, 247, 241, 1),
-    onSurface: Color.fromRGBO(5, 5, 23, 1));
-*/
+    surface: Color.fromRGBO(249, 255, 253, 1.0),
+    onSurface: Color.fromRGBO(5, 5, 23, 1));*/
+
+ColorScheme defaultLightScheme = ColorScheme.fromSwatch(
+    primarySwatch: Colors.teal,
+    accentColor: Colors.teal[400]);
+ColorScheme defaultDarkScheme = ColorScheme.fromSwatch(
+    primarySwatch: Colors.teal, brightness: Brightness.dark);
+
+
 ThemeData getTheme({bool dark = false}) {
   late ThemeData data;
   if (dark) {
