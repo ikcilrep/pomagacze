@@ -11,6 +11,6 @@ extension DateTimeExt on DateTime {
   }
 
   String displayable() {
-    return DateFormat('dd.MM.yyyy - kk:mm').format(this);
+    return DateFormat('dd MMM yyyy HH:mm').format(this);
   }
 }

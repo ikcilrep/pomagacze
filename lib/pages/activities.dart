@@ -20,9 +20,8 @@ class ActivitiesPage extends ConsumerWidget {
                 final activity = friendsAndUserActivities[index];
                 return ListTile(
                   title: Text(
-                      "${activity.user.name} dołączył do ${activity.event.title}"),
-                  subtitle: Text(
-                      "Data dołączenia ${activity.createdAt.displayable()}"),
+                      '${activity.user.name} dołączył do "${activity.event.title}"'),
+                  subtitle: Text(activity.createdAt.displayable()),
                 );
               });
         },

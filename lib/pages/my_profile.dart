@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pomagacze/components/error_with_action.dart';
 import 'package:pomagacze/components/profile_action.dart';
 import 'package:pomagacze/components/user_profile_details.dart';
 import 'package:pomagacze/models/user_profile.dart';
@@ -29,15 +30,7 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
     var currentUser = ref.watch(userProfileProvider);
     return currentUser.when(
         data: (data) => buildSuccess(data),
-        error: (err, stack) => Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('Coś poszło nie tak...'),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                    onPressed: _signOut, child: const Text('Wyloguj się'))
-              ],
-            ),
+        error: (err, stack) => ErrorWithAction(action: _signOut, actionText: 'Wyloguj się'),
         loading: () => const Center(child: CircularProgressIndicator()));
   }
 
@@ -80,6 +73,13 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
                 Navigator.of(context).pushNamed('/my-events');
               },
               title: const Text('Moje wydarzenia'),
+              icon: const Icon(Icons.arrow_forward),
+            ),
+            ProfileAction(
+              onTap: () {
+                Navigator.of(context).pushNamed('/friends');
+              },
+              title: const Text('Znajomi'),
               icon: const Icon(Icons.arrow_forward),
             ),
             Divider(color: Theme.of(context).dividerColor.withAlpha(80)),

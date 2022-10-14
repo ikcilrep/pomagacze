@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:pomagacze/components/user_avatar.dart';
 import 'package:pomagacze/models/user_profile.dart';
@@ -39,6 +38,7 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
       child: RefreshIndicator(
         onRefresh: () async {
           await Future.wait([
+            ref.refresh(friendsIdsProvider.future),
             ref.refresh(userProfilesProvider.future),
             ref.refresh(friendsAndUserProfilesProvider.future),
           ].toList());
@@ -128,7 +128,7 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
                   ],
                 ),
               ),
-              Text(NumberFormat.compact(locale: 'en').format(userProfile.xp),
+              Text(formatXP(userProfile.xp),
                   style: Theme.of(context).textTheme.bodyLarge),
               const SizedBox(width: 2),
               Icon(Icons.local_fire_department,

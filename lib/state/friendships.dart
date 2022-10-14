@@ -12,19 +12,23 @@ final friendsIdsProvider = FutureProvider<List<String>>((ref) async {
       .toList();
 });
 
+final friendsProvider = FutureProvider<List<UserProfile>>((ref) async {
+  final friendsIds = await ref.watch(friendsIdsProvider.future);
+  return await _getAllByIds(friendsIds);
+});
+
 final friendsAndUserProfilesProvider =
     FutureProvider<List<UserProfile>>((ref) async {
   final userId = supabase.auth.user()?.id ?? '';
   final friendsIds = await ref.watch(friendsIdsProvider.future);
-  return await _getAllByIds(friendsIds, userId);
+  return await _getAllByIds([...friendsIds, userId]);
 });
 
 Future<List<UserProfile>> _getAllByIds(
-    List<String> friendsIds, String userId) async {
+    List<String> ids) async {
   final result = <UserProfile>[];
-  for (final friendId in friendsIds) {
-    result.add(await UsersDB.getById(friendId));
+  for (final id in ids) {
+    result.add(await UsersDB.getById(id));
   }
-  result.add(await UsersDB.getById(userId));
   return result;
 }

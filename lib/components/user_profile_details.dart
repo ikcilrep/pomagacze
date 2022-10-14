@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/utils/gender_serializing.dart';
 import 'package:pomagacze/utils/xp.dart';
@@ -11,7 +10,12 @@ class UserProfileDetails extends StatelessWidget {
   final Widget? iconButton;
   final List<Widget> children;
 
-  const UserProfileDetails({Key? key, required this.userProfile, this.iconButton, this.children = const []}) : super(key: key);
+  const UserProfileDetails(
+      {Key? key,
+      required this.userProfile,
+      this.iconButton,
+      this.children = const []})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +31,11 @@ class UserProfileDetails extends StatelessWidget {
               children: [
                 Text(userProfile.name ?? '',
                     style: Theme.of(context).textTheme.headline6),
-                Text(
-                    '${userProfile.gender?.display()} • ${userProfile.age} l.')
+                Text('${userProfile.gender?.display()} • ${userProfile.age} l.')
               ],
             ),
             Expanded(child: Container()),
-            if(iconButton != null) iconButton!
+            if (iconButton != null) iconButton!
           ],
         ),
         const SizedBox(height: 50),
@@ -44,7 +47,7 @@ class UserProfileDetails extends StatelessWidget {
   }
 
   Widget _buildSummary(BuildContext context) {
-    return         Row(
+    return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Column(
@@ -58,7 +61,7 @@ class UserProfileDetails extends StatelessWidget {
                     value: 0.7,
                     color: Theme.of(context).colorScheme.error,
                     backgroundColor:
-                    Theme.of(context).colorScheme.error.withAlpha(20),
+                        Theme.of(context).colorScheme.error.withAlpha(20),
                   ),
                   Text(levelFromXP(userProfile.xp).toString(),
                       style: Theme.of(context).textTheme.titleMedium)
@@ -78,16 +81,13 @@ class UserProfileDetails extends StatelessWidget {
                   Icon(Icons.local_fire_department,
                       color: Theme.of(context).colorScheme.error),
                   const SizedBox(width: 5),
-                  Text(
-                      NumberFormat.compact(locale: 'en')
-                          .format(userProfile.xp),
+                  Text(formatXP(userProfile.xp),
                       style: Theme.of(context).textTheme.titleLarge),
                 ],
               ),
             ),
             const SizedBox(height: 8),
-            Text('PUNKTY POMOCY',
-                style: Theme.of(context).textTheme.overline)
+            Text('PUNKTY POMOCY', style: Theme.of(context).textTheme.overline)
           ],
         ),
         Column(
@@ -99,14 +99,12 @@ class UserProfileDetails extends StatelessWidget {
                   Icon(Icons.local_fire_department,
                       color: Theme.of(context).colorScheme.error),
                   const SizedBox(width: 5),
-                  Text('650',
-                      style: Theme.of(context).textTheme.titleLarge),
+                  Text('650', style: Theme.of(context).textTheme.titleLarge),
                 ],
               ),
             ),
             const SizedBox(height: 8),
-            Text('W TYM MIESIĄCU',
-                style: Theme.of(context).textTheme.overline)
+            Text('W TYM MIESIĄCU', style: Theme.of(context).textTheme.overline)
           ],
         ),
       ],
