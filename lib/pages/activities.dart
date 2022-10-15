@@ -14,6 +14,7 @@ class ActivitiesPage extends ConsumerWidget {
         ref.watch(friendsAndUserActivitiesProvider);
     return friendsAndUserActivities.when(
         data: (friendsAndUserActivities) {
+          friendsAndUserActivities.sort((a, b) => b.createdAt.compareTo(a.createdAt));
           return ListView.builder(
               itemCount: friendsAndUserActivities.length,
               itemBuilder: (context, index) {
