@@ -22,24 +22,28 @@ class ManageFriendsPageState extends ConsumerState<ManageFriendsPage> {
     final incomingRequests = ref.watch(incomingFriendRequestsProvider);
 
     return Scaffold(
-      floatingActionButton: ScrollingFabAnimated(
-        scrollController: _scrollController,
-        text: Text('Szukaj znajomych',
-            style: Theme.of(context)
-                .textTheme
-                .subtitle2
-                ?.copyWith(color: Theme.of(context).colorScheme.onPrimary)),
-        icon:
-            Icon(Icons.search, color: Theme.of(context).colorScheme.onPrimary),
-        onPress: () {
-          Navigator.of(context).pushNamed('/search-users');
-        },
-        radius: 18,
-        width: 185,
-        elevation: 10,
-        animateIcon: false,
-        color: Theme.of(context).colorScheme.primary,
-        duration: const Duration(milliseconds: 150),
+      floatingActionButton: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        child: ScrollingFabAnimated(
+          scrollController: _scrollController,
+          text: Text('Szukaj znajomych',
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle2
+                  ?.copyWith(color: Theme.of(context).colorScheme.onPrimary)),
+          icon:
+              Icon(Icons.search, color: Theme.of(context).colorScheme.onPrimary),
+          onPress: () {
+            Navigator.of(context).pushNamed('/search-users');
+          },
+          radius: 18,
+          width: 185,
+          elevation: 10,
+          animateIcon: false,
+          color: Theme.of(context).colorScheme.primary,
+          duration: const Duration(milliseconds: 150),
+        ),
       ),
       body: friends.isLoading ||
               outgoingRequests.isLoading ||

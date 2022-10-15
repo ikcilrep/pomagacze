@@ -22,7 +22,7 @@ class UserAvatar extends StatelessWidget {
               NetworkSource(userProfile.avatarURL!)
           ],
           placeholderColors: [
-            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.error,
           ]),
     );
   }

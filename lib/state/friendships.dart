@@ -22,7 +22,9 @@ final friendsAndUserProfilesProvider =
     FutureProvider<List<UserProfile>>((ref) async {
   final userId = supabase.auth.user()?.id ?? '';
   final friendsIds = await ref.watch(friendsIdsProvider.future);
-  return await _getAllByIds([...friendsIds, userId]);
+  var res = await _getAllByIds([...friendsIds, userId]);
+  res.sort((a, b) => b.xp - a.xp);
+  return res;
 });
 
 Future<List<UserProfile>> _getAllByIds(

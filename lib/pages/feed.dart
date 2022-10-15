@@ -39,7 +39,7 @@ class FeedPageState extends ConsumerState<FeedPage> {
         bottom: 15,
         right: 10,
         child: Card(
-          elevation: 3,
+          elevation: 4,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
           child: OpenContainer<bool>(

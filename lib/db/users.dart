@@ -54,7 +54,7 @@ class UsersDB {
   }
 
   static Future<List<UserProfile>> getAll() async {
-    final response = await supabase.from('profiles').select().execute();
+    final response = await supabase.from('profiles').select().order('xp').execute();
     response.throwOnError();
     return (response.data as List<dynamic>)
         .map((e) => UserProfile.fromData(e))
