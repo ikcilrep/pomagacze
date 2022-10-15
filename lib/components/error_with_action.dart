@@ -19,7 +19,7 @@ class ErrorWithAction extends StatelessWidget {
       children: [
         Text(errorText),
         const SizedBox(height: 10),
-        ElevatedButton(onPressed: action, child: const Text('Wyloguj się'))
+        ElevatedButton(onPressed: action, child: Text(actionText))
       ],
     );
   }

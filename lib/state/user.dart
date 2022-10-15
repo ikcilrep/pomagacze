@@ -19,3 +19,8 @@ final userProfileProvider = FutureProvider<UserProfile>((ref) async {
 final userProfilesProvider = FutureProvider<List<UserProfile>>((ref) async {
   return await UsersDB.getAll();
 });
+
+final searchUsersProvider = FutureProvider.family<List<UserProfile>, String>((ref, query) async {
+  var currentUser = await ref.watch(userProfileProvider.future);
+  return await UsersDB.search(query, excludeId: currentUser.id);
+});

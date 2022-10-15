@@ -75,13 +75,6 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
               title: const Text('Moje wydarzenia'),
               icon: const Icon(Icons.arrow_forward),
             ),
-            ProfileAction(
-              onTap: () {
-                Navigator.of(context).pushNamed('/friends');
-              },
-              title: const Text('Znajomi'),
-              icon: const Icon(Icons.arrow_forward),
-            ),
             Divider(color: Theme.of(context).dividerColor.withAlpha(80)),
             const ListTile(
               title: Text('Opcje'),

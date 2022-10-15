@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pomagacze/components/auth_required_state.dart';
 import 'package:pomagacze/components/indexed_transition_switcher.dart';
-import 'package:pomagacze/pages/community.dart';
+import 'package:pomagacze/pages/friends.dart';
 import 'package:pomagacze/pages/feed.dart';
+import 'package:pomagacze/pages/leaderboard.dart';
 import 'package:pomagacze/pages/my_profile.dart';
 import 'package:animations/animations.dart';
 
@@ -15,7 +16,8 @@ class HomeLayout extends StatefulWidget {
 
 const destinations = [
   NavigationDestination(icon: Icon(Icons.handshake), label: 'Pomagaj'),
-  NavigationDestination(icon: Icon(Icons.people), label: 'Społeczność'),
+  NavigationDestination(icon: Icon(Icons.people), label: 'Znajomi'),
+  NavigationDestination(icon: Icon(Icons.leaderboard), label: 'Rankingi'),
   NavigationDestination(icon: Icon(Icons.account_circle), label: 'Profil'),
 ];
 
@@ -25,7 +27,8 @@ class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
 
   final List<Widget> _pages = [
     const FeedPage(key: PageStorageKey('feed')),
-    const CommunityPage(key: PageStorageKey('community')),
+    const FriendsPage(key: PageStorageKey('friends')),
+    const LeaderboardPage(key: PageStorageKey('leaderboard')),
     const MyProfilePage(key: PageStorageKey('profile'))
   ];
 

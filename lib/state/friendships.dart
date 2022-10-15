@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomagacze/db/db.dart';
 import 'package:pomagacze/db/friendships.dart';
+import 'package:pomagacze/models/friend_request.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/utils/constants.dart';
 
@@ -32,3 +33,17 @@ Future<List<UserProfile>> _getAllByIds(
   }
   return result;
 }
+
+final outgoingFriendRequestsProvider = FutureProvider<List<FriendRequest>>((ref) async {
+  ref.watch(friendsIdsProvider.future);
+
+  final userId = supabase.auth.user()?.id ?? '';
+  return await FriendshipsDB.getOutgoingFriendRequests(userId);
+});
+
+final incomingFriendRequestsProvider = FutureProvider<List<FriendRequest>>((ref) async {
+  ref.watch(friendsIdsProvider.future);
+
+  final userId = supabase.auth.user()?.id ?? '';
+  return await FriendshipsDB.getIncomingFriendRequests(userId);
+});

@@ -19,7 +19,11 @@ class UsersDB {
   }
 
   static Future<bool> profileExists(String id) async {
-    final response = await supabase.from('profiles').select().eq('id', id).execute(count: CountOption.exact);
+    final response = await supabase
+        .from('profiles')
+        .select()
+        .eq('id', id)
+        .execute(count: CountOption.exact);
     return response.count == 1;
   }
 
@@ -36,6 +40,21 @@ class UsersDB {
 
   static Future<List<UserProfile>> getAll() async {
     final response = await supabase.from('profiles').select().execute();
+    response.throwOnError();
+    return (response.data as List<dynamic>)
+        .map((e) => UserProfile.fromData(e))
+        .toList();
+  }
+
+  static Future<List<UserProfile>> search(String name,
+      {String excludeId = '', int limit = 10}) async {
+    var query = supabase.from('profiles').select().ilike('name', '%$name%');
+
+    if (excludeId.isNotEmpty) {
+      query = query.neq('id', excludeId);
+    }
+
+    final response = await query.limit(limit).execute();
     response.throwOnError();
     return (response.data as List<dynamic>)
         .map((e) => UserProfile.fromData(e))

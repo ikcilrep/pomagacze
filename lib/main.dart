@@ -7,7 +7,6 @@ import 'package:open_location_picker/open_location_picker.dart';
 import 'package:pomagacze/pages/about.dart';
 import 'package:pomagacze/pages/event_form.dart';
 import 'package:pomagacze/pages/events_joined.dart';
-import 'package:pomagacze/pages/friends.dart';
 import 'package:pomagacze/pages/login.dart';
 import 'package:pomagacze/pages/my_events.dart';
 import 'package:pomagacze/pages/search_users.dart';
@@ -58,7 +57,6 @@ class MyApp extends StatelessWidget {
                 '/setup-profile': (_) => const SetupProfilePage(),
                 '/my-events': (_) => const MyEvents(),
                 '/events-joined': (_) => const EventsJoined(),
-                '/friends': (_) => const FriendsPage(),
                 '/search-users': (_) => const SearchUsersPage(),
                 '/about': (_) => const AboutPage(),
               },

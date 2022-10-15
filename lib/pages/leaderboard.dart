@@ -34,7 +34,7 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: RefreshIndicator(
         onRefresh: () async {
           await Future.wait([
