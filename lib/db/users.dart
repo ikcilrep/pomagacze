@@ -23,12 +23,12 @@ class UsersDB {
         .from('volunteers')
         .select('*, event:event_id(*)')
         .eq('user_id', id)
+        .eq('is_participation_confirmed', true)
         .gte('event.date_end', DateTime.now().add(const Duration(days: -30)))
         .execute();
-    
-    final xp = (response.data as List<dynamic>)
-        .map((e) => e['event']['points'])
-        .reduce((value, element) => value + element);
+
+    final xp = ((response.data) as List<dynamic>)
+        .fold(0, (acc, e) => acc + e['event']['points'] as int);
 
     return xp;
   }
