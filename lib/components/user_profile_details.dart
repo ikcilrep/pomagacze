@@ -67,10 +67,10 @@ class _UserProfileDetailsState extends ConsumerState<UserProfileDetails> {
                 alignment: Alignment.center,
                 children: [
                   CircularProgressIndicator(
-                    value: 0.7,
+                    value: getProgressToNextLevel(widget.userProfile.xp),
                     color: Theme.of(context).colorScheme.error,
                     backgroundColor:
-                        Theme.of(context).colorScheme.error.withAlpha(20),
+                        Theme.of(context).colorScheme.error.withAlpha(35),
                   ),
                   Text(levelFromXP(widget.userProfile.xp).toString(),
                       style: Theme.of(context).textTheme.titleMedium)
