@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomagacze/models/user_profile.dart';
+import 'package:pomagacze/state/user.dart';
 import 'package:pomagacze/utils/gender_serializing.dart';
 import 'package:pomagacze/utils/xp.dart';
 
 import 'user_avatar.dart';
 
-class UserProfileDetails extends StatelessWidget {
+class UserProfileDetails extends ConsumerStatefulWidget {
   final UserProfile userProfile;
   final Widget? iconButton;
   final List<Widget> children;
@@ -18,35 +20,42 @@ class UserProfileDetails extends StatelessWidget {
       : super(key: key);
 
   @override
+  ConsumerState<UserProfileDetails> createState() => _UserProfileDetailsState();
+}
+
+class _UserProfileDetailsState extends ConsumerState<UserProfileDetails> {
+  @override
   Widget build(BuildContext context) {
     return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 25),
       children: [
         Row(
           children: [
-            UserAvatar(userProfile),
+            UserAvatar(widget.userProfile),
             const SizedBox(width: 15),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(userProfile.name ?? '',
+                Text(widget.userProfile.name ?? '',
                     style: Theme.of(context).textTheme.headline6),
-                Text('${userProfile.gender?.display()} • ${userProfile.age} l.')
+                Text('${widget.userProfile.gender?.display()} • ${widget.userProfile.age} l.')
               ],
             ),
             Expanded(child: Container()),
-            if (iconButton != null) iconButton!
+            if (widget.iconButton != null) widget.iconButton!
           ],
         ),
         const SizedBox(height: 50),
         _buildSummary(context),
         const SizedBox(height: 40),
-        ...children,
+        ...widget.children,
       ],
     );
   }
 
   Widget _buildSummary(BuildContext context) {
+    var xpThisMonth = ref.watch(userXPThisMonthProvider(widget.userProfile.id));
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -63,7 +72,7 @@ class UserProfileDetails extends StatelessWidget {
                     backgroundColor:
                         Theme.of(context).colorScheme.error.withAlpha(20),
                   ),
-                  Text(levelFromXP(userProfile.xp).toString(),
+                  Text(levelFromXP(widget.userProfile.xp).toString(),
                       style: Theme.of(context).textTheme.titleMedium)
                 ],
               ),
@@ -81,7 +90,7 @@ class UserProfileDetails extends StatelessWidget {
                   Icon(Icons.local_fire_department,
                       color: Theme.of(context).colorScheme.error),
                   const SizedBox(width: 5),
-                  Text(formatXP(userProfile.xp),
+                  Text(formatXP(widget.userProfile.xp),
                       style: Theme.of(context).textTheme.titleLarge),
                 ],
               ),
@@ -99,7 +108,7 @@ class UserProfileDetails extends StatelessWidget {
                   Icon(Icons.local_fire_department,
                       color: Theme.of(context).colorScheme.error),
                   const SizedBox(width: 5),
-                  Text('650', style: Theme.of(context).textTheme.titleLarge),
+                  Text(formatXP(xpThisMonth.valueOrNull ?? 0), style: Theme.of(context).textTheme.titleLarge),
                 ],
               ),
             ),

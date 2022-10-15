@@ -30,6 +30,10 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   List<Widget> _buildFriendRelatedItems() {
+    if (widget.userProfile.id == supabase.auth.user()?.id) {
+      return [];
+    }
+
     var friendIds = ref.watch(friendsIdsProvider);
     var outgoingFriendRequests = ref.watch(outgoingFriendRequestsProvider);
     var incomingFriendRequests = ref.watch(incomingFriendRequestsProvider);
@@ -60,7 +64,8 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
           title: const Text('Akceptuj zaproszenie'),
           icon: const Icon(Icons.check),
           onTap: () async {
-            await FriendshipsDB.acceptFriendRequest(widget.userProfile.id, supabase.auth.currentUser!.id)
+            await FriendshipsDB.acceptFriendRequest(
+                    widget.userProfile.id, supabase.auth.currentUser!.id)
                 .catchError((err, stack) {
               if (mounted) {
                 context.showErrorSnackBar(message: err.toString());

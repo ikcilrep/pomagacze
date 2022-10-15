@@ -16,6 +16,10 @@ final userProfileProvider = FutureProvider<UserProfile>((ref) async {
   }
 });
 
+final userXPThisMonthProvider = FutureProvider.autoDispose.family<int, String>((ref, id) async {
+  return await UsersDB.getUserXPThisMonth(id);
+});
+
 final userProfilesProvider = FutureProvider<List<UserProfile>>((ref) async {
   return await UsersDB.getAll();
 });

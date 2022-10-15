@@ -18,6 +18,21 @@ class UsersDB {
     return UserProfile.fromData(response.data);
   }
 
+  static Future<int> getUserXPThisMonth(String id) async {
+    final response = await supabase
+        .from('volunteers')
+        .select('*, event:event_id(*)')
+        .eq('user_id', id)
+        .gte('event.date_end', DateTime.now().add(const Duration(days: -30)))
+        .execute();
+    
+    final xp = (response.data as List<dynamic>)
+        .map((e) => e['event']['points'])
+        .reduce((value, element) => value + element);
+
+    return xp;
+  }
+
   static Future<bool> profileExists(String id) async {
     final response = await supabase
         .from('profiles')

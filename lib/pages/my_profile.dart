@@ -30,13 +30,20 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
     var currentUser = ref.watch(userProfileProvider);
     return currentUser.when(
         data: (data) => buildSuccess(data),
-        error: (err, stack) => ErrorWithAction(action: _signOut, actionText: 'Wyloguj się'),
+        error: (err, stack) =>
+            ErrorWithAction(action: _signOut, actionText: 'Wyloguj się'),
         loading: () => const Center(child: CircularProgressIndicator()));
   }
 
   Widget buildSuccess(UserProfile userProfile) {
     return RefreshIndicator(
-        onRefresh: () => ref.refresh(userProfileProvider.future),
+        onRefresh: () {
+          return Future.wait([
+            ref.refresh(userProfileProvider.future),
+            ref.refresh(
+                userXPThisMonthProvider(supabase.auth.user()?.id ?? '').future)
+          ]);
+        },
         child: UserProfileDetails(
           userProfile: userProfile,
           iconButton: IconButton(

@@ -52,9 +52,9 @@ class EventsDB {
   static PostgrestFilterBuilder applyFilters(
       PostgrestFilterBuilder query, EventFilters filters) {
     if (filters.state == EventState.active) {
-      query = query.gt('date_end', DateTime.now().toUtc());
+      query = query.gt('date_end', DateTime.now());
     } else if (filters.state == EventState.past) {
-      query = query.lte('date_end', DateTime.now().toUtc());
+      query = query.lte('date_end', DateTime.now());
     }
 
     if (filters.authorId != null) {
