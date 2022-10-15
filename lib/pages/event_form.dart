@@ -186,13 +186,27 @@ class EventFormState extends ConsumerState<EventForm> {
                       type: DateTimePickerType.dateTimeSeparate,
                       dateMask: 'EE, dd MMM yyyy',
                       initialValue: field.value.toString(),
-                      key: Key(field.value.toString()),
+                      key: Key(field.value.toString() + _formKey
+                          .currentState?.fields['date_start']?.value),
                       firstDate: DateTime.tryParse(_formKey
                               .currentState?.fields['date_start']?.value) ??
                           DateTime.now(),
                       lastDate: DateTime(2500),
                       onChanged: (dateTimeString) {
+                        var date = DateTime.tryParse(dateTimeString);
+                        if (date == null) return;
+
                         field.didChange(dateTimeString);
+
+                        var startDate = DateTime.tryParse(_formKey
+                            .currentState!
+                            .fields['date_start']
+                            ?.value as String);
+
+                        if (startDate != null && date.isBefore(startDate)) {
+                          _formKey.currentState!.fields['date_start']
+                              ?.didChange(dateTimeString);
+                        }
                       },
                       dateLabelText: 'Data zakończenia',
                       timeLabelText: 'Godzina',
