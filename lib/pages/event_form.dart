@@ -85,6 +85,7 @@ class EventFormState extends ConsumerState<EventForm> {
     }
 
     final ageRange = _formKey.currentState!.value['age_range'] as RangeValues?;
+    final volunteerCountRange = _formKey.currentState!.value['volunteer_count_range'] as RangeValues?;
 
     final values = {
       ...(widget.initialData?.toJson() ?? {}),
@@ -98,6 +99,8 @@ class EventFormState extends ConsumerState<EventForm> {
       'longitude': _location?.lon,
       'minimal_age': ageRange?.start.round(),
       'maximal_age': ageRange?.end.round(),
+      'minimal_volunteer_count': volunteerCountRange?.start.round(),
+      'maximal_volunteer_count': volunteerCountRange?.end.round(),
       'points': (_formKey.currentState!.value['points'] as double).round(),
       'image_url': imageUrl ?? widget.initialData?.imageUrl
     };

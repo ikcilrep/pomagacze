@@ -19,6 +19,6 @@ final eventsWithVolunteerFutureProvider =
 });
 
 final eventFutureProvider =
-    FutureProvider.family<HelpEvent, String>((ref, id) async {
+    FutureProvider.autoDispose.family<HelpEvent, String>((ref, id) async {
   return await EventsDB.getById(id);
 });

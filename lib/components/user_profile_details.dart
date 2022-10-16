@@ -53,86 +53,89 @@ class _UserProfileDetailsState extends ConsumerState<UserProfileDetails> {
   }
 
   Widget _buildSummary(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Column(
-          children: [
-            SizedBox(
-              height: 50,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    value: getProgressToNextLevel(widget.userProfile.xp),
-                    color: Theme.of(context).colorScheme.error,
-                    backgroundColor:
-                        Theme.of(context).colorScheme.error.withAlpha(35),
-                  ),
-                  Text(levelFromXP(widget.userProfile.xp).toString(),
-                      style: Theme.of(context).textTheme.titleMedium)
-                ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            children: [
+              SizedBox(
+                height: 50,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      value: getProgressToNextLevel(widget.userProfile.xp),
+                      color: Theme.of(context).colorScheme.error,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.error.withAlpha(35),
+                    ),
+                    Text(levelFromXP(widget.userProfile.xp).toString(),
+                        style: Theme.of(context).textTheme.titleMedium)
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text('POZIOM', style: Theme.of(context).textTheme.overline)
-          ],
-        ),
-        Column(
-          children: [
-            SizedBox(
-              height: 50,
-              child: Row(
-                children: [
-                  Icon(Icons.local_fire_department,
-                      color: Theme.of(context).colorScheme.error),
-                  const SizedBox(width: 5),
-                  Text(formatXP(widget.userProfile.xp),
-                      style: Theme.of(context).textTheme.titleLarge),
-                ],
+              const SizedBox(height: 8),
+              Text('POZIOM', style: Theme.of(context).textTheme.overline)
+            ],
+          ),
+          Column(
+            children: [
+              SizedBox(
+                height: 50,
+                child: Row(
+                  children: [
+                    Icon(Icons.local_fire_department,
+                        color: Theme.of(context).colorScheme.error),
+                    const SizedBox(width: 5),
+                    Text(formatXP(widget.userProfile.xp),
+                        style: Theme.of(context).textTheme.titleLarge),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text('PUNKTY', style: Theme.of(context).textTheme.overline)
-          ],
-        ),
-        Column(
-          children: [
-            SizedBox(
-              height: 50,
-              child: Row(
-                children: [
-                  Icon(Icons.local_fire_department,
-                      color: Theme.of(context).colorScheme.error),
-                  const SizedBox(width: 5),
-                  Text(formatXP(widget.userProfile.xpThisMonth),
-                      style: Theme.of(context).textTheme.titleLarge),
-                ],
+              const SizedBox(height: 8),
+              Text('PUNKTY', style: Theme.of(context).textTheme.overline)
+            ],
+          ),
+          Column(
+            children: [
+              SizedBox(
+                height: 50,
+                child: Row(
+                  children: [
+                    Icon(Icons.local_fire_department,
+                        color: Theme.of(context).colorScheme.error),
+                    const SizedBox(width: 5),
+                    Text(formatXP(widget.userProfile.xpThisMonth),
+                        style: Theme.of(context).textTheme.titleLarge),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text('TEN MIESIĄC', style: Theme.of(context).textTheme.overline)
-          ],
-        ),
-        Column(
-          children: [
-            SizedBox(
-              height: 50,
-              child: Row(
-                children: [
-                  Icon(Icons.local_fire_department,
-                      color: Theme.of(context).colorScheme.error),
-                  const SizedBox(width: 5),
-                  Text(formatXP(widget.userProfile.xpThisWeek),
-                      style: Theme.of(context).textTheme.titleLarge),
-                ],
+              const SizedBox(height: 8),
+              Text('TEN MIESIĄC', style: Theme.of(context).textTheme.overline)
+            ],
+          ),
+          Column(
+            children: [
+              SizedBox(
+                height: 50,
+                child: Row(
+                  children: [
+                    Icon(Icons.local_fire_department,
+                        color: Theme.of(context).colorScheme.error),
+                    const SizedBox(width: 5),
+                    Text(formatXP(widget.userProfile.xpThisWeek),
+                        style: Theme.of(context).textTheme.titleLarge),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text('TEN TYDZIEŃ', style: Theme.of(context).textTheme.overline)
-          ],
-        ),
-      ],
+              const SizedBox(height: 8),
+              Text('TEN TYDZIEŃ', style: Theme.of(context).textTheme.overline)
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
