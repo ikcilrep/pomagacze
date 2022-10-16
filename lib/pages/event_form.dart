@@ -269,6 +269,14 @@ class EventFormState extends ConsumerState<EventForm> {
                       maximalVolunteerCount.toDouble()),
                   numberFormat: NumberFormat('###'),
                 ),
+                FormBuilderTextField(
+                  name: 'email',
+                  minLines: 1,
+                  // any number you need (It works as the rows for the textarea)
+                  keyboardType: TextInputType.emailAddress,
+                  maxLines: 1,
+                  decoration: const InputDecoration(labelText: '* Adres e-mail'),
+                ),
                 const SizedBox(height: 20),
               ])),
         ));
