@@ -59,6 +59,7 @@ dependencies:
   fluttertoast: ^8.0.9
   maps_launcher: ^2.0.1
   material_segmented_control: ^4.0.0
+  mailto: ^2.0.0
 
 
 dev_dependencies:
