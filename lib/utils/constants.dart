@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 final supabase = Supabase.instance.client;
@@ -17,3 +18,8 @@ const maximalPoints = 500;
 
 const wroclawLat = 51.107883;
 const wroclawLng = 17.038538;
+
+const bottomSheetShape = RoundedRectangleBorder(
+  borderRadius: BorderRadius.only(
+      topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+);

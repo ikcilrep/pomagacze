@@ -132,6 +132,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
               trailing: const Icon(Icons.open_in_new),
               onTap: () async {
                 showModalBottomSheet(
+                    shape: bottomSheetShape,
                     context: context,
                     builder: (context) => ListView(
                           shrinkWrap: true,
@@ -278,6 +279,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                           onTap: () async {
                             if (event.contactEmail != null) {
                               showModalBottomSheet(
+                                  shape: bottomSheetShape,
                                   context: context,
                                   builder: (context) => ListView(
                                         shrinkWrap: true,
