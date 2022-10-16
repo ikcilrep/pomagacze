@@ -1,10 +1,8 @@
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
-import 'package:maps_launcher/maps_launcher.dart';
 import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/user_profile.dart';
@@ -14,7 +12,6 @@ import 'package:pomagacze/state/events.dart';
 import 'package:pomagacze/state/user.dart';
 import 'package:pomagacze/state/volunteers.dart';
 import 'package:pomagacze/utils/constants.dart';
-import 'package:pomagacze/utils/date_extensions.dart';
 import 'package:mailto/mailto.dart';
 import 'package:url_launcher/url_launcher.dart';
 

@@ -26,11 +26,23 @@ class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
   ];
 
   List<NavigationDestination> get destinations => [
-    NavigationDestination(icon: Icon(_index == 0 ? Icons.handshake : Icons.handshake_outlined), label: 'Pomagaj'),
-    NavigationDestination(icon: Icon(_index == 1? Icons.people : Icons.people_outline), label: 'Znajomi'),
-    NavigationDestination(icon: Icon(_index == 2? Icons.leaderboard : Icons.leaderboard_outlined), label: 'Rankingi'),
-    NavigationDestination(icon: Icon(_index == 3? Icons.account_circle : Icons.account_circle_outlined), label: 'Profil'),
-  ];
+        NavigationDestination(
+            icon:
+                Icon(_index == 0 ? Icons.handshake : Icons.handshake_outlined),
+            label: 'Pomagaj'),
+        NavigationDestination(
+            icon: Icon(_index == 1 ? Icons.people : Icons.people_outline),
+            label: 'Znajomi'),
+        NavigationDestination(
+            icon: Icon(
+                _index == 2 ? Icons.leaderboard : Icons.leaderboard_outlined),
+            label: 'Rankingi'),
+        NavigationDestination(
+            icon: Icon(_index == 4
+                ? Icons.account_circle
+                : Icons.account_circle_outlined),
+            label: 'Profil'),
+      ];
 
   @override
   Widget build(BuildContext context) {
