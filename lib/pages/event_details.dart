@@ -45,7 +45,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
     final mailtoLink = Mailto(
       to: [mail],
       cc: [],
-      subject: '',
+      subject: event?.title,
       body: '',
     );
 
