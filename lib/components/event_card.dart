@@ -1,22 +1,26 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pomagacze/models/help_event.dart';
+import 'package:pomagacze/models/user_profile.dart';
+import 'package:pomagacze/models/volunteer.dart';
 import 'package:pomagacze/pages/event_details.dart';
+import 'package:pomagacze/state/friendships.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/date_extensions.dart';
 import 'package:pomagacze/utils/string_extensions.dart';
 
-class EventCard extends StatefulWidget {
+class EventCard extends ConsumerStatefulWidget {
   final HelpEvent event;
 
   const EventCard(this.event, {Key? key}) : super(key: key);
 
   @override
-  State<EventCard> createState() => _EventCardState();
+  ConsumerState<EventCard> createState() => _EventCardState();
 }
 
-class _EventCardState extends State<EventCard> {
+class _EventCardState extends ConsumerState<EventCard> {
   final _dateFormat = DateFormat('dd MMM');
   final _dateFormatHour = DateFormat('dd MMM HH:mm');
 
@@ -127,9 +131,27 @@ class _EventCardState extends State<EventCard> {
   }
 
   String? _getInfoMessage() {
-    if (widget.event.volunteers
-            .any((x) => x.userId == supabase.auth.currentUser!.id) ==
-        true) {
+    var friendIds = ref.read(friendsIdsProvider).valueOrNull ?? [];
+    var friends = ref.read(friendsProvider).valueOrNull ?? [];
+    var friendVolunteer = widget.event.volunteers
+        .cast<Volunteer?>()
+        .singleWhere((x) => friendIds.contains(x?.userId), orElse: () => null);
+    final friend = friends.cast<UserProfile?>().singleWhere(
+        (x) => x?.id == friendVolunteer?.userId,
+        orElse: () => null);
+
+    final isCurrentUserParticipating = widget.event.volunteers
+        .any((x) => x.userId == supabase.auth.currentUser!.id);
+
+    if(isCurrentUserParticipating && friend != null) {
+      return 'Ty i ${friend.name} bierzecie udział';
+    }
+
+    if (friend != null) {
+      return '${friend.name} bierze udział';
+    }
+
+    if (isCurrentUserParticipating == true) {
       return 'Bierzesz udział w tym wydarzeniu';
     }
     return null;
