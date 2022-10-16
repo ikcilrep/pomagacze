@@ -86,7 +86,7 @@ class _UserProfileDetailsState extends ConsumerState<UserProfileDetails> {
                 height: 50,
                 child: Row(
                   children: [
-                    Icon(Icons.local_fire_department,
+                    Icon(Icons.favorite,
                         color: Theme.of(context).colorScheme.error),
                     const SizedBox(width: 5),
                     Text(formatXP(widget.userProfile.xp),
@@ -104,7 +104,7 @@ class _UserProfileDetailsState extends ConsumerState<UserProfileDetails> {
                 height: 50,
                 child: Row(
                   children: [
-                    Icon(Icons.local_fire_department,
+                    Icon(Icons.favorite,
                         color: Theme.of(context).colorScheme.error),
                     const SizedBox(width: 5),
                     Text(formatXP(widget.userProfile.xpThisMonth),
@@ -122,7 +122,7 @@ class _UserProfileDetailsState extends ConsumerState<UserProfileDetails> {
                 height: 50,
                 child: Row(
                   children: [
-                    Icon(Icons.local_fire_department,
+                    Icon(Icons.favorite,
                         color: Theme.of(context).colorScheme.error),
                     const SizedBox(width: 5),
                     Text(formatXP(widget.userProfile.xpThisWeek),

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:mailto/mailto.dart';
 import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/user_profile.dart';
@@ -12,7 +13,6 @@ import 'package:pomagacze/state/events.dart';
 import 'package:pomagacze/state/user.dart';
 import 'package:pomagacze/state/volunteers.dart';
 import 'package:pomagacze/utils/constants.dart';
-import 'package:mailto/mailto.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../components/gain_points_badge.dart';
@@ -29,6 +29,9 @@ class EventDetails extends ConsumerStatefulWidget {
 class EventDetailsState extends ConsumerState<EventDetails> {
   bool _isFABLoading = false;
 
+  final _scrollController = ScrollController();
+  double _imageOffset = 0;
+
   AutoDisposeFutureProvider<HelpEvent> get eventProvider {
     return eventFutureProvider(widget.helpEvent.id!);
   }
@@ -42,25 +45,30 @@ class EventDetailsState extends ConsumerState<EventDetails> {
 
   List<Volunteer>? get userEvents => ref.read(userEventsProvider).valueOrNull;
 
-  launchMailto(mail) async {
-    final mailtoLink = Mailto(
-      to: [mail],
-      cc: [],
-      subject: event?.title,
-      body: '',
-    );
+  final _dateFormat = DateFormat('dd MMM yy HH:mm');
 
-    await launch('$mailtoLink');
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      setState(() {
+        _imageOffset = _scrollController.offset * 0.6;
+      });
+    });
   }
 
-  final _dateFormat = DateFormat('dd MMM yy HH:mm');
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     var data = ref.watch(eventProvider);
 
     return Scaffold(
-      appBar: AppBar(title: Text("Wydarzenie"), actions: [
+      appBar: AppBar(title: const Text("Wydarzenie"), actions: [
         Visibility(
           visible: data.hasValue &&
               data.value?.authorId == supabase.auth.currentUser?.id,
@@ -95,25 +103,29 @@ class EventDetailsState extends ConsumerState<EventDetails> {
 
   Widget buildSuccess(BuildContext context, HelpEvent event) {
     return SingleChildScrollView(
+      controller: _scrollController,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           if (event.imageUrl != null)
-            Stack(children: <Widget>[
-              Container(
-                width: double.infinity,
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(0),
-                    child: ConstrainedBox(
-                        constraints: const BoxConstraints(maxHeight: 250),
-                        child: Image.network(
-                          event.imageUrl!,
-                          fit: BoxFit.fitWidth,
-                        ))),
-              ),
-              Positioned(right: 10, top: 10, child: PointsBadge())
-            ]),
+            Transform.translate(
+              offset: Offset(0, _imageOffset),
+              child: Stack(children: <Widget>[
+                SizedBox(
+                  width: double.infinity,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(0),
+                      child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxHeight: 250),
+                          child: Image.network(
+                            event.imageUrl!,
+                            fit: BoxFit.fitWidth,
+                          ))),
+                ),
+                Positioned(right: 10, top: 10, child: PointsBadge(event: event))
+              ]),
+            ),
           /*ListTile(
               title: const Text("Lokalizacja"),
               subtitle: Text(event.addressFull ?? ''),
@@ -149,67 +161,66 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                           ],
                         ));
               }),*/
-          Container(
-              transform: Matrix4.translationValues(0.0, -10.0, 0.0),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10)),
-                  color: Theme.of(context).colorScheme.surface),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    Container(
-                        // alignment: Alignment.center,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 18),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Flexible(
-                              child: Text(event.title,
-                                  textAlign: TextAlign.left,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline5
-                                      ?.copyWith(fontWeight: FontWeight.w400)),
-                            ),
-                            if (event.imageUrl == null) const PointsBadge()
-                          ],
-                        )
-                        // margin: EdgeInsets.only(top: -10),
-                        ),
-                    Visibility(
+          ConstrainedBox(
+            constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height - 120),
+            child: Container(
+                transform: Matrix4.translationValues(0.0, -10.0, 0.0),
+                decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10)),
+                    color: Theme.of(context).colorScheme.surface),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Container(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 12, horizontal: 16),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Flexible(
+                                child: Text(event.title,
+                                    textAlign: TextAlign.left,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline5
+                                        ?.copyWith(
+                                            fontWeight: FontWeight.w400)),
+                              ),
+                              if (event.imageUrl == null)
+                                PointsBadge(event: event)
+                            ],
+                          )),
+                      Visibility(
                         visible: userProfile != null &&
                             !canJoin(userProfile!, event.volunteers),
-                        child: Row(children: <Widget>[
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(bottom: 8.0, left: 20),
-                            child: Text(
-                              "Nie spełniasz wymagań, by dołączyć.",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .overline
-                                  ?.copyWith(
-                                      color:
-                                          Theme.of(context).colorScheme.error),
-                            ),
-                          )
-                        ])),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 25),
+                          child: Text(
+                            "Nie spełniasz wymagań, aby dołączyć".toUpperCase(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .overline
+                                ?.copyWith(
+                                    color: Theme.of(context).colorScheme.error),
+                          ),
+                        ),
+                      ),
+                      Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          SizedBox(
-                            width: 10,
+                          const SizedBox(
+                            width: 16,
                           ),
                           Icon(Icons.event,
                               color: Theme.of(context).colorScheme.primary),
-                          SizedBox(
-                            width: 20,
+                          const SizedBox(
+                            width: 10,
                           ),
                           ClipRRect(
                               borderRadius: BorderRadius.circular(10),
@@ -245,68 +256,64 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                                 ),
                               )),
                         ],
-                        /* ListTile(
-                title: const Text("Czas rozpoczęcia"),
-                subtitle: Text(event.dateStart?.displayable() ?? '')),
-            ListTile(
-                title: const Text("Czas zakończenia"),
-                subtitle: Text(event.dateEnd?.displayable() ?? ''))*/
                       ),
-                    ),
-                    ListTile(
-                        title: const Text("Opis"),
-                        subtitle: Text(event.description)),
-                    // ListTile(
-                    //     title: const Text("Punkty"),
-                    //     subtitle: Text(event.points.toString())),
-                    ListTile(
-                        title: const Text("Wymagany wiek wolontariusza"),
-                        subtitle: Text(ageRangeString)),
-                    ListTile(
-                        title: const Text("Zgłoszeni wolontariusze"),
-                        subtitle: Text(numberOfVolunteersText())),
-                    ListTile(
-                        title: const Text("Kontakt do organizatora"),
-                        subtitle: Text(event.contactEmail ?? 'Brak'),
-                        trailing: const Icon(Icons.open_in_new),
-                        onTap: () async {
-                          if (event.contactEmail != null) {
-                            showModalBottomSheet(
-                                context: context,
-                                builder: (context) => ListView(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10),
-                                      children: [
-                                        ListTile(
-                                            leading: const Icon(Icons.copy),
-                                            title: const Text(
-                                                'Skopiuj do schowka'),
-                                            onTap: () async {
-                                              Navigator.of(context).pop();
-                                              await Clipboard.setData(
-                                                  ClipboardData(
-                                                      text:
-                                                          event.contactEmail));
-                                              Fluttertoast.showToast(
-                                                  msg:
-                                                      'Skopiowano do schowka!');
-                                            }),
-                                        ListTile(
-                                            leading: const Icon(Icons.mail),
-                                            title:
-                                                const Text('Wyślij wiadomość'),
-                                            onTap: () async {
-                                              Navigator.of(context).pop();
-                                              launchMailto(event.contactEmail);
-                                            })
-                                      ],
-                                    ));
-                          }
-                        }),
-                  ]))
+                      const SizedBox(height: 10),
+                      ListTile(
+                          title: const Text("Opis"),
+                          subtitle: Text(event.description)),
+                      // ListTile(
+                      //     title: const Text("Punkty"),
+                      //     subtitle: Text(event.points.toString())),
+                      ListTile(
+                          title: const Text("Wymagany wiek wolontariusza"),
+                          subtitle: Text(ageRangeString)),
+                      ListTile(
+                          title: const Text("Zgłoszeni wolontariusze"),
+                          subtitle: Text(numberOfVolunteersText())),
+                      ListTile(
+                          title: const Text("Kontakt do organizatora"),
+                          subtitle: Text(event.contactEmail ?? 'Brak'),
+                          trailing: const Icon(Icons.open_in_new),
+                          onTap: () async {
+                            if (event.contactEmail != null) {
+                              showModalBottomSheet(
+                                  context: context,
+                                  builder: (context) => ListView(
+                                        shrinkWrap: true,
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        padding: const EdgeInsets.symmetric(
+                                            vertical: 10),
+                                        children: [
+                                          ListTile(
+                                              leading: const Icon(Icons.copy),
+                                              title: const Text(
+                                                  'Skopiuj do schowka'),
+                                              onTap: () async {
+                                                Navigator.of(context).pop();
+                                                await Clipboard.setData(
+                                                    ClipboardData(
+                                                        text: event
+                                                            .contactEmail));
+                                                Fluttertoast.showToast(
+                                                    msg:
+                                                        'Skopiowano do schowka!');
+                                              }),
+                                          ListTile(
+                                              leading: const Icon(Icons.mail),
+                                              title: const Text(
+                                                  'Wyślij wiadomość'),
+                                              onTap: () async {
+                                                Navigator.of(context).pop();
+                                                launchMailto(
+                                                    event.contactEmail);
+                                              })
+                                        ],
+                                      ));
+                            }
+                          }),
+                    ])),
+          )
         ],
       ),
     );
@@ -339,6 +346,17 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                 child: const CircularProgressIndicator(color: Colors.white))
             : Icon(
                 !hasJoinedTheEvent(userEvents) ? Icons.check : Icons.logout));
+  }
+
+  launchMailto(mail) async {
+    final mailtoLink = Mailto(
+      to: [mail],
+      cc: [],
+      subject: event?.title,
+      body: '',
+    );
+
+    await launch('$mailtoLink');
   }
 
   String numberOfVolunteersText() {

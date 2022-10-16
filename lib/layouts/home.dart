@@ -38,7 +38,7 @@ class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
                 _index == 2 ? Icons.leaderboard : Icons.leaderboard_outlined),
             label: 'Rankingi'),
         NavigationDestination(
-            icon: Icon(_index == 4
+            icon: Icon(_index == 3
                 ? Icons.account_circle
                 : Icons.account_circle_outlined),
             label: 'Profil'),
@@ -48,7 +48,11 @@ class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(destinations[_index].label), scrolledUnderElevation: 0),
+          title: Text(destinations[_index].label), scrolledUnderElevation: 0, actions: _index == 0 ? [
+            IconButton(onPressed: () {
+              Navigator.of(context).pushNamed('/learn');
+            }, icon: const Icon(Icons.school, color: Colors.black87))
+      ] : []),
       body: _buildBody(),
       bottomNavigationBar: NavigationBar(
         destinations: destinations,

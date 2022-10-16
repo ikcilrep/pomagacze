@@ -9,6 +9,7 @@ import 'package:pomagacze/layouts/home.dart';
 import 'package:pomagacze/pages/about.dart';
 import 'package:pomagacze/pages/event_form.dart';
 import 'package:pomagacze/pages/events_joined.dart';
+import 'package:pomagacze/pages/learn.dart';
 import 'package:pomagacze/pages/login.dart';
 import 'package:pomagacze/pages/my_events.dart';
 import 'package:pomagacze/pages/search_users.dart';
@@ -49,16 +50,17 @@ class MyApp extends StatelessWidget {
           initialRoute: '/',
           debugShowCheckedModeBanner: false,
           routes: <String, WidgetBuilder>{
-            '/': (_) => const SplashPage(),
-            '/login': (_) => const LoginPage(),
-            '/home': (_) => const HomeLayout(),
-            '/new': (_) => const EventForm(),
-            '/setup-profile': (_) => const SetupProfilePage(),
-            '/my-events': (_) => const MyEvents(),
-            '/events-joined': (_) => const EventsJoined(),
-            '/search-users': (_) => const SearchUsersPage(),
-            '/about': (_) => const AboutPage(),
-          },
+                '/': (_) => const SplashPage(),
+                '/login': (_) => const LoginPage(),
+                '/home': (_) => const HomeLayout(),
+                '/new': (_) => const EventForm(),
+                '/setup-profile': (_) => const SetupProfilePage(),
+                '/my-events': (_) => const MyEvents(),
+                '/events-joined': (_) => const EventsJoined(),
+                '/search-users': (_) => const SearchUsersPage(),
+                '/about': (_) => const AboutPage(),
+                '/learn': (_) => const LearnPage(),
+              },
         ));
   }
 

@@ -68,9 +68,9 @@ class HelpEvent {
       minimalAge = parseIntIfString(data['minimal_age']);
       maximalAge = parseIntIfString(data['maximal_age']);
       minimalNumberOfVolunteers =
-          parseIntIfString(data['minimal_number_of_volunteers']);
+          parseIntIfString(data['minimal_number_of_volunteers']) ?? minimalVolunteerCount;
       maximalNumberOfVolunteers =
-          parseIntIfString(data['maximal_number_of_volunteers']);
+          parseIntIfString(data['maximal_number_of_volunteers']) ?? maximalVolunteerCount;
       points = parseIntIfString(data['points']) ?? 0;
       if (data['volunteers'] is List) {
         volunteers = (data['volunteers'] as List)

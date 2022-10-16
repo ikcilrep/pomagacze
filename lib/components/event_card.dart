@@ -100,7 +100,7 @@ class _EventCardState extends ConsumerState<EventCard> {
                             ),
                           ),
                           const SizedBox(width: 15),
-                          Icon(Icons.local_fire_department_sharp,
+                          Icon(Icons.favorite,
                               size: 15,
                               color: Theme.of(context)
                                   .colorScheme
@@ -109,7 +109,7 @@ class _EventCardState extends ConsumerState<EventCard> {
                           const SizedBox(width: 4),
                           SizedBox(
                               width: 35,
-                              child: Text(widget.event.points.toString(),
+                              child: Text("+${widget.event.points}",
                                   style: Theme.of(context).textTheme.caption))
                         ])
                       ],

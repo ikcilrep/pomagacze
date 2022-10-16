@@ -21,7 +21,7 @@ class LeaderboardPage extends ConsumerStatefulWidget {
 
 class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
   var _leaderboardOptions =
-      LeaderboardOptions(LeaderboardType.world, LeaderboardTimeRange.week);
+      const LeaderboardOptions(LeaderboardType.world, LeaderboardTimeRange.week);
 
   @override
   Widget build(BuildContext context) {
@@ -139,9 +139,9 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
               ),
               Text(formatXP(userProfile.xp),
                   style: Theme.of(context).textTheme.bodyLarge),
-              const SizedBox(width: 2),
-              Icon(Icons.local_fire_department,
-                  color: Theme.of(context).colorScheme.error, size: 17),
+              const SizedBox(width: 4),
+              Icon(Icons.favorite,
+                  color: Theme.of(context).colorScheme.error, size: 16),
             ],
           ),
         ),

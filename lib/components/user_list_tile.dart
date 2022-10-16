@@ -25,7 +25,7 @@ class UserListTile extends StatelessWidget {
               style: Theme.of(context).textTheme.subtitle1,
             ),
             const SizedBox(width: 3),
-            Icon(Icons.local_fire_department,
+            Icon(Icons.favorite,
                 color: Theme.of(context).colorScheme.error)
           ],
         ),
