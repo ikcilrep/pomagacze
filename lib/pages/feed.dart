@@ -20,7 +20,7 @@ class FeedPageState extends ConsumerState<FeedPage> {
   final ScrollController _scrollController = ScrollController();
 
   EventFilters _eventFilters =
-      EventFilters(orderBy: EventOrder.closest, state: EventState.active);
+      const EventFilters(orderBy: EventOrder.closest, state: EventState.active);
 
   @override
   void initState() {
@@ -113,24 +113,27 @@ class FeedPageState extends ConsumerState<FeedPage> {
   }
 
   Widget _buildList() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildFilters(),
-        Expanded(
-          child: PageTransitionSwitcher(
-              transitionBuilder: (child, animation, secondaryAnimation) {
-                return FadeThroughTransition(
-                    animation: animation,
-                    secondaryAnimation: secondaryAnimation,
-                    child: child);
-              },
-              child: EventList(
-                  key: Key(_eventFilters.hashCode.toString()),
-                  provider: filteredEventsFutureProvider(_eventFilters),
-                  scrollController: _scrollController)),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildFilters(),
+          Expanded(
+            child: PageTransitionSwitcher(
+                transitionBuilder: (child, animation, secondaryAnimation) {
+                  return FadeThroughTransition(
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
+                      child: child);
+                },
+                child: EventList(
+                    key: Key(_eventFilters.hashCode.toString()),
+                    provider: filteredEventsFutureProvider(_eventFilters),
+                    scrollController: _scrollController)),
+          ),
+        ],
+      ),
     );
   }
 

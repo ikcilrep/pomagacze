@@ -211,6 +211,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
@@ -257,7 +258,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                               )),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 14),
                       ListTile(
                           title: const Text("Opis"),
                           subtitle: Text(event.description)),
