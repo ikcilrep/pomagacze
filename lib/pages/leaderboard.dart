@@ -61,7 +61,7 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
         LeaderboardType.friends: Text('Znajomi'),
       },
       selectionIndex: _leaderboardOptions.type,
-      horizontalPadding: const EdgeInsets.symmetric(horizontal: 20),
+      horizontalPadding: const EdgeInsets.symmetric(horizontal: 12),
       onSegmentChosen: (index) {
         setState(() {
           _leaderboardOptions = _leaderboardOptions.copyWith(type: index);
@@ -78,7 +78,7 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
         LeaderboardTimeRange.all: Text('Cały czas'),
       },
       selectionIndex: _leaderboardOptions.timeRange,
-      horizontalPadding: const EdgeInsets.symmetric(horizontal: 20),
+      horizontalPadding: const EdgeInsets.symmetric(horizontal: 12),
       onSegmentChosen: (index) {
         setState(() {
           _leaderboardOptions = _leaderboardOptions.copyWith(timeRange: index);
