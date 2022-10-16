@@ -99,7 +99,7 @@ class EventFormState extends ConsumerState<EventForm> {
       'minimal_age': ageRange?.start.round(),
       'maximal_age': ageRange?.end.round(),
       'points': (_formKey.currentState!.value['points'] as double).round(),
-      'image_url': imageUrl
+      'image_url': imageUrl ?? widget.initialData?.imageUrl
     };
 
     var data = HelpEvent.fromData(values);

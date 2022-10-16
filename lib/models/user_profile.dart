@@ -65,8 +65,5 @@ class UserProfile {
         'latitude': latitude,
         'longitude': longitude,
         'place_name': placeName,
-        'xp': xp,
-        'xp_this_week': xpThisWeek,
-        'xp_this_month': xpThisMonth
       };
 }

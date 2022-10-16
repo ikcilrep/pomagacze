@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomagacze/models/help_event.dart';
 
+import 'error_with_action.dart';
 import 'event_card.dart';
 
 class EventList extends ConsumerStatefulWidget {
@@ -31,7 +32,12 @@ class EventListState extends ConsumerState<EventList> {
                   itemBuilder: (context, index) => EventCard(data[index]),
                   itemCount: data.length,
                 )
-              : const Center(child: Text('Brak wydarzeń')),
+              : ErrorWithAction(
+                  action: () {
+                    ref.invalidate(widget.provider);
+                  },
+                  actionText: 'Odśwież',
+                  errorText: 'Brak wydarzeń'),
           error: (err, stack) {
             print(err);
             print(stack);

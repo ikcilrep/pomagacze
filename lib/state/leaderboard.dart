@@ -6,7 +6,7 @@ import 'package:pomagacze/models/user_profile.dart';
 import 'friendships.dart';
 
 final leaderboardProvider =
-    FutureProvider.family<List<UserProfile>, LeaderboardOptions>(
+    FutureProvider.autoDispose.family<List<UserProfile>, LeaderboardOptions>(
         (ref, options) async {
   var friendIds = await ref.watch(friendsIdsProvider.future);
   if (options.type == LeaderboardType.friends) {
