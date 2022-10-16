@@ -71,15 +71,15 @@ class FeedPageState extends ConsumerState<FeedPage> {
                   scrollController: _scrollController,
                   text: Text('Nowe wydarzenie',
                       style: Theme.of(context).textTheme.subtitle2?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary)),
+                          color: Theme.of(context).colorScheme.onSecondary)),
                   icon: Icon(Icons.add,
-                      color: Theme.of(context).colorScheme.onPrimary),
+                      color: Theme.of(context).colorScheme.onSecondary),
                   onPress: openContainer,
                   radius: 18,
                   width: 185,
                   elevation: 10,
                   animateIcon: false,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.secondary,
                   duration: const Duration(milliseconds: 150),
                 );
               }),
