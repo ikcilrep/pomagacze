@@ -27,7 +27,7 @@ final friendsAndUserProfilesProvider =
 });
 
 final outgoingFriendRequestsProvider =
-    FutureProvider<List<FriendRequest>>((ref) async {
+    FutureProvider.autoDispose<List<FriendRequest>>((ref) async {
   ref.watch(friendsIdsProvider.future);
 
   final userId = supabase.auth.user()?.id ?? '';
@@ -35,7 +35,7 @@ final outgoingFriendRequestsProvider =
 });
 
 final incomingFriendRequestsProvider =
-    FutureProvider<List<FriendRequest>>((ref) async {
+    FutureProvider.autoDispose<List<FriendRequest>>((ref) async {
   ref.watch(friendsIdsProvider.future);
 
   final userId = supabase.auth.user()?.id ?? '';

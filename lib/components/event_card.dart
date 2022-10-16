@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:pomagacze/models/help_event.dart';
-import 'package:pomagacze/models/user_profile.dart';
-import 'package:pomagacze/models/volunteer.dart';
 import 'package:pomagacze/pages/event_details.dart';
 import 'package:pomagacze/state/friendships.dart';
 import 'package:pomagacze/utils/constants.dart';
@@ -132,28 +130,32 @@ class _EventCardState extends ConsumerState<EventCard> {
 
   String? _getInfoMessage() {
     var friendIds = ref.read(friendsIdsProvider).valueOrNull ?? [];
-    var friends = ref.read(friendsProvider).valueOrNull ?? [];
-    var friendVolunteer = widget.event.volunteers
-        .cast<Volunteer?>()
-        .singleWhere((x) => friendIds.contains(x?.userId), orElse: () => null);
-    final friend = friends.cast<UserProfile?>().singleWhere(
-        (x) => x?.id == friendVolunteer?.userId,
-        orElse: () => null);
+    var friendVolunteers =
+        widget.event.volunteers.where((x) => friendIds.contains(x.userId));
 
     final isCurrentUserParticipating = widget.event.volunteers
         .any((x) => x.userId == supabase.auth.currentUser!.id);
 
-    if(isCurrentUserParticipating && friend != null) {
-      return 'Ty i ${friend.name} bierzecie udział';
+    if (isCurrentUserParticipating && friendVolunteers.length == 1) {
+      return 'Ty i ${friendVolunteers.first.profile?.name} bierzecie udział';
     }
 
-    if (friend != null) {
-      return '${friend.name} bierze udział';
+    if(isCurrentUserParticipating && friendVolunteers.length > 1) {
+      return 'Ty i ${friendVolunteers.length} znajomych bierzecie udział';
+    }
+
+    if (friendVolunteers.length == 1) {
+      return '${friendVolunteers.first.profile?.name} bierze udział';
+    }
+
+    if(friendVolunteers.length > 1) {
+      return '${friendVolunteers.length} znajomych bierze udział';
     }
 
     if (isCurrentUserParticipating == true) {
       return 'Bierzesz udział w tym wydarzeniu';
     }
+
     return null;
   }
 

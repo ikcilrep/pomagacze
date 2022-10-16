@@ -32,12 +32,14 @@ class EventListState extends ConsumerState<EventList> {
                   itemBuilder: (context, index) => EventCard(data[index]),
                   itemCount: data.length,
                 )
-              : ErrorWithAction(
-                  action: () {
-                    ref.invalidate(widget.provider);
-                  },
-                  actionText: 'Odśwież',
-                  errorText: 'Brak wydarzeń'),
+              : Center(
+                child: ErrorWithAction(
+                    action: () {
+                      ref.invalidate(widget.provider);
+                    },
+                    actionText: 'Odśwież',
+                    errorText: 'Brak wydarzeń'),
+              ),
           error: (err, stack) {
             print(err);
             print(stack);

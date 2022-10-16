@@ -35,7 +35,7 @@ class UsersDB {
       'updated_at': DateTime.now().toIso8601String(),
     };
     final response =
-        await supabase.from('profiles_extended').upsert(updates).execute();
+        await supabase.from('profiles').upsert(updates).execute();
     response.throwOnError();
   }
 
