@@ -77,20 +77,17 @@ class _EventCardState extends ConsumerState<EventCard> {
                                   .colorScheme
                                   .onSurface
                                   .withOpacity(0.8)),
-                          const SizedBox(width: 4),
-                          SizedBox(
-                            width: 87,
-                            child: Text(_getDateString(),
-                                style: Theme.of(context).textTheme.caption),
-                          ),
-                          const SizedBox(width: 15),
+                          const SizedBox(width: 3),
+                          Text(_getDateString(),
+                              style: Theme.of(context).textTheme.caption),
+                          const SizedBox(width: 12),
                           Icon(Icons.location_pin,
                               size: 15,
                               color: Theme.of(context)
                                   .colorScheme
                                   .onSurface
                                   .withOpacity(0.8)),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: 3),
                           Expanded(
                             child: Text(
                               widget.event.addressShort.orDefault('???'),
@@ -99,7 +96,7 @@ class _EventCardState extends ConsumerState<EventCard> {
                               softWrap: false,
                             ),
                           ),
-                          const SizedBox(width: 15),
+                          const SizedBox(width: 12),
                           Icon(Icons.favorite,
                               size: 15,
                               color: Theme.of(context)
