@@ -261,7 +261,7 @@ class EventFormState extends ConsumerState<EventForm> {
                             var startDate = DateTime.tryParse(_formKey
                                 .currentState!
                                 .fields['date_start']
-                                ?.value as String);
+                                ?.value ?? '');
 
                             if (startDate != null && date.isBefore(startDate)) {
                               _formKey.currentState!.fields['date_start']

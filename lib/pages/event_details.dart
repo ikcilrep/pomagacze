@@ -273,7 +273,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                       ListTile(
                           title: const Text("Kontakt do organizatora"),
                           subtitle: Text(event.contactEmail ?? 'Brak'),
-                          trailing: const Icon(Icons.open_in_new),
+                          trailing: event.contactEmail != null ? const Icon(Icons.open_in_new) : null,
                           onTap: () async {
                             if (event.contactEmail != null) {
                               showModalBottomSheet(
@@ -306,7 +306,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                                               onTap: () async {
                                                 Navigator.of(context).pop();
                                                 launchMailto(
-                                                    event.contactEmail);
+                                                    event.contactEmail!);
                                               })
                                         ],
                                       ));
@@ -321,6 +321,8 @@ class EventDetailsState extends ConsumerState<EventDetails> {
 
   Widget _buildFAB() {
     return FloatingActionButton.extended(
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        foregroundColor: Theme.of(context).colorScheme.onSecondary,
         onPressed: () async {
           if (_isFABLoading) return;
 
@@ -348,7 +350,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                 !hasJoinedTheEvent(userEvents) ? Icons.check : Icons.logout));
   }
 
-  launchMailto(mail) async {
+  launchMailto(String mail) async {
     final mailtoLink = Mailto(
       to: [mail],
       cc: [],
@@ -356,7 +358,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
       body: '',
     );
 
-    await launch('$mailtoLink');
+    await launchUrl(Uri.parse(mailtoLink.toString()));
   }
 
   String numberOfVolunteersText() {
