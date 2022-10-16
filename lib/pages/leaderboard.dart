@@ -1,6 +1,7 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:material_segmented_control/material_segmented_control.dart';
+import 'package:pomagacze/components/segmented_control.dart';
 import 'package:pomagacze/components/user_avatar.dart';
 import 'package:pomagacze/models/leaderboard_options.dart';
 import 'package:pomagacze/models/user_profile.dart';
@@ -40,24 +41,26 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
           const SizedBox(height: 10),
           _buildTimeRangeChooser(),
           const SizedBox(height: 10),
-          Expanded(child: _buildLeaderboard()),
+          Expanded(child: PageTransitionSwitcher(
+              transitionBuilder: (child, animation, secondaryAnimation) {
+                return FadeThroughTransition(
+                    animation: animation,
+                    secondaryAnimation: secondaryAnimation,
+                    child: child);
+              },
+              child: _buildLeaderboard())),
         ]),
       ),
     );
   }
 
-  MaterialSegmentedControl<LeaderboardType> _buildLeaderboardTypeChooser() {
-    return MaterialSegmentedControl(
+  SegmentedControl<LeaderboardType> _buildLeaderboardTypeChooser() {
+    return SegmentedControl(
       children: const {
         LeaderboardType.world: Text('Świat'),
         LeaderboardType.friends: Text('Znajomi'),
       },
       selectionIndex: _leaderboardOptions.type,
-      borderColor: Theme.of(context).colorScheme.primary,
-      selectedColor: Theme.of(context).colorScheme.primary,
-      unselectedColor: Theme.of(context).colorScheme.surface,
-      borderRadius: 32.0,
-      verticalOffset: 10,
       horizontalPadding: const EdgeInsets.symmetric(horizontal: 20),
       onSegmentChosen: (index) {
         setState(() {
@@ -67,19 +70,14 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
     );
   }
 
-  MaterialSegmentedControl<LeaderboardTimeRange> _buildTimeRangeChooser() {
-    return MaterialSegmentedControl(
+  SegmentedControl<LeaderboardTimeRange> _buildTimeRangeChooser() {
+    return SegmentedControl(
       children: const {
         LeaderboardTimeRange.week: Text('Tydzień'),
         LeaderboardTimeRange.month: Text('Miesiąc'),
         LeaderboardTimeRange.all: Text('Cały czas'),
       },
       selectionIndex: _leaderboardOptions.timeRange,
-      borderColor: Theme.of(context).colorScheme.primary,
-      selectedColor: Theme.of(context).colorScheme.primary,
-      unselectedColor: Theme.of(context).colorScheme.surface,
-      borderRadius: 32.0,
-      verticalOffset: 10,
       horizontalPadding: const EdgeInsets.symmetric(horizontal: 20),
       onSegmentChosen: (index) {
         setState(() {
@@ -94,6 +92,7 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
 
     return leaderboard.when(
         data: (entries) => ListView.builder(
+            key: Key(_leaderboardOptions.hashCode.toString()),
             padding: const EdgeInsets.only(top: 10),
             itemCount: entries.length,
             itemBuilder: (_, index) {

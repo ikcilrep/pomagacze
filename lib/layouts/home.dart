@@ -14,13 +14,6 @@ class HomeLayout extends StatefulWidget {
   State<HomeLayout> createState() => _HomeLayoutState();
 }
 
-const destinations = [
-  NavigationDestination(icon: Icon(Icons.handshake), label: 'Pomagaj'),
-  NavigationDestination(icon: Icon(Icons.people), label: 'Znajomi'),
-  NavigationDestination(icon: Icon(Icons.leaderboard), label: 'Rankingi'),
-  NavigationDestination(icon: Icon(Icons.account_circle), label: 'Profil'),
-];
-
 class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
   int _index = 0;
   bool _reversed = false;
@@ -30,6 +23,13 @@ class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
     const FriendsPage(key: PageStorageKey('friends')),
     const LeaderboardPage(key: PageStorageKey('leaderboard')),
     const MyProfilePage(key: PageStorageKey('profile'))
+  ];
+
+  List<NavigationDestination> get destinations => [
+    NavigationDestination(icon: Icon(_index == 0 ? Icons.handshake : Icons.handshake_outlined), label: 'Pomagaj'),
+    NavigationDestination(icon: Icon(_index == 1? Icons.people : Icons.people_outline), label: 'Znajomi'),
+    NavigationDestination(icon: Icon(_index == 2? Icons.leaderboard : Icons.leaderboard_outlined), label: 'Rankingi'),
+    NavigationDestination(icon: Icon(_index == 3? Icons.account_circle : Icons.account_circle_outlined), label: 'Profil'),
   ];
 
   @override

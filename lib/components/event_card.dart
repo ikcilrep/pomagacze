@@ -36,9 +36,10 @@ class _EventCardState extends ConsumerState<EventCard> {
         // transitionDuration: const Duration(seconds: 2),
         closedBuilder: (_, openContainer) {
           return Card(
-              elevation: 2,
+              elevation: 0,
+              color: Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.07),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(10), side: BorderSide(color: Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.3), width: 1)),
               child: InkWell(
                 borderRadius: BorderRadius.circular(10),
                 onTap: openContainer,
