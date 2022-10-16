@@ -31,22 +31,18 @@ import 'package:flutter/material.dart';
     onSurface: Color.fromRGBO(5, 5, 23, 1));*/
 
 ColorScheme defaultLightScheme = ColorScheme.fromSwatch(
-    primarySwatch: Colors.teal,
-    accentColor: Colors.teal[400]);
+    primarySwatch: Colors.teal, accentColor: Colors.teal[400]);
 ColorScheme defaultDarkScheme = ColorScheme.fromSwatch(
     primarySwatch: Colors.teal, brightness: Brightness.dark);
-
 
 ThemeData getTheme({bool dark = false}) {
   late ThemeData data;
   if (dark) {
-    data = ThemeData.dark(useMaterial3: true).copyWith(
-        colorScheme: defaultDarkScheme);
+    data = ThemeData.dark(useMaterial3: true)
+        .copyWith(colorScheme: defaultDarkScheme);
   } else {
-    data = ThemeData.light(useMaterial3: true).copyWith(
-        colorScheme: defaultLightScheme);
+    data = ThemeData.light(useMaterial3: true)
+        .copyWith(colorScheme: defaultLightScheme);
   }
-  return data.copyWith(
-      inputDecorationTheme: const InputDecorationTheme()
-  );
+  return data.copyWith(inputDecorationTheme: const InputDecorationTheme());
 }

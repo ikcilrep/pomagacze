@@ -21,11 +21,27 @@ class EventsDB {
   }
 
   static Future<List<HelpEvent>> getFiltered(EventFilters filters) async {
-    var query = supabase.from('events').select(select);
+    PostgrestFilterBuilder query;
+
+    if (filters.orderBy == EventOrder.closest) {
+      query = supabase.rpc('closest_events',
+          params: {'lat': filters.currentLat, 'lng': filters.currentLng});
+    } else {
+      query = supabase.from('events_extended').select(select);
+    }
 
     query = applyFilters(query, filters);
 
-    var result = await query.execute();
+    PostgrestTransformBuilder q2;
+    if (filters.orderBy == EventOrder.closest) {
+      q2 = query.select(select);
+    } else if (filters.orderBy == EventOrder.incoming) {
+      q2 = query.order('date_start', ascending: true);
+    } else {
+      q2 = query.order('volunteer_count');
+    }
+
+    var result = await q2.execute();
     result.throwOnError();
 
     return (result.data as List<dynamic>)
@@ -35,13 +51,11 @@ class EventsDB {
 
   static Future<List<HelpEvent>> getByVolunteer(EventFilters filters) async {
     var query = supabase
-        .from('events')
+        .from('events_extended')
         .select(selectInner)
         .eq('volunteers.user_id', filters.volunteerId);
 
-    query = applyFilters(query, filters);
-
-    var result = await query.execute();
+    var result = await applyFilters(query, filters).execute();
     result.throwOnError();
 
     return (result.data as List<dynamic>)
@@ -77,20 +91,53 @@ class EventsDB {
     return HelpEvent.fromData(result.data);
   }
 
-  static Future<void> upsert(HelpEvent data) async {
+  static Future<HelpEvent> upsert(HelpEvent data) async {
     var result = await supabase.from('events').upsert(data.toJson()).execute();
     result.throwOnError();
+    return HelpEvent.fromData(result.data[0]);
   }
 }
 
 enum EventState { active, past }
 
+enum EventOrder { incoming, closest, popular }
+
 class EventFilters {
   EventState? state;
   String? authorId;
   String? volunteerId;
+  EventOrder? orderBy;
 
-  EventFilters({this.state, this.authorId, this.volunteerId});
+  double? currentLat, currentLng;
+
+  EventFilters(
+      {this.state,
+      this.authorId,
+      this.volunteerId,
+      this.orderBy,
+      this.currentLat,
+      this.currentLng});
 
   EventFilters.empty();
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is EventFilters &&
+          runtimeType == other.runtimeType &&
+          state == other.state &&
+          authorId == other.authorId &&
+          volunteerId == other.volunteerId &&
+          orderBy == other.orderBy &&
+          currentLat == other.currentLat &&
+          currentLng == other.currentLng;
+
+  @override
+  int get hashCode =>
+      state.hashCode ^
+      authorId.hashCode ^
+      volunteerId.hashCode ^
+      orderBy.hashCode ^
+      currentLat.hashCode ^
+      currentLng.hashCode;
 }

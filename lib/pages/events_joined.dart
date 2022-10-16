@@ -11,7 +11,8 @@ class EventsJoined extends StatefulWidget {
   State<EventsJoined> createState() => _EventsJoinedState();
 }
 
-class _EventsJoinedState extends State<EventsJoined> with TickerProviderStateMixin {
+class _EventsJoinedState extends State<EventsJoined>
+    with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();

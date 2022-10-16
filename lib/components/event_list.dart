@@ -1,5 +1,5 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomagacze/models/help_event.dart';
 
 import 'event_card.dart';
@@ -32,20 +32,24 @@ class EventListState extends ConsumerState<EventList> {
                   itemCount: data.length,
                 )
               : const Center(child: Text('Brak wydarzeń')),
-          error: (err, stack) => Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Coś poszło nie tak...'),
-                    const SizedBox(height: 5),
-                    ElevatedButton(
-                        onPressed: () {
-                          ref.invalidate(widget.provider);
-                        },
-                        child: const Text('Odśwież'))
-                  ],
-                ),
+          error: (err, stack) {
+            print(err);
+            print(stack);
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Coś poszło nie tak...'),
+                  const SizedBox(height: 5),
+                  ElevatedButton(
+                      onPressed: () {
+                        ref.invalidate(widget.provider);
+                      },
+                      child: const Text('Odśwież'))
+                ],
               ),
+            );
+          },
           loading: () => const Center(child: CircularProgressIndicator())),
     );
   }

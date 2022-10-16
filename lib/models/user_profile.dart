@@ -13,6 +13,8 @@ class UserProfile {
   double? longitude;
   String? placeName;
   int xp = 0;
+  int xpThisWeek = 0;
+  int xpThisMonth = 0;
 
   int get age => AgeCalculator.age(birthDate ?? DateTime.now()).years;
 
@@ -46,13 +48,16 @@ class UserProfile {
       gender = GenderSerializing.deserialize(data['gender']);
       birthDate = DateTime.tryParse(data['birth_date'] ?? '');
       latitude = data['latitude'];
-      longitude = data['latitude'];
+      longitude = data['longitude'];
       placeName = data['place_name'];
       xp = data['xp'] ?? 0;
+      xpThisWeek = data['xp_this_week'] ?? 0;
+      xpThisMonth = data['xp_this_month'] ?? 0;
     }
   }
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         'name': name,
         'avatar_url': avatarURL,
         'birth_date': birthDate?.toIso8601String().toString(),
@@ -61,5 +66,7 @@ class UserProfile {
         'longitude': longitude,
         'place_name': placeName,
         'xp': xp,
+        'xp_this_week': xpThisWeek,
+        'xp_this_month': xpThisMonth
       };
 }

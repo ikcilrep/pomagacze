@@ -79,7 +79,6 @@ class EventDetailsState extends ConsumerState<EventDetails> {
   }
 
   Widget buildSuccess(BuildContext context, HelpEvent event) {
-
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -112,24 +111,25 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                                 title: const Text('Otwórz w mapach'),
                                 onTap: () async {
                                   Navigator.of(context).pop();
-                                  MapsLauncher.launchCoordinates(event.latitude!, event.longitude!, '${event.addressShort} - ${event.title}');
+                                  MapsLauncher.launchCoordinates(
+                                      event.latitude!,
+                                      event.longitude!,
+                                      '${event.addressShort} - ${event.title}');
                                 })
                           ],
                         ));
               }),
           ListTile(
               title: const Text("Czas rozpoczęcia"),
-              subtitle:
-                  Text(event.dateStart!.displayable())),
+              subtitle: Text(event.dateStart?.displayable() ?? '')),
           ListTile(
               title: const Text("Czas zakończenia"),
-              subtitle:
-                  Text(event.dateEnd!.displayable())),
+              subtitle: Text(event.dateEnd?.displayable() ?? '')),
           ListTile(
               title: const Text("Opis"), subtitle: Text(event.description)),
           ListTile(
-            title: const Text("Punkty"), subtitle: Text(event.points.toString())
-          ),
+              title: const Text("Punkty"),
+              subtitle: Text(event.points.toString())),
           ListTile(
               title: const Text("Wymagany wiek wolontariusza"),
               subtitle: Text(ageRangeString)),

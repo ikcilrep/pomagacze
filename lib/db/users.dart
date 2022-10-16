@@ -1,13 +1,13 @@
 import 'package:pomagacze/db/helpers.dart';
+import 'package:pomagacze/models/leaderboard_options.dart';
 import 'package:pomagacze/models/user_profile.dart';
-
 import 'package:pomagacze/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class UsersDB {
   static Future<UserProfile> getById(String id) async {
     final response = await supabase
-        .from('profiles')
+        .from('profiles_extended')
         .select()
         .eq('id', id)
         .single()
@@ -16,21 +16,6 @@ class UsersDB {
     response.throwOnError(expectData: true);
 
     return UserProfile.fromData(response.data);
-  }
-
-  static Future<int> getUserXPThisMonth(String id) async {
-    final response = await supabase
-        .from('volunteers')
-        .select('*, event:event_id(*)')
-        .eq('user_id', id)
-        .eq('is_participation_confirmed', true)
-        .gte('event.date_end', DateTime.now().add(const Duration(days: -30)))
-        .execute();
-
-    final xp = ((response.data) as List<dynamic>)
-        .fold(0, (acc, e) => acc + e['event']['points'] as int);
-
-    return xp;
   }
 
   static Future<bool> profileExists(String id) async {
@@ -49,12 +34,32 @@ class UsersDB {
       'id': user!.id,
       'updated_at': DateTime.now().toIso8601String(),
     };
-    final response = await supabase.from('profiles').upsert(updates).execute();
+    final response =
+        await supabase.from('profiles_extended').upsert(updates).execute();
     response.throwOnError();
   }
 
-  static Future<List<UserProfile>> getAll() async {
-    final response = await supabase.from('profiles').select().order('xp').execute();
+  static Future<List<UserProfile>> getAll(
+      {LeaderboardTimeRange range = LeaderboardTimeRange.week}) async {
+    final response = await supabase
+        .from('profiles_extended')
+        .select()
+        .order(range.getOrderColumn())
+        .execute();
+    response.throwOnError();
+    return (response.data as List<dynamic>)
+        .map((e) => UserProfile.fromData(e))
+        .toList();
+  }
+
+  static Future<List<UserProfile>> getByIds(List<String> ids,
+      {LeaderboardTimeRange range = LeaderboardTimeRange.week}) async {
+    final response = await supabase
+        .from('profiles_extended')
+        .select()
+        .in_('id', ids)
+        .order(range.getOrderColumn())
+        .execute();
     response.throwOnError();
     return (response.data as List<dynamic>)
         .map((e) => UserProfile.fromData(e))
@@ -63,7 +68,8 @@ class UsersDB {
 
   static Future<List<UserProfile>> search(String name,
       {String excludeId = '', int limit = 10}) async {
-    var query = supabase.from('profiles').select().ilike('name', '%$name%');
+    var query =
+        supabase.from('profiles_extended').select().ilike('name', '%$name%');
 
     if (excludeId.isNotEmpty) {
       query = query.neq('id', excludeId);

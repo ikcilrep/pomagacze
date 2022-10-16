@@ -1,10 +1,13 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:pomagacze/components/event_list.dart';
 import 'package:pomagacze/components/fab_extended_animated.dart';
+import 'package:pomagacze/db/db.dart';
 import 'package:pomagacze/pages/event_form.dart';
 import 'package:pomagacze/state/events.dart';
+import 'package:pomagacze/state/user.dart';
 
 class FeedPage extends ConsumerStatefulWidget {
   const FeedPage({Key? key}) : super(key: key);
@@ -16,9 +19,17 @@ class FeedPage extends ConsumerStatefulWidget {
 class FeedPageState extends ConsumerState<FeedPage> {
   final ScrollController _scrollController = ScrollController();
 
+  EventFilters _eventFilters =
+      EventFilters(orderBy: EventOrder.closest, state: EventState.active);
+
   @override
   void initState() {
     super.initState();
+    var userProfile = ref.read(userProfileProvider);
+
+    _eventFilters = _eventFilters
+      ..currentLat = userProfile.valueOrNull?.latitude
+      ..currentLng = userProfile.valueOrNull?.longitude;
   }
 
   @override
@@ -75,9 +86,49 @@ class FeedPageState extends ConsumerState<FeedPage> {
         ));
   }
 
+  Widget _buildFilters() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          MaterialSegmentedControl(
+            children: const {
+              EventOrder.closest: Text('Najbliższe'),
+              EventOrder.incoming: Text('Nadchodzące'),
+              EventOrder.popular: Text('Popularne'),
+            },
+            selectionIndex: _eventFilters.orderBy,
+            borderColor: Theme.of(context).colorScheme.primary,
+            selectedColor: Theme.of(context).colorScheme.primary,
+            unselectedColor: Theme.of(context).colorScheme.surface,
+            borderRadius: 32.0,
+            verticalOffset: 10,
+            horizontalPadding: const EdgeInsets.symmetric(horizontal: 10),
+            onSegmentChosen: (index) {
+              setState(() {
+                _eventFilters.orderBy = index;
+              });
+            },
+          )
+        ],
+      ),
+    );
+  }
+
   Widget _buildList() {
-    return EventList(
-        provider: feedFutureProvider, scrollController: _scrollController);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildFilters(),
+        Expanded(
+          child: EventList(
+              key: Key(_eventFilters.hashCode.toString()),
+              provider: filteredEventsFutureProvider(_eventFilters),
+              scrollController: _scrollController),
+        ),
+      ],
+    );
   }
 
   @override

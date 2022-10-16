@@ -1,4 +1,5 @@
 import 'package:pomagacze/models/user_profile.dart';
+
 import 'help_event.dart';
 
 class Activity {

@@ -15,7 +15,6 @@ class SplashPageState extends AuthState<SplashPage> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return const Scaffold(

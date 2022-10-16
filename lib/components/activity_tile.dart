@@ -10,7 +10,6 @@ class ActivityTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     throw ListTile(
         title:
             Text('${activity.user.name} dołączył do "${activity.event.title}"'),

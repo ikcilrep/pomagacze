@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomagacze/models/user_profile.dart';
-import 'package:pomagacze/state/user.dart';
 import 'package:pomagacze/utils/gender_serializing.dart';
 import 'package:pomagacze/utils/xp.dart';
 
@@ -54,8 +53,6 @@ class _UserProfileDetailsState extends ConsumerState<UserProfileDetails> {
   }
 
   Widget _buildSummary(BuildContext context) {
-    var xpThisMonth = ref.watch(userXPThisMonthProvider(widget.userProfile.id));
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -108,7 +105,8 @@ class _UserProfileDetailsState extends ConsumerState<UserProfileDetails> {
                   Icon(Icons.local_fire_department,
                       color: Theme.of(context).colorScheme.error),
                   const SizedBox(width: 5),
-                  Text(formatXP(xpThisMonth.valueOrNull ?? 0), style: Theme.of(context).textTheme.titleLarge),
+                  Text(formatXP(widget.userProfile.xpThisMonth),
+                      style: Theme.of(context).textTheme.titleLarge),
                 ],
               ),
             ),

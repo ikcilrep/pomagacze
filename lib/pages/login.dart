@@ -1,9 +1,9 @@
 import 'package:auth_buttons/auth_buttons.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pomagacze/components/auth_state.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -64,7 +64,12 @@ class LoginPageState extends AuthState<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Text("POMAGACZE", style: GoogleFonts.oswald(textStyle: Theme.of(context).textTheme.headline2?.copyWith(color: Colors.black) )),
+                  Text("POMAGACZE",
+                      style: GoogleFonts.oswald(
+                          textStyle: Theme.of(context)
+                              .textTheme
+                              .headline2
+                              ?.copyWith(color: Colors.black))),
                   Center(
                     child: GoogleAuthButton(
                         style: AuthButtonStyle(

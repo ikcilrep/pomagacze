@@ -41,12 +41,12 @@ class FriendshipsDB {
         .execute();
   }
 
-  static Future<void> acceptFriendRequest(String senderId, String targetId) async {
+  static Future<void> acceptFriendRequest(
+      String senderId, String targetId) async {
     await cancelFriendRequest(senderId, targetId);
-    await supabase.from('friendships').upsert({
-      'user1_id': senderId,
-      'user2_id': targetId
-    }).execute();
+    await supabase
+        .from('friendships')
+        .upsert({'user1_id': senderId, 'user2_id': targetId}).execute();
   }
 
   static Future<List<FriendRequest>> getIncomingFriendRequests(

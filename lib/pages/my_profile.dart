@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pomagacze/components/edit_profile.dart';
 import 'package:pomagacze/components/error_with_action.dart';
 import 'package:pomagacze/components/profile_action.dart';
 import 'package:pomagacze/components/user_profile_details.dart';
 import 'package:pomagacze/models/user_profile.dart';
-import 'package:pomagacze/components/edit_profile.dart';
 import 'package:pomagacze/state/user.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/snackbar.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class MyProfilePage extends ConsumerStatefulWidget {
   const MyProfilePage({Key? key}) : super(key: key);
@@ -40,8 +40,6 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
         onRefresh: () {
           return Future.wait([
             ref.refresh(userProfileProvider.future),
-            ref.refresh(
-                userXPThisMonthProvider(supabase.auth.user()?.id ?? '').future)
           ]);
         },
         child: UserProfileDetails(

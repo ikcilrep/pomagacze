@@ -13,8 +13,9 @@ int xpRequiredForLevel(int level) {
 }
 
 String formatXP(int xp) {
-  return xp < 10000 ? xp.toString() : NumberFormat.compact(locale: 'en')
-      .format(xp);
+  return xp < 10000
+      ? xp.toString()
+      : NumberFormat.compact(locale: 'en').format(xp);
 }
 
 double getProgressToNextLevel(int xp) {

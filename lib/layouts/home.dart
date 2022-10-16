@@ -1,11 +1,11 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:pomagacze/components/auth_required_state.dart';
 import 'package:pomagacze/components/indexed_transition_switcher.dart';
-import 'package:pomagacze/pages/friends.dart';
 import 'package:pomagacze/pages/feed.dart';
+import 'package:pomagacze/pages/friends.dart';
 import 'package:pomagacze/pages/leaderboard.dart';
 import 'package:pomagacze/pages/my_profile.dart';
-import 'package:animations/animations.dart';
 
 class HomeLayout extends StatefulWidget {
   const HomeLayout({Key? key}) : super(key: key);
@@ -35,7 +35,8 @@ class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(destinations[_index].label), scrolledUnderElevation: 0),
+      appBar: AppBar(
+          title: Text(destinations[_index].label), scrolledUnderElevation: 0),
       body: _buildBody(),
       bottomNavigationBar: NavigationBar(
         destinations: destinations,
@@ -51,11 +52,9 @@ class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
   Widget _buildBody() {
     return IndexedTransitionSwitcher(
       reverse: _reversed,
-      transitionBuilder: (
-        Widget child,
-        Animation<double> animation,
-        Animation<double> secondaryAnimation,
-      ) {
+      transitionBuilder: (Widget child,
+          Animation<double> animation,
+          Animation<double> secondaryAnimation,) {
         return SharedAxisTransition(
           animation: animation,
           secondaryAnimation: secondaryAnimation,

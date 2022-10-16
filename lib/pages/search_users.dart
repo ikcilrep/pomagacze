@@ -20,7 +20,7 @@ class SearchUsersState extends ConsumerState<SearchUsersPage> {
   void initState() {
     super.initState();
     _searchFieldController.addListener(() {
-      if(_previousText != _searchFieldController.text) {
+      if (_previousText != _searchFieldController.text) {
         ref.invalidate(searchUsersProvider);
         _previousText = _searchFieldController.text;
       }
@@ -53,15 +53,17 @@ class SearchUsersState extends ConsumerState<SearchUsersPage> {
             error: (err, stack) {
               print(err);
               return ErrorWithAction(
-                action: () => ref.invalidate(searchUsersProvider),
-                actionText: 'Odśwież');
+                  action: () => ref.invalidate(searchUsersProvider),
+                  actionText: 'Odśwież');
             },
             loading: () => const Center(child: CircularProgressIndicator())));
   }
 
   Widget _buildList(List<UserProfile> users) {
-    return ListView.builder(itemBuilder: (context, i) {
-      return UserListTile(userProfile: users[i]);
-    }, itemCount: users.length);
+    return ListView.builder(
+        itemBuilder: (context, i) {
+          return UserListTile(userProfile: users[i]);
+        },
+        itemCount: users.length);
   }
 }

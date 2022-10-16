@@ -66,7 +66,7 @@ class _EventCardState extends State<EventCard> {
                                   .withOpacity(0.8)),
                           const SizedBox(width: 4),
                           SizedBox(
-                            width: 86,
+                            width: 87,
                             child: Text(_getDateString(),
                                 style: Theme.of(context).textTheme.caption),
                           ),
@@ -95,7 +95,7 @@ class _EventCardState extends State<EventCard> {
                                   .withOpacity(0.8)),
                           const SizedBox(width: 4),
                           SizedBox(
-                              width: 20,
+                              width: 35,
                               child: Text(widget.event.points.toString(),
                                   style: Theme.of(context).textTheme.caption))
                         ])
@@ -117,7 +117,8 @@ class _EventCardState extends State<EventCard> {
   }
 
   String? _getInfoMessage() {
-    if (widget.event.volunteers.any((x) => x.userId == supabase.auth.currentUser!.id) ==
+    if (widget.event.volunteers
+            .any((x) => x.userId == supabase.auth.currentUser!.id) ==
         true) {
       return 'Bierzesz udział w tym wydarzeniu';
     }

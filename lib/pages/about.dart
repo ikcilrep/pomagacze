@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 // widoczne po pierwszym zalogowaniu + z poziomu menu profilu
 
 class AboutPage extends StatelessWidget {

@@ -1,5 +1,5 @@
-import 'package:pomagacze/models/volunteer.dart';
 import 'package:pomagacze/db/helpers.dart';
+import 'package:pomagacze/models/volunteer.dart';
 import 'package:pomagacze/utils/constants.dart';
 
 class VolunteersDB {

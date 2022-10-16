@@ -7,7 +7,8 @@ extension ShowSnackBar on BuildContext {
     Color? color,
   }) {
     ScaffoldMessenger.of(this).showSnackBar(SnackBar(
-      content: Text(message, style: TextStyle(color: Theme.of(this).colorScheme.onSurface)),
+      content: Text(message,
+          style: TextStyle(color: Theme.of(this).colorScheme.onSurface)),
       backgroundColor: backgroundColor ?? Theme.of(this).colorScheme.surface,
     ));
   }
