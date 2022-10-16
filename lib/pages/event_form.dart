@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:open_location_picker/open_location_picker.dart';
 import 'package:pomagacze/db/db.dart';
@@ -29,6 +30,8 @@ class EventFormState extends ConsumerState<EventForm> {
   bool _loading = false;
 
   FormattedLocation? _location;
+
+  XFile? _imageFile;
 
   bool get isEditing => widget.initialData != null;
 
@@ -65,6 +68,22 @@ class EventFormState extends ConsumerState<EventForm> {
       _loading = true;
     });
 
+    String? imageUrl;
+    if (_imageFile != null) {
+      final bytes = await _imageFile!.readAsBytes();
+      final fileExt = _imageFile!.path.split('.').last;
+      final fileName = '${DateTime.now().toIso8601String()}.$fileExt';
+      final filePath = fileName;
+      final response = await supabase.storage
+          .from('event-images')
+          .uploadBinary(filePath, bytes);
+      if (response.error != null && mounted) {
+        context.showErrorSnackBar(message: response.error!.message);
+        return;
+      }
+      imageUrl = (supabase.storage.from('event-images').getPublicUrl(filePath)).data;
+    }
+
     final ageRange = _formKey.currentState!.value['age_range'] as RangeValues?;
 
     final values = {
@@ -79,7 +98,8 @@ class EventFormState extends ConsumerState<EventForm> {
       'longitude': _location?.lon,
       'minimal_age': ageRange?.start.round(),
       'maximal_age': ageRange?.end.round(),
-      'points': (_formKey.currentState!.value['points'] as double).round()
+      'points': (_formKey.currentState!.value['points'] as double).round(),
+      'image_url': imageUrl
     };
 
     var data = HelpEvent.fromData(values);
@@ -96,7 +116,6 @@ class EventFormState extends ConsumerState<EventForm> {
     await ref.refresh(feedFutureProvider.future);
     await ref.refresh(eventFutureProvider(data.id!).future);
 
-    print(data);
 
     if (mounted) {
       if (isEditing) {
@@ -145,6 +164,37 @@ class EventFormState extends ConsumerState<EventForm> {
                       decoration: const InputDecoration(labelText: 'Opis'),
                       validator: FormBuilderValidators.required(
                           errorText: 'Opis nie może być pusty'),
+                    ),
+                    const SizedBox(height: 15),
+                    FormBuilderTextField(
+                      name: 'image_url',
+                      decoration: InputDecoration(
+                          hintText: 'Zdjęcie',
+                          icon: const Icon(Icons.photo),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              _imageFile = null;
+                              _formKey.currentState?.fields['image_url']
+                                  ?.didChange(null);
+                            },
+                          )),
+                      readOnly: true,
+                      onTap: () async {
+                        final picker = ImagePicker();
+                        final imageFile = await picker.pickImage(
+                          source: ImageSource.gallery,
+                          maxWidth: 300,
+                          maxHeight: 300,
+                        );
+                        if (imageFile == null) {
+                          return;
+                        }
+                        _imageFile = imageFile;
+
+                        _formKey.currentState?.fields['image_url']
+                            ?.didChange(_imageFile?.name ?? '');
+                      },
                     ),
                     const SizedBox(height: 15),
                     FormBuilderField(
@@ -229,7 +279,7 @@ class EventFormState extends ConsumerState<EventForm> {
                         labelText: "Lokalizacja",
                         prefixIconConstraints: BoxConstraints(maxWidth: 0),
                         prefixIcon: Icon(null),
-                        suffixIcon: Icon(Icons.location_pin),
+                        icon: Icon(Icons.location_pin),
                       ),
                       removeIcon: Icon(Icons.clear,
                           color: Theme.of(context).colorScheme.onSurface),

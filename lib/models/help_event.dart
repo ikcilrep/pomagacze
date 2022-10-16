@@ -10,6 +10,7 @@ class HelpEvent {
   UserProfile? author;
   String title = '';
   String description = '';
+  String? imageUrl;
   DateTime? dateStart;
   DateTime? dateEnd;
 
@@ -50,6 +51,7 @@ class HelpEvent {
     if (data != null) {
       title = data['title'] ?? '';
       description = data['description'] ?? '';
+      imageUrl = data['image_url'];
       authorId = data['author_id'] ?? '';
       author = UserProfile.fromData(data['author']);
       if (data['author'] != null) {
@@ -92,6 +94,7 @@ class HelpEvent {
       'author_id': authorId,
       'title': title,
       'description': description,
+      'image_url': imageUrl,
       'date_start': dateStart?.toString(),
       'date_end': dateEnd?.toString(),
       'latitude': latitude,

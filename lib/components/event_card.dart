@@ -34,7 +34,7 @@ class _EventCardState extends State<EventCard> {
         // transitionDuration: const Duration(seconds: 2),
         closedBuilder: (_, openContainer) {
           return Card(
-              elevation: 1.5,
+              elevation: 2,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10)),
               child: InkWell(
@@ -44,18 +44,28 @@ class _EventCardState extends State<EventCard> {
                     padding: const EdgeInsets.all(18),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         _buildInfoMessage(),
                         Text(widget.event.title,
                             style: Theme.of(context).textTheme.titleMedium),
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 5),
                         Text(
                           widget.event.description,
                           style: Theme.of(context).textTheme.bodyText2,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
+                        const SizedBox(height: 10),
+                        if (widget.event.imageUrl != null)
+                          ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: ConstrainedBox(
+                                  constraints: const BoxConstraints(maxHeight: 250),
+                                  child: Image.network(
+                                    widget.event.imageUrl!,
+                                    fit: BoxFit.fitWidth,
+                                  ))),
                         const SizedBox(height: 15),
                         Row(children: [
                           Icon(Icons.event,
