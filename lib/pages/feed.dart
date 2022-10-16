@@ -1,9 +1,9 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:pomagacze/components/event_list.dart';
 import 'package:pomagacze/components/fab_extended_animated.dart';
+import 'package:pomagacze/components/segmented_control.dart';
 import 'package:pomagacze/db/db.dart';
 import 'package:pomagacze/pages/event_form.dart';
 import 'package:pomagacze/state/events.dart';
@@ -87,24 +87,20 @@ class FeedPageState extends ConsumerState<FeedPage> {
   }
 
   Widget _buildFilters() {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
+      color: Theme.of(context).colorScheme.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          MaterialSegmentedControl(
+          SegmentedControl(
             children: const {
               EventOrder.closest: Text('Najbliższe'),
               EventOrder.incoming: Text('Nadchodzące'),
               EventOrder.popular: Text('Popularne'),
             },
             selectionIndex: _eventFilters.orderBy,
-            borderColor: Theme.of(context).colorScheme.primary,
-            selectedColor: Theme.of(context).colorScheme.primary,
-            unselectedColor: Theme.of(context).colorScheme.surface,
-            borderRadius: 32.0,
-            verticalOffset: 10,
-            horizontalPadding: const EdgeInsets.symmetric(horizontal: 10),
+            horizontalPadding: const EdgeInsets.symmetric(horizontal: 7),
             onSegmentChosen: (value) {
               setState(() {
                 _eventFilters = _eventFilters.copyWith(orderBy: value);
@@ -122,9 +118,17 @@ class FeedPageState extends ConsumerState<FeedPage> {
       children: [
         _buildFilters(),
         Expanded(
-          child: EventList(
-              provider: filteredEventsFutureProvider(_eventFilters),
-              scrollController: _scrollController),
+          child: PageTransitionSwitcher(
+              transitionBuilder: (child, animation, secondaryAnimation) {
+                return FadeThroughTransition(
+                    animation: animation,
+                    secondaryAnimation: secondaryAnimation,
+                    child: child);
+              },
+              child: EventList(
+                  key: Key(_eventFilters.hashCode.toString()),
+                  provider: filteredEventsFutureProvider(_eventFilters),
+                  scrollController: _scrollController)),
         ),
       ],
     );

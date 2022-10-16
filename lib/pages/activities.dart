@@ -14,35 +14,40 @@ class ActivitiesPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final friendsAndUserActivities =
         ref.watch(friendsAndUserActivitiesProvider);
-    return friendsAndUserActivities.when(
-        data: (friendsAndUserActivities) {
-          friendsAndUserActivities
-              .sort((a, b) => b.createdAt.compareTo(a.createdAt));
-          return ListView.builder(
-              itemCount: friendsAndUserActivities.length,
-              itemBuilder: (context, index) {
-                final activity = friendsAndUserActivities[index];
-                return OpenContainer<bool>(
-                    tappable: false,
-                    transitionType: ContainerTransitionType.fadeThrough,
-                    transitionDuration: const Duration(milliseconds: 350),
-                    openBuilder: (BuildContext context, VoidCallback _) =>
-                        EventDetails(activity.event),
-                    // closedShape: RoundedRectangleBorder(
-                    //     borderRadius: BorderRadius.circular(18)),
-                    closedElevation: 1.5,
-                    // transitionDuration: const Duration(seconds: 2),
-                    closedBuilder: (_, openContainer) {
-                      return ListTile(
-                        onTap: openContainer,
-                        title: Text(
-                            '${activity.user.name} dołączył do "${activity.event.title}"'),
-                        subtitle: Text(activity.createdAt.displayable()),
-                      );
-                    });
-              });
-        },
-        error: (err, stack) => Center(child: Text('Coś poszło nie tak: $err')),
-        loading: () => const Center(child: CircularProgressIndicator()));
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: friendsAndUserActivities.when(
+          data: (friendsAndUserActivities) {
+            friendsAndUserActivities
+                .sort((a, b) => b.createdAt.compareTo(a.createdAt));
+            return ListView.builder(
+                itemCount: friendsAndUserActivities.length,
+                itemBuilder: (context, index) {
+                  final activity = friendsAndUserActivities[index];
+                  return OpenContainer<bool>(
+                      tappable: false,
+                      transitionType: ContainerTransitionType.fadeThrough,
+                      transitionDuration: const Duration(milliseconds: 350),
+                      openBuilder: (BuildContext context, VoidCallback _) =>
+                          EventDetails(activity.event),
+                      // closedShape: RoundedRectangleBorder(
+                      //     borderRadius: BorderRadius.circular(18)),
+                      closedElevation: 1.5,
+                      // transitionDuration: const Duration(seconds: 2),
+                      closedBuilder: (_, openContainer) {
+                        return ListTile(
+                          tileColor: Colors.transparent,
+                          onTap: openContainer,
+                          title: Text(
+                              '${activity.user.name} dołączył do "${activity.event.title}"'),
+                          subtitle: Text(activity.createdAt.displayable()),
+                        );
+                      });
+                });
+          },
+          error: (err, stack) => Center(child: Text('Coś poszło nie tak: $err')),
+          loading: () => const Center(child: CircularProgressIndicator())),
+    );
   }
 }
