@@ -329,7 +329,7 @@ class EventFormState extends ConsumerState<EventForm> {
                     ),
                     FormBuilderTextField(
                       name: 'email',
-                      decoration: const InputDecoration(labelText: '* Adres e-mail'),
+                      decoration: const InputDecoration(labelText: 'Adres e-mail (opcjonalne)'),
                     ),
                     const SizedBox(height: 20),
                   ])),
