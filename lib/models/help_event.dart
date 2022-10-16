@@ -25,6 +25,8 @@ class HelpEvent {
   String? addressShort;
   String? addressFull;
 
+  String? contactEmail;
+
   List<Volunteer> volunteers = [];
 
   bool get isMinimalAgeSpecified => minimalAge != null && minimalAge != minimalVolunteerAge;
@@ -54,6 +56,7 @@ class HelpEvent {
       longitude = castToDoubleIfInteger(data['longitude']);
       addressShort = data['address_short'];
       addressFull = data['address_full'];
+      contactEmail = data['email'];
       dateStart = DateTime.tryParse(data['date_start'] ?? '');
       dateEnd = DateTime.tryParse(data['date_end'] ?? '');
       minimalAge = parseIntIfString(data['minimal_age']);
@@ -95,6 +98,7 @@ class HelpEvent {
       'maximal_number_of_volunteers': maximalNumberOfVolunteers,
       'address_short': addressShort,
       'address_full': addressFull,
+      'email': contactEmail,
       'points': points
     };
   }

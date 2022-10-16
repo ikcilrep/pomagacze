@@ -151,35 +151,37 @@ class EventDetailsState extends ConsumerState<EventDetails> {
               subtitle: Text(numberOfVolunteersText())),
           ListTile(
               title: const Text("Kontakt do organizatora"),
-              subtitle: Text("MAIL"),
+              subtitle: Text(event.contactEmail ?? 'Brak'),
               trailing:const Icon(Icons.open_in_new),
               onTap: () async {
-              showModalBottomSheet(
-              context: context,
-              builder: (context) => ListView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              children: [
-              ListTile(
-              leading: const Icon(Icons.copy),
-              title: const Text('Skopiuj do schowka'),
-              onTap: () async {
-              Navigator.of(context).pop();
-              await Clipboard.setData(ClipboardData(text: "MAIL" ?? ''));
-              Fluttertoast.showToast(
-              msg: 'Skopiowano do schowka!');
-              }),
-              ListTile(
-              leading: const Icon(Icons.mail),
-              title: const Text('Wyślij wiadomość'),
-              onTap: () async {
-              Navigator.of(context).pop();
-              launchMailto('hyopplocp@gmail.com');
-              })
+                if(event.contactEmail != null) {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (context) => ListView(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      children: [
+                        ListTile(
+                            leading: const Icon(Icons.copy),
+                            title: const Text('Skopiuj do schowka'),
+                            onTap: () async {
+                              Navigator.of(context).pop();
+                              await Clipboard.setData(ClipboardData(text: event.contactEmail));
+                              Fluttertoast.showToast(
+                                  msg: 'Skopiowano do schowka!');
+                            }),
+                        ListTile(
+                            leading: const Icon(Icons.mail),
+                            title: const Text('Wyślij wiadomość'),
+                            onTap: () async {
+                              Navigator.of(context).pop();
+                              launchMailto(event.contactEmail);
+                              }
+                            )
               ],
               ));
-              }),
+              }}),
           Visibility(
               visible: userProfile != null &&
                   !canJoin(userProfile!, event.volunteers),
