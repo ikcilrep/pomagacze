@@ -19,7 +19,7 @@ class LeaderboardPage extends ConsumerStatefulWidget {
 }
 
 class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
-  final _leaderboardOptions =
+  var _leaderboardOptions =
       LeaderboardOptions(LeaderboardType.world, LeaderboardTimeRange.week);
 
   @override
@@ -46,25 +46,11 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
     );
   }
 
-  Widget _buildLeaderboard() {
-    final leaderboard = ref.watch(leaderboardProvider(_leaderboardOptions));
-
-    return leaderboard.when(
-        data: (entries) => ListView.builder(
-            padding: const EdgeInsets.only(top: 10),
-            itemCount: entries.length,
-            itemBuilder: (_, index) {
-              return _buildUserTile(index, entries[index]);
-            }),
-        error: (err, stack) => Center(child: Text('Coś poszło nie tak: $err')),
-        loading: () => const Center(child: CircularProgressIndicator()));
-  }
-
   MaterialSegmentedControl<LeaderboardType> _buildLeaderboardTypeChooser() {
     return MaterialSegmentedControl(
       children: const {
-        LeaderboardType.world: const Text('Świat'),
-        LeaderboardType.friends: const Text('Znajomi'),
+        LeaderboardType.world: Text('Świat'),
+        LeaderboardType.friends: Text('Znajomi'),
       },
       selectionIndex: _leaderboardOptions.type,
       borderColor: Theme.of(context).colorScheme.primary,
@@ -75,7 +61,7 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
       horizontalPadding: const EdgeInsets.symmetric(horizontal: 20),
       onSegmentChosen: (index) {
         setState(() {
-          _leaderboardOptions.type = index;
+          _leaderboardOptions = _leaderboardOptions.copyWith(type: index);
         });
       },
     );
@@ -97,10 +83,24 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
       horizontalPadding: const EdgeInsets.symmetric(horizontal: 20),
       onSegmentChosen: (index) {
         setState(() {
-          _leaderboardOptions.timeRange = index;
+          _leaderboardOptions = _leaderboardOptions.copyWith(timeRange: index);
         });
       },
     );
+  }
+
+  Widget _buildLeaderboard() {
+    var leaderboard = ref.watch(leaderboardProvider(_leaderboardOptions));
+
+    return leaderboard.when(
+        data: (entries) => ListView.builder(
+            padding: const EdgeInsets.only(top: 10),
+            itemCount: entries.length,
+            itemBuilder: (_, index) {
+              return _buildUserTile(index, entries[index]);
+            }),
+        error: (err, stack) => Center(child: Text('Coś poszło nie tak: $err')),
+        loading: () => const Center(child: CircularProgressIndicator()));
   }
 
   Widget _buildUserTile(int position, UserProfile userProfile) {

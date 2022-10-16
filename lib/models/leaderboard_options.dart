@@ -1,3 +1,5 @@
+import 'package:equatable/equatable.dart';
+
 enum LeaderboardType { world, friends }
 
 enum LeaderboardTimeRange { all, week, month }
@@ -15,9 +17,16 @@ extension EnumExtension on LeaderboardTimeRange {
   }
 }
 
-class LeaderboardOptions {
-  LeaderboardType type;
-  LeaderboardTimeRange timeRange;
+class LeaderboardOptions extends Equatable {
+  final LeaderboardType type;
+  final LeaderboardTimeRange timeRange;
 
-  LeaderboardOptions(this.type, this.timeRange);
+  const LeaderboardOptions(this.type, this.timeRange);
+
+  LeaderboardOptions copyWith({LeaderboardType? type, LeaderboardTimeRange? timeRange}) {
+    return LeaderboardOptions(type ?? this.type, timeRange ?? this.timeRange);
+  }
+
+  @override
+  List<Object> get props => [type, timeRange];
 }

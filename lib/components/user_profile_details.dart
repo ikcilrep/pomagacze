@@ -93,7 +93,7 @@ class _UserProfileDetailsState extends ConsumerState<UserProfileDetails> {
               ),
             ),
             const SizedBox(height: 8),
-            Text('PUNKTY POMOCY', style: Theme.of(context).textTheme.overline)
+            Text('PUNKTY', style: Theme.of(context).textTheme.overline)
           ],
         ),
         Column(
@@ -111,7 +111,25 @@ class _UserProfileDetailsState extends ConsumerState<UserProfileDetails> {
               ),
             ),
             const SizedBox(height: 8),
-            Text('W TYM MIESIĄCU', style: Theme.of(context).textTheme.overline)
+            Text('TEN MIESIĄC', style: Theme.of(context).textTheme.overline)
+          ],
+        ),
+        Column(
+          children: [
+            SizedBox(
+              height: 50,
+              child: Row(
+                children: [
+                  Icon(Icons.local_fire_department,
+                      color: Theme.of(context).colorScheme.error),
+                  const SizedBox(width: 5),
+                  Text(formatXP(widget.userProfile.xpThisWeek),
+                      style: Theme.of(context).textTheme.titleLarge),
+                ],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text('TEN TYDZIEŃ', style: Theme.of(context).textTheme.overline)
           ],
         ),
       ],
