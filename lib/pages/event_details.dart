@@ -28,7 +28,7 @@ class EventDetails extends ConsumerStatefulWidget {
 class EventDetailsState extends ConsumerState<EventDetails> {
   bool _isFABLoading = false;
 
-  FutureProvider<HelpEvent> get eventProvider {
+  AutoDisposeFutureProvider<HelpEvent> get eventProvider {
     return eventFutureProvider(widget.helpEvent.id!);
   }
 
