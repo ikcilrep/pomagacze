@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:pomagacze/db/helpers.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/utils/constants.dart';
@@ -63,8 +64,7 @@ class EventsDB {
         .toList();
   }
 
-  static PostgrestFilterBuilder applyFilters(
-      PostgrestFilterBuilder query, EventFilters filters) {
+  static PostgrestFilterBuilder applyFilters(PostgrestFilterBuilder query, EventFilters filters) {
     if (filters.state == EventState.active) {
       query = query.gt('date_end', DateTime.now());
     } else if (filters.state == EventState.past) {
@@ -102,15 +102,15 @@ enum EventState { active, past }
 
 enum EventOrder { incoming, closest, popular }
 
-class EventFilters {
-  EventState? state;
-  String? authorId;
-  String? volunteerId;
-  EventOrder? orderBy;
+class EventFilters extends Equatable {
+  final EventState? state;
+  final String? authorId;
+  final String? volunteerId;
+  final EventOrder? orderBy;
 
-  double? currentLat, currentLng;
+  final double? currentLat, currentLng;
 
-  EventFilters(
+  const EventFilters(
       {this.state,
       this.authorId,
       this.volunteerId,
@@ -118,26 +118,23 @@ class EventFilters {
       this.currentLat,
       this.currentLng});
 
-  EventFilters.empty();
-
   @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is EventFilters &&
-          runtimeType == other.runtimeType &&
-          state == other.state &&
-          authorId == other.authorId &&
-          volunteerId == other.volunteerId &&
-          orderBy == other.orderBy &&
-          currentLat == other.currentLat &&
-          currentLng == other.currentLng;
+  List<Object?> get props =>
+      [state, authorId, volunteerId, orderBy, currentLat, currentLng];
 
-  @override
-  int get hashCode =>
-      state.hashCode ^
-      authorId.hashCode ^
-      volunteerId.hashCode ^
-      orderBy.hashCode ^
-      currentLat.hashCode ^
-      currentLng.hashCode;
+  EventFilters copyWith(
+      {EventState? state,
+      String? authorId,
+      String? volunteerId,
+      EventOrder? orderBy,
+      double? currentLat,
+      double? currentLng}) {
+    return EventFilters(
+        state: state ?? this.state,
+        authorId: authorId ?? this.authorId,
+        volunteerId: volunteerId ?? this.volunteerId,
+        orderBy: orderBy ?? this.orderBy,
+        currentLat: currentLat ?? this.currentLat,
+        currentLng: currentLng ?? this.currentLng);
+  }
 }

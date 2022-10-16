@@ -27,9 +27,9 @@ class FeedPageState extends ConsumerState<FeedPage> {
     super.initState();
     var userProfile = ref.read(userProfileProvider);
 
-    _eventFilters = _eventFilters
-      ..currentLat = userProfile.valueOrNull?.latitude
-      ..currentLng = userProfile.valueOrNull?.longitude;
+    _eventFilters = _eventFilters.copyWith(
+        currentLat: userProfile.valueOrNull?.latitude,
+        currentLng: userProfile.valueOrNull?.longitude);
   }
 
   @override
@@ -105,9 +105,9 @@ class FeedPageState extends ConsumerState<FeedPage> {
             borderRadius: 32.0,
             verticalOffset: 10,
             horizontalPadding: const EdgeInsets.symmetric(horizontal: 10),
-            onSegmentChosen: (index) {
+            onSegmentChosen: (value) {
               setState(() {
-                _eventFilters.orderBy = index;
+                _eventFilters = _eventFilters.copyWith(orderBy: value);
               });
             },
           )
@@ -123,7 +123,6 @@ class FeedPageState extends ConsumerState<FeedPage> {
         _buildFilters(),
         Expanded(
           child: EventList(
-              key: Key(_eventFilters.hashCode.toString()),
               provider: filteredEventsFutureProvider(_eventFilters),
               scrollController: _scrollController),
         ),
