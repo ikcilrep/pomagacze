@@ -13,6 +13,8 @@ import 'package:pomagacze/state/user.dart';
 import 'package:pomagacze/state/volunteers.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/date_extensions.dart';
+import 'package:mailto/mailto.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class EventDetails extends ConsumerStatefulWidget {
   final HelpEvent helpEvent;
@@ -38,6 +40,17 @@ class EventDetailsState extends ConsumerState<EventDetails> {
   UserProfile? get userProfile => ref.read(userProfileProvider).valueOrNull;
 
   List<Volunteer>? get userEvents => ref.read(userEventsProvider).valueOrNull;
+
+  launchMailto(mail) async {
+    final mailtoLink = Mailto(
+      to: [mail],
+      cc: [],
+      subject: '',
+      body: '',
+    );
+
+    await launch('$mailtoLink');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -136,6 +149,39 @@ class EventDetailsState extends ConsumerState<EventDetails> {
           ListTile(
               title: const Text("Zgłoszeni wolontariusze"),
               subtitle: Text(numberOfVolunteersText())),
+          ListTile(
+              title: const Text("Kontakt do organizatora"),
+              subtitle: Text(event.contactEmail ?? 'Brak'),
+              trailing:const Icon(Icons.open_in_new),
+              onTap: () async {
+                if(event.contactEmail != null) {
+                showModalBottomSheet(
+                    context: context,
+                    builder: (context) => ListView(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      children: [
+                        ListTile(
+                            leading: const Icon(Icons.copy),
+                            title: const Text('Skopiuj do schowka'),
+                            onTap: () async {
+                              Navigator.of(context).pop();
+                              await Clipboard.setData(ClipboardData(text: event.contactEmail));
+                              Fluttertoast.showToast(
+                                  msg: 'Skopiowano do schowka!');
+                            }),
+                        ListTile(
+                            leading: const Icon(Icons.mail),
+                            title: const Text('Wyślij wiadomość'),
+                            onTap: () async {
+                              Navigator.of(context).pop();
+                              launchMailto(event.contactEmail);
+                              }
+                            )
+              ],
+              ));
+              }}),
           Visibility(
               visible: userProfile != null &&
                   !canJoin(userProfile!, event.volunteers),
