@@ -37,9 +37,9 @@ class _EventCardState extends ConsumerState<EventCard> {
         closedBuilder: (_, openContainer) {
           return Card(
               elevation: 0,
-              color: Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.15),
+              color: Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.12),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10), side: BorderSide(color: Theme.of(context).colorScheme.secondary.withOpacity(0.5), width: 1)),
+                  borderRadius: BorderRadius.circular(10), side: BorderSide(color: Theme.of(context).colorScheme.secondary.withOpacity(0.54), width: 1)),
               child: InkWell(
                 borderRadius: BorderRadius.circular(10),
                 onTap: openContainer,

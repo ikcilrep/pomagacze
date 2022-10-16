@@ -16,17 +16,20 @@ class FriendsPageState extends ConsumerState<FriendsPage> {
     return DefaultTabController(
       length: 2,
       child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
-        TabBar(
-          tabs: const [
-            Tab(
-              text: 'Aktualności',
-            ),
-            Tab(
-              text: 'Znajomi',
-            ),
-          ],
-          labelColor: Theme.of(context).colorScheme.onSurface,
-          indicatorColor: Theme.of(context).colorScheme.primary,
+        Container(
+          color: Theme.of(context).colorScheme.surface,
+          child: TabBar(
+            tabs: const [
+              Tab(
+                text: 'Aktualności',
+              ),
+              Tab(
+                text: 'Znajomi',
+              ),
+            ],
+            labelColor: Theme.of(context).colorScheme.onSurface,
+            indicatorColor: Theme.of(context).colorScheme.primary,
+          ),
         ),
         const Expanded(
             child:
