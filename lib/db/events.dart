@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:pomagacze/db/helpers.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/utils/constants.dart';
@@ -21,11 +22,27 @@ class EventsDB {
   }
 
   static Future<List<HelpEvent>> getFiltered(EventFilters filters) async {
-    var query = supabase.from('events').select(select);
+    PostgrestFilterBuilder query;
+
+    if (filters.orderBy == EventOrder.closest) {
+      query = supabase.rpc('closest_events',
+          params: {'lat': filters.currentLat, 'lng': filters.currentLng});
+    } else {
+      query = supabase.from('events_extended').select(select);
+    }
 
     query = applyFilters(query, filters);
 
-    var result = await query.execute();
+    PostgrestTransformBuilder q2;
+    if (filters.orderBy == EventOrder.closest) {
+      q2 = query.select(select);
+    } else if (filters.orderBy == EventOrder.incoming) {
+      q2 = query.order('date_start', ascending: true);
+    } else {
+      q2 = query.order('volunteer_count');
+    }
+
+    var result = await q2.execute();
     result.throwOnError();
 
     return (result.data as List<dynamic>)
@@ -35,13 +52,11 @@ class EventsDB {
 
   static Future<List<HelpEvent>> getByVolunteer(EventFilters filters) async {
     var query = supabase
-        .from('events')
+        .from('events_extended')
         .select(selectInner)
         .eq('volunteers.user_id', filters.volunteerId);
 
-    query = applyFilters(query, filters);
-
-    var result = await query.execute();
+    var result = await applyFilters(query, filters).execute();
     result.throwOnError();
 
     return (result.data as List<dynamic>)
@@ -49,8 +64,7 @@ class EventsDB {
         .toList();
   }
 
-  static PostgrestFilterBuilder applyFilters(
-      PostgrestFilterBuilder query, EventFilters filters) {
+  static PostgrestFilterBuilder applyFilters(PostgrestFilterBuilder query, EventFilters filters) {
     if (filters.state == EventState.active) {
       query = query.gt('date_end', DateTime.now());
     } else if (filters.state == EventState.past) {
@@ -77,20 +91,50 @@ class EventsDB {
     return HelpEvent.fromData(result.data);
   }
 
-  static Future<void> upsert(HelpEvent data) async {
+  static Future<HelpEvent> upsert(HelpEvent data) async {
     var result = await supabase.from('events').upsert(data.toJson()).execute();
     result.throwOnError();
+    return HelpEvent.fromData(result.data[0]);
   }
 }
 
 enum EventState { active, past }
 
-class EventFilters {
-  EventState? state;
-  String? authorId;
-  String? volunteerId;
+enum EventOrder { incoming, closest, popular }
 
-  EventFilters({this.state, this.authorId, this.volunteerId});
+class EventFilters extends Equatable {
+  final EventState? state;
+  final String? authorId;
+  final String? volunteerId;
+  final EventOrder? orderBy;
 
-  EventFilters.empty();
+  final double? currentLat, currentLng;
+
+  const EventFilters(
+      {this.state,
+      this.authorId,
+      this.volunteerId,
+      this.orderBy,
+      this.currentLat,
+      this.currentLng});
+
+  @override
+  List<Object?> get props =>
+      [state, authorId, volunteerId, orderBy, currentLat, currentLng];
+
+  EventFilters copyWith(
+      {EventState? state,
+      String? authorId,
+      String? volunteerId,
+      EventOrder? orderBy,
+      double? currentLat,
+      double? currentLng}) {
+    return EventFilters(
+        state: state ?? this.state,
+        authorId: authorId ?? this.authorId,
+        volunteerId: volunteerId ?? this.volunteerId,
+        orderBy: orderBy ?? this.orderBy,
+        currentLat: currentLat ?? this.currentLat,
+        currentLng: currentLng ?? this.currentLng);
+  }
 }

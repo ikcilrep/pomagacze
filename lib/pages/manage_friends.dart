@@ -32,8 +32,8 @@ class ManageFriendsPageState extends ConsumerState<ManageFriendsPage> {
                   .textTheme
                   .subtitle2
                   ?.copyWith(color: Theme.of(context).colorScheme.onPrimary)),
-          icon:
-              Icon(Icons.search, color: Theme.of(context).colorScheme.onPrimary),
+          icon: Icon(Icons.search,
+              color: Theme.of(context).colorScheme.onPrimary),
           onPress: () {
             Navigator.of(context).pushNamed('/search-users');
           },
@@ -66,8 +66,8 @@ class ManageFriendsPageState extends ConsumerState<ManageFriendsPage> {
     );
   }
 
-  Widget _buildList<T>(String title, List<T> list,
-      UserProfile? Function(T element) userGetter) {
+  Widget _buildList<T>(
+      String title, List<T> list, UserProfile? Function(T element) userGetter) {
     if (list.isEmpty) return const SizedBox.shrink();
 
     return Column(

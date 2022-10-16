@@ -23,17 +23,18 @@ class ActivitiesPage extends ConsumerWidget {
               itemBuilder: (context, index) {
                 final activity = friendsAndUserActivities[index];
                 return OpenContainer<bool>(
-                    tappable: true,
+                    tappable: false,
                     transitionType: ContainerTransitionType.fadeThrough,
                     transitionDuration: const Duration(milliseconds: 350),
                     openBuilder: (BuildContext context, VoidCallback _) =>
                         EventDetails(activity.event),
-                    closedShape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18)),
+                    // closedShape: RoundedRectangleBorder(
+                    //     borderRadius: BorderRadius.circular(18)),
                     closedElevation: 1.5,
                     // transitionDuration: const Duration(seconds: 2),
                     closedBuilder: (_, openContainer) {
                       return ListTile(
+                        onTap: openContainer,
                         title: Text(
                             '${activity.user.name} dołączył do "${activity.event.title}"'),
                         subtitle: Text(activity.createdAt.displayable()),

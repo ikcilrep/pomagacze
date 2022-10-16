@@ -1,4 +1,4 @@
 export 'events.dart';
-export 'users.dart';
 export 'friendships.dart';
+export 'users.dart';
 export 'volunteers.dart';

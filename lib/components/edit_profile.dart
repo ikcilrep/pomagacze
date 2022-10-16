@@ -10,9 +10,9 @@ import 'package:pomagacze/db/users.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/state/user.dart';
 import 'package:pomagacze/utils/constants.dart';
-import 'package:pomagacze/utils/string_extensions.dart';
-import 'package:pomagacze/utils/snackbar.dart';
 import 'package:pomagacze/utils/gender_serializing.dart';
+import 'package:pomagacze/utils/snackbar.dart';
+import 'package:pomagacze/utils/string_extensions.dart';
 
 class EditProfile extends ConsumerStatefulWidget {
   final String? title;
@@ -56,9 +56,10 @@ class EditProfilePageState extends ConsumerState<EditProfile> {
 
     try {
       var data = UserProfile.fromData({
+        ...userProfile.toJson(),
         ...(_formKey.currentState?.value ?? {}),
         'birth_date': _formKey.currentState?.value['birth_date'].toString(),
-        'avatar_url': supabase.auth.currentUser?.userMetadata['avatar_url']
+        'avatar_url': supabase.auth.currentUser?.userMetadata['avatar_url'],
       });
       await UsersDB.upsert(data);
       ref.refresh(userProfileProvider);

@@ -15,35 +15,27 @@ final friendsIdsProvider = FutureProvider<List<String>>((ref) async {
 
 final friendsProvider = FutureProvider<List<UserProfile>>((ref) async {
   final friendsIds = await ref.watch(friendsIdsProvider.future);
-  return await _getAllByIds(friendsIds);
+  return await UsersDB.getByIds(friendsIds);
 });
 
 final friendsAndUserProfilesProvider =
     FutureProvider<List<UserProfile>>((ref) async {
-  final userId = supabase.auth.user()?.id ?? '';
+      final userId = supabase.auth.user()?.id ?? '';
   final friendsIds = await ref.watch(friendsIdsProvider.future);
-  var res = await _getAllByIds([...friendsIds, userId]);
-  res.sort((a, b) => b.xp - a.xp);
+  var res = await UsersDB.getByIds([...friendsIds, userId]);
   return res;
 });
 
-Future<List<UserProfile>> _getAllByIds(
-    List<String> ids) async {
-  final result = <UserProfile>[];
-  for (final id in ids) {
-    result.add(await UsersDB.getById(id));
-  }
-  return result;
-}
-
-final outgoingFriendRequestsProvider = FutureProvider<List<FriendRequest>>((ref) async {
+final outgoingFriendRequestsProvider =
+    FutureProvider<List<FriendRequest>>((ref) async {
   ref.watch(friendsIdsProvider.future);
 
   final userId = supabase.auth.user()?.id ?? '';
   return await FriendshipsDB.getOutgoingFriendRequests(userId);
 });
 
-final incomingFriendRequestsProvider = FutureProvider<List<FriendRequest>>((ref) async {
+final incomingFriendRequestsProvider =
+    FutureProvider<List<FriendRequest>>((ref) async {
   ref.watch(friendsIdsProvider.future);
 
   final userId = supabase.auth.user()?.id ?? '';

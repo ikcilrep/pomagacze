@@ -14,8 +14,9 @@ class AuthState<T extends StatefulWidget> extends SupabaseAuthState<T> {
   @override
   void onAuthenticated(Session session) async {
     if (!await UsersDB.profileExists(session.user?.id ?? '') && mounted) {
-      Navigator.of(context).pushNamedAndRemoveUntil('/setup-profile', (route) => false);
-    } else if(mounted){
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/setup-profile', (route) => false);
+    } else if (mounted) {
       Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
     }
   }

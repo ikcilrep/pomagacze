@@ -10,9 +10,9 @@ class HelpEvent {
   UserProfile? author;
   String title = '';
   String description = '';
+  String? imageUrl;
   DateTime? dateStart;
   DateTime? dateEnd;
-
 
   int? minimalNumberOfVolunteers;
   int? maximalNumberOfVolunteers;
@@ -29,16 +29,21 @@ class HelpEvent {
 
   List<Volunteer> volunteers = [];
 
-  bool get isMinimalAgeSpecified => minimalAge != null && minimalAge != minimalVolunteerAge;
-  bool get isMaximalAgeSpecified => maximalAge != null && maximalAge != maximalVolunteerAge;
+  bool get isMinimalAgeSpecified =>
+      minimalAge != null && minimalAge != minimalVolunteerAge;
 
-  String? get formattedDateStart => dateStart == null ? null : _formatDate(dateStart!);
-  String? get formattedDateEnd => dateStart == null ? null : _formatDate(dateEnd!);
+  bool get isMaximalAgeSpecified =>
+      maximalAge != null && maximalAge != maximalVolunteerAge;
+
+  String? get formattedDateStart =>
+      dateStart == null ? null : _formatDate(dateStart!);
+
+  String? get formattedDateEnd =>
+      dateStart == null ? null : _formatDate(dateEnd!);
 
   String _formatDate(DateTime date) {
     return DateFormat('dd.MM.yyyy - kk:mm').format(date);
   }
-
 
   HelpEvent.empty();
 
@@ -46,6 +51,7 @@ class HelpEvent {
     if (data != null) {
       title = data['title'] ?? '';
       description = data['description'] ?? '';
+      imageUrl = data['image_url'];
       authorId = data['author_id'] ?? '';
       author = UserProfile.fromData(data['author']);
       if (data['author'] != null) {
@@ -66,8 +72,10 @@ class HelpEvent {
       maximalNumberOfVolunteers =
           parseIntIfString(data['maximal_number_of_volunteers']);
       points = parseIntIfString(data['points']) ?? 0;
-      if(data['volunteers'] is List) {
-        volunteers = (data['volunteers'] as List).map((x) => Volunteer.fromData(x)).toList();
+      if (data['volunteers'] is List) {
+        volunteers = (data['volunteers'] as List)
+            .map((x) => Volunteer.fromData(x))
+            .toList();
       } else {
         volunteers = [];
       }
@@ -75,9 +83,7 @@ class HelpEvent {
   }
 
   int? parseIntIfString(number) =>
-      (number is int?) || number is int
-          ? number
-          : int.tryParse(number);
+      (number is int?) || number is int ? number : int.tryParse(number);
 
   double? castToDoubleIfInteger(number) =>
       number is int ? number.toDouble() : number;
@@ -88,6 +94,7 @@ class HelpEvent {
       'author_id': authorId,
       'title': title,
       'description': description,
+      'image_url': imageUrl,
       'date_start': dateStart?.toString(),
       'date_end': dateEnd?.toString(),
       'latitude': latitude,

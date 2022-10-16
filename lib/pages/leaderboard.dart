@@ -2,24 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_segmented_control/material_segmented_control.dart';
 import 'package:pomagacze/components/user_avatar.dart';
+import 'package:pomagacze/models/leaderboard_options.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/pages/profile.dart';
 import 'package:pomagacze/state/friendships.dart';
+import 'package:pomagacze/state/leaderboard.dart';
 import 'package:pomagacze/state/user.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/xp.dart';
-
-enum _LeaderboardType {
-  world(0),
-  friends(1);
-
-  final int value;
-
-  const _LeaderboardType(this.value);
-
-  static _LeaderboardType fromInteger(int value) =>
-      _LeaderboardType.values.firstWhere((x) => x.value == value);
-}
 
 class LeaderboardPage extends ConsumerStatefulWidget {
   const LeaderboardPage({Key? key}) : super(key: key);
@@ -29,7 +19,8 @@ class LeaderboardPage extends ConsumerStatefulWidget {
 }
 
 class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
-  _LeaderboardType _currentSelection = _LeaderboardType.world;
+  var _leaderboardOptions =
+      LeaderboardOptions(LeaderboardType.world, LeaderboardTimeRange.week);
 
   @override
   Widget build(BuildContext context) {
@@ -47,38 +38,21 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
             Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
           _buildLeaderboardTypeChooser(),
           const SizedBox(height: 10),
+          _buildTimeRangeChooser(),
+          const SizedBox(height: 10),
           Expanded(child: _buildLeaderboard()),
         ]),
       ),
     );
   }
 
-  Widget _buildLeaderboard() {
-    final userProfiles = ref.watch(userProfilesProvider);
-    final friendsAndUserProfiles = ref.watch(friendsAndUserProfilesProvider);
-
-    final entries = _currentSelection == _LeaderboardType.world
-        ? userProfiles
-        : friendsAndUserProfiles;
-
-    return entries.when(
-        data: (entries) => ListView.builder(
-            padding: const EdgeInsets.only(top: 10),
-            itemCount: entries.length,
-            itemBuilder: (_, index) {
-              return _buildUserTile(index, entries[index]);
-            }),
-        error: (err, stack) => Center(child: Text('Coś poszło nie tak: $err')),
-        loading: () => const Center(child: CircularProgressIndicator()));
-  }
-
-  MaterialSegmentedControl<int> _buildLeaderboardTypeChooser() {
+  MaterialSegmentedControl<LeaderboardType> _buildLeaderboardTypeChooser() {
     return MaterialSegmentedControl(
-      children: {
-        _LeaderboardType.world.value: const Text('Świat'),
-        _LeaderboardType.friends.value: const Text('Znajomi'),
+      children: const {
+        LeaderboardType.world: Text('Świat'),
+        LeaderboardType.friends: Text('Znajomi'),
       },
-      selectionIndex: _currentSelection.value,
+      selectionIndex: _leaderboardOptions.type,
       borderColor: Theme.of(context).colorScheme.primary,
       selectedColor: Theme.of(context).colorScheme.primary,
       unselectedColor: Theme.of(context).colorScheme.surface,
@@ -87,10 +61,46 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
       horizontalPadding: const EdgeInsets.symmetric(horizontal: 20),
       onSegmentChosen: (index) {
         setState(() {
-          _currentSelection = _LeaderboardType.fromInteger(index);
+          _leaderboardOptions = _leaderboardOptions.copyWith(type: index);
         });
       },
     );
+  }
+
+  MaterialSegmentedControl<LeaderboardTimeRange> _buildTimeRangeChooser() {
+    return MaterialSegmentedControl(
+      children: const {
+        LeaderboardTimeRange.week: Text('Tydzień'),
+        LeaderboardTimeRange.month: Text('Miesiąc'),
+        LeaderboardTimeRange.all: Text('Cały czas'),
+      },
+      selectionIndex: _leaderboardOptions.timeRange,
+      borderColor: Theme.of(context).colorScheme.primary,
+      selectedColor: Theme.of(context).colorScheme.primary,
+      unselectedColor: Theme.of(context).colorScheme.surface,
+      borderRadius: 32.0,
+      verticalOffset: 10,
+      horizontalPadding: const EdgeInsets.symmetric(horizontal: 20),
+      onSegmentChosen: (index) {
+        setState(() {
+          _leaderboardOptions = _leaderboardOptions.copyWith(timeRange: index);
+        });
+      },
+    );
+  }
+
+  Widget _buildLeaderboard() {
+    var leaderboard = ref.watch(leaderboardProvider(_leaderboardOptions));
+
+    return leaderboard.when(
+        data: (entries) => ListView.builder(
+            padding: const EdgeInsets.only(top: 10),
+            itemCount: entries.length,
+            itemBuilder: (_, index) {
+              return _buildUserTile(index, entries[index]);
+            }),
+        error: (err, stack) => Center(child: Text('Coś poszło nie tak: $err')),
+        loading: () => const Center(child: CircularProgressIndicator()));
   }
 
   Widget _buildUserTile(int position, UserProfile userProfile) {

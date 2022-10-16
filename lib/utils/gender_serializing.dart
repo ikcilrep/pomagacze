@@ -2,7 +2,7 @@ import 'package:gender_picker/source/enums.dart';
 
 extension GenderSerializing on Gender {
   String serialize() {
-    switch(this) {
+    switch (this) {
       case Gender.Male:
         return "male";
       case Gender.Female:
@@ -26,7 +26,7 @@ extension GenderSerializing on Gender {
   }
 
   String display() {
-    switch(this) {
+    switch (this) {
       case Gender.Male:
         return "Mężczyzna";
       case Gender.Female:
