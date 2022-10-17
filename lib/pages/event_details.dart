@@ -8,6 +8,7 @@ import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/models/volunteer.dart';
+import 'package:pomagacze/pages/confirm_participation.dart';
 import 'package:pomagacze/pages/event_form.dart';
 import 'package:pomagacze/state/events.dart';
 import 'package:pomagacze/state/user.dart';
@@ -45,8 +46,11 @@ class EventDetailsState extends ConsumerState<EventDetails> {
 
   List<Volunteer>? get userEvents => ref.read(userEventsProvider).valueOrNull;
 
-  bool get hasUserJoined =>
-      event?.volunteers.any((v) => v.userId == userProfile?.id) == true;
+  Volunteer? get userVolunteer => eventVolunteers
+      .cast<Volunteer?>()
+      .firstWhere((x) => userProfile?.id == x?.userId, orElse: () => null);
+
+  bool get hasUserJoined => userVolunteer != null;
 
   final _dateFormat = DateFormat('dd MMM yy HH:mm');
 
@@ -87,11 +91,13 @@ class EventDetailsState extends ConsumerState<EventDetails> {
         )
       ]),
       floatingActionButton: Visibility(
-          visible: hasUserJoined ||
-              (data.hasValue &&
-                  userEvents != null &&
-                  userProfile != null &&
-                  canJoin(userProfile!, data.valueOrNull?.volunteers ?? [])),
+          visible: userVolunteer?.isParticipationConfirmed != true &&
+              (hasUserJoined ||
+                  (data.hasValue &&
+                      userEvents != null &&
+                      userProfile != null &&
+                      canJoin(
+                          userProfile!, data.valueOrNull?.volunteers ?? []))),
           child: _buildFAB()),
       body: data.when(
           data: (data) =>
@@ -217,6 +223,34 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                           ),
                         ),
                       ),
+                      if (event.authorId != userProfile?.id &&
+                          userVolunteer?.isParticipationConfirmed == true)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 8),
+                          child: OutlinedButton(
+                            onPressed: () {
+                              Fluttertoast.showToast(
+                                  msg: 'Funkcja dostępna wkrótce!');
+                            },
+                            child:
+                                const Text('Wygeneruj certyfikat uczestnictwa'),
+                          ),
+                        ),
+                      if (userVolunteer?.isParticipationConfirmed != true)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 8),
+                          child: OutlinedButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ConfirmParticipationPage(event: event)));
+                            },
+                            child: Text(event.authorId == userProfile?.id
+                                ? 'Potwierdz uczestnictwo wolontariuszy'
+                                : 'Potwierdź swoje uczestnictwo'),
+                          ),
+                        ),
+
                       const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
