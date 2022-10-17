@@ -31,7 +31,7 @@ import 'package:flutter/material.dart';
     onSurface: Color.fromRGBO(5, 5, 23, 1));*/
 
 ColorScheme defaultLightScheme = ColorScheme.fromSwatch(
-    primarySwatch: Colors.teal, accentColor: Colors.teal[400]);
+    primarySwatch: Colors.teal, accentColor: Colors.teal[200]).copyWith(primary: Colors.teal[500]);
 ColorScheme defaultDarkScheme = ColorScheme.fromSwatch(
     primarySwatch: Colors.teal, brightness: Brightness.dark);
 

@@ -25,22 +25,22 @@ class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
     const MyProfilePage(key: PageStorageKey('profile'))
   ];
 
-  List<NavigationDestination> get destinations => [
+  List<NavigationDestination> destinations = const [
         NavigationDestination(
-            icon:
-                Icon(_index == 0 ? Icons.handshake : Icons.handshake_outlined),
+            selectedIcon: Icon(Icons.handshake),
+            icon: Icon(Icons.handshake_outlined),
             label: 'Pomagaj'),
         NavigationDestination(
-            icon: Icon(_index == 1 ? Icons.people : Icons.people_outline),
+            selectedIcon: Icon(Icons.people),
+            icon: Icon(Icons.people_outline),
             label: 'Znajomi'),
         NavigationDestination(
-            icon: Icon(
-                _index == 2 ? Icons.leaderboard : Icons.leaderboard_outlined),
+            selectedIcon: Icon(Icons.leaderboard),
+            icon: Icon(Icons.leaderboard_outlined),
             label: 'Rankingi'),
         NavigationDestination(
-            icon: Icon(_index == 3
-                ? Icons.account_circle
-                : Icons.account_circle_outlined),
+            selectedIcon: Icon(Icons.account_circle),
+            icon: Icon(Icons.account_circle_outlined),
             label: 'Profil'),
       ];
 

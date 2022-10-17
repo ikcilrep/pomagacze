@@ -136,12 +136,14 @@ class EventFormState extends ConsumerState<EventForm> {
         appBar: AppBar(
             title: Text(isEditing ? 'Edytuj wydarzenie' : 'Nowe wydarzenie')),
         floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+            foregroundColor: Theme.of(context).colorScheme.onSecondary,
             onPressed: _submit,
             label: Text(isEditing ? 'Zapisz' : 'Opublikuj'),
             icon: _loading
                 ? Transform.scale(
                     scale: 0.6,
-                    child: const CircularProgressIndicator(color: Colors.white))
+                    child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSecondary))
                 : Icon(isEditing ? Icons.save : Icons.send)),
         body: FormBuilder(
           key: _formKey,
@@ -259,7 +261,7 @@ class EventFormState extends ConsumerState<EventForm> {
                             var startDate = DateTime.tryParse(_formKey
                                 .currentState!
                                 .fields['date_start']
-                                ?.value as String);
+                                ?.value ?? '');
 
                             if (startDate != null && date.isBefore(startDate)) {
                               _formKey.currentState!.fields['date_start']

@@ -31,9 +31,9 @@ class ManageFriendsPageState extends ConsumerState<ManageFriendsPage> {
               style: Theme.of(context)
                   .textTheme
                   .subtitle2
-                  ?.copyWith(color: Theme.of(context).colorScheme.onPrimary)),
+                  ?.copyWith(color: Theme.of(context).colorScheme.onSecondary)),
           icon: Icon(Icons.search,
-              color: Theme.of(context).colorScheme.onPrimary),
+              color: Theme.of(context).colorScheme.onSecondary),
           onPress: () {
             Navigator.of(context).pushNamed('/search-users');
           },
@@ -41,7 +41,7 @@ class ManageFriendsPageState extends ConsumerState<ManageFriendsPage> {
           width: 185,
           elevation: 10,
           animateIcon: false,
-          color: Theme.of(context).colorScheme.primary,
+          color: Theme.of(context).colorScheme.secondary,
           duration: const Duration(milliseconds: 150),
         ),
       ),

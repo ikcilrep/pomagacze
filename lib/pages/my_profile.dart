@@ -47,6 +47,7 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
           iconButton: IconButton(
               onPressed: () {
                 showModalBottomSheet(
+                    shape: bottomSheetShape,
                     context: context,
                     isScrollControlled: true,
                     builder: (context) {
