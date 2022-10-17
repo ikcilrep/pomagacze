@@ -237,7 +237,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                                 const Text('Wygeneruj certyfikat uczestnictwa'),
                           ),
                         ),
-                      if (userVolunteer?.isParticipationConfirmed != true)
+                      if (userVolunteer?.isParticipationConfirmed != true && (event.authorId == userProfile?.id || hasUserJoined))
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 15, vertical: 8),
