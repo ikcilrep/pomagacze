@@ -33,14 +33,16 @@ class _LearnPageState extends State<LearnPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (sections.isEmpty)
+    if (sections.isEmpty) {
       return const Center(
         child: CircularProgressIndicator(),
       );
+    }
     return DefaultTabController(
       length: sections.length,
       child: Scaffold(
         appBar: AppBar(
+          title: Text('Jak pomagać?'),
           bottom: TabBar(
             tabs: [for (var x in sections) Tab(child: Text(x.title))],
             labelColor: Theme.of(context).colorScheme.onSurface,
@@ -60,9 +62,10 @@ class _LearnPageState extends State<LearnPage> {
   }
 
   Widget _buildSection(FAQSection section) {
-    return ListView(
-      children: [
-        ExpansionPanelList(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 20),
+        child: ExpansionPanelList(
             expansionCallback: (int index, bool isExpanded) {
               setState(() {
                 section.children[index].isExpanded = !isExpanded;
@@ -73,6 +76,8 @@ class _LearnPageState extends State<LearnPage> {
                 ExpansionPanel(
                     headerBuilder: (context, isExpanded) => ListTile(
                           title: Text(x.title),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 3, horizontal: 16),
                         ),
                     body: ListTile(
                       title: Text(
@@ -83,7 +88,7 @@ class _LearnPageState extends State<LearnPage> {
                     isExpanded: x.isExpanded,
                     canTapOnHeader: true)
             ]),
-      ],
+      ),
     );
   }
 }
