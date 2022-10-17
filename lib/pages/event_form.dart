@@ -313,7 +313,7 @@ class EventFormState extends ConsumerState<EventForm> {
                       name: 'age_range',
                       decoration: const InputDecoration(
                           labelText: 'Wymagany wiek wolontariusza',
-                          icon: Icon(Icons.numbers)),
+                          icon: Icon(Icons.face)),
                       min: minimalVolunteerAge.toDouble(),
                       max: maximalVolunteerAge.toDouble(),
                       divisions: maximalVolunteerAge - minimalVolunteerAge + 1,
