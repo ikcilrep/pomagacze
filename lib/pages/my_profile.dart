@@ -86,9 +86,12 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
               title: Text('Opcje'),
               trailing: Icon(Icons.arrow_forward),
             ),
-            const ListTile(
-              title: Text('O aplikacji'),
-              trailing: Icon(Icons.arrow_forward),
+            ProfileAction(
+              title: const Text('O aplikacji'),
+              icon: const Icon(Icons.arrow_forward),
+              onTap: () {
+                Navigator.of(context).pushNamed('/learn');
+              }
             ),
             ProfileAction(
               onTap: _signOut,
