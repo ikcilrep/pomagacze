@@ -155,6 +155,7 @@ class EventFormState extends ConsumerState<EventForm> {
                   children: [
                     FormBuilderTextField(
                       name: 'title',
+                      style: Theme.of(context).textTheme.titleLarge,
                       validator: FormBuilderValidators.required(
                           errorText: 'Tytuł nie może być pusty'),
                       decoration: const InputDecoration(labelText: 'Tytuł'),
@@ -166,7 +167,7 @@ class EventFormState extends ConsumerState<EventForm> {
                       // any number you need (It works as the rows for the textarea)
                       keyboardType: TextInputType.multiline,
                       maxLines: 8,
-                      decoration: const InputDecoration(labelText: 'Opis'),
+                      decoration: const InputDecoration(labelText: 'Opis', icon: Icon(Icons.text_snippet)),
                       validator: FormBuilderValidators.required(
                           errorText: 'Opis nie może być pusty'),
                     ),
@@ -174,7 +175,7 @@ class EventFormState extends ConsumerState<EventForm> {
                     FormBuilderTextField(
                       name: 'image_url',
                       decoration: InputDecoration(
-                          hintText: 'Zdjęcie',
+                          labelText: 'Zdjęcie',
                           icon: const Icon(Icons.photo),
                           suffixIcon: IconButton(
                             icon: const Icon(Icons.clear),
@@ -233,6 +234,7 @@ class EventFormState extends ConsumerState<EventForm> {
                           },
                           dateLabelText: 'Data rozpoczęcia',
                           timeLabelText: 'Godzina',
+                          icon: const Icon(Icons.event),
                         );
                       },
                     ),
@@ -272,6 +274,7 @@ class EventFormState extends ConsumerState<EventForm> {
                           },
                           dateLabelText: 'Data zakończenia',
                           timeLabelText: 'Godzina',
+                          icon: const Icon(Icons.event, color: Colors.transparent),
                         );
                       },
                     ),
@@ -303,13 +306,13 @@ class EventFormState extends ConsumerState<EventForm> {
                       min: minimalPoints.toDouble(),
                       max: maximalPoints.toDouble(),
                       numberFormat: NumberFormat('###'),
-                      decoration: const InputDecoration(labelText: 'Punkty'),
+                      decoration: const InputDecoration(labelText: 'Punkty za udział', icon: Icon(Icons.favorite)),
                     ),
                     const SizedBox(height: 20),
                     FormBuilderRangeSlider(
                       name: 'age_range',
                       decoration: const InputDecoration(
-                          labelText: 'Wymagany wiek wolontariusza'),
+                          labelText: 'Wymagany wiek wolontariusza', icon: Icon(Icons.numbers)),
                       min: minimalVolunteerAge.toDouble(),
                       max: maximalVolunteerAge.toDouble(),
                       divisions: maximalVolunteerAge - minimalVolunteerAge + 1,
@@ -321,7 +324,7 @@ class EventFormState extends ConsumerState<EventForm> {
                     FormBuilderRangeSlider(
                       name: 'volunteer_count_range',
                       decoration: const InputDecoration(
-                          labelText: 'Ilość wolontariuszy'),
+                          labelText: 'Ilość wolontariuszy', icon: Icon(Icons.people)),
                       min: minimalVolunteerCount.toDouble(),
                       max: maximalVolunteerCount.toDouble(),
                       divisions:
@@ -334,7 +337,7 @@ class EventFormState extends ConsumerState<EventForm> {
                     const SizedBox(height: 20),
                     FormBuilderTextField(
                       name: 'email',
-                      decoration: const InputDecoration(labelText: 'Adres e-mail (opcjonalne)'),
+                      decoration: const InputDecoration(labelText: 'Adres e-mail (opcjonalne)', icon: Icon(Icons.alternate_email)),
                     ),
                     const SizedBox(height: 20),
                   ])),
