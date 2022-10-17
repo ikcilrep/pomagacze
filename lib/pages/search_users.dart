@@ -4,6 +4,7 @@ import 'package:pomagacze/components/error_with_action.dart';
 import 'package:pomagacze/components/user_list_tile.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/state/user.dart';
+import 'package:pomagacze/utils/constants.dart';
 import 'package:share_plus/share_plus.dart';
 
 class SearchUsersPage extends ConsumerStatefulWidget {
@@ -71,7 +72,7 @@ class SearchUsersState extends ConsumerState<SearchUsersPage> {
               title: const Text('Zaproś znajomych do aplikacji'),
               leading: const Icon(Icons.person_add),
               onTap: () {
-                Share.share('Pomagajmy wspólnie! Zainstaluj aplikację Pomagacze i dodaj mnie do znajomych - https://pomagacze.cubepotato.eu/install');
+                Share.share('Pomagajmy wspólnie! Zainstaluj aplikację Pomagacze i dodaj mnie do znajomych - $websiteUrl/install');
               },
             );
           }

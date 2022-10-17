@@ -14,6 +14,7 @@ import 'package:pomagacze/state/events.dart';
 import 'package:pomagacze/state/user.dart';
 import 'package:pomagacze/state/volunteers.dart';
 import 'package:pomagacze/utils/constants.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../components/gain_points_badge.dart';
@@ -89,7 +90,13 @@ class EventDetailsState extends ConsumerState<EventDetails> {
               }));
             },
           ),
-        )
+        ),
+        IconButton(
+          icon: const Icon(Icons.share),
+          onPressed: () {
+            Share.share('"${event?.title}" w aplikacji Pomagacze - $websiteUrl/event/${event?.id}');
+          },
+        ),
       ]),
       floatingActionButton: Visibility(
           visible: event?.authorId != userProfile?.id &&

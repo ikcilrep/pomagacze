@@ -23,3 +23,5 @@ const bottomSheetShape = RoundedRectangleBorder(
   borderRadius: BorderRadius.only(
       topLeft: Radius.circular(12), topRight: Radius.circular(12)),
 );
+
+const websiteUrl = 'https://pomagacze.cubepotato.eu';
