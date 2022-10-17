@@ -62,6 +62,7 @@ dependencies:
   mailto: ^2.0.0
   equatable: ^2.0.5
   yaml: ^3.1.1
+  share_plus: ^4.5.3
 
 
 dev_dependencies:
@@ -91,8 +92,6 @@ flutter:
     - assets/
     - assets/loginBGgren.png
     - assets/LearnInstructions.yaml
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

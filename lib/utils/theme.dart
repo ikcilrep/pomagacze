@@ -44,5 +44,13 @@ ThemeData getTheme({bool dark = false}) {
     data = ThemeData.light(useMaterial3: true)
         .copyWith(colorScheme: defaultLightScheme);
   }
-  return data.copyWith(inputDecorationTheme: const InputDecorationTheme());
+  return data.copyWith(
+      inputDecorationTheme: const InputDecorationTheme(),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+              side: BorderSide(
+        width: 1,
+        color: data.colorScheme.secondary,
+        style: BorderStyle.solid,
+      ))));
 }

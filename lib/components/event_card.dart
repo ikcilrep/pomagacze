@@ -37,9 +37,9 @@ class _EventCardState extends ConsumerState<EventCard> {
         closedBuilder: (_, openContainer) {
           return Card(
               elevation: 0,
-              color: Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.15),
+              color: Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.12),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10), side: BorderSide(color: Theme.of(context).colorScheme.secondary.withOpacity(0.5), width: 1)),
+                  borderRadius: BorderRadius.circular(10), side: BorderSide(color: Theme.of(context).colorScheme.secondary.withOpacity(0.54), width: 1)),
               child: InkWell(
                 borderRadius: BorderRadius.circular(10),
                 onTap: openContainer,
@@ -77,20 +77,17 @@ class _EventCardState extends ConsumerState<EventCard> {
                                   .colorScheme
                                   .onSurface
                                   .withOpacity(0.8)),
-                          const SizedBox(width: 4),
-                          SizedBox(
-                            width: 87,
-                            child: Text(_getDateString(),
-                                style: Theme.of(context).textTheme.caption),
-                          ),
-                          const SizedBox(width: 15),
+                          const SizedBox(width: 3),
+                          Text(_getDateString(),
+                              style: Theme.of(context).textTheme.caption),
+                          const SizedBox(width: 12),
                           Icon(Icons.location_pin,
                               size: 15,
                               color: Theme.of(context)
                                   .colorScheme
                                   .onSurface
                                   .withOpacity(0.8)),
-                          const SizedBox(width: 4),
+                          const SizedBox(width: 3),
                           Expanded(
                             child: Text(
                               widget.event.addressShort.orDefault('???'),
@@ -99,7 +96,7 @@ class _EventCardState extends ConsumerState<EventCard> {
                               softWrap: false,
                             ),
                           ),
-                          const SizedBox(width: 15),
+                          const SizedBox(width: 12),
                           Icon(Icons.favorite,
                               size: 15,
                               color: Theme.of(context)

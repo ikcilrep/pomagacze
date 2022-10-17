@@ -8,6 +8,7 @@ import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/models/volunteer.dart';
+import 'package:pomagacze/pages/confirm_participation.dart';
 import 'package:pomagacze/pages/event_form.dart';
 import 'package:pomagacze/state/events.dart';
 import 'package:pomagacze/state/user.dart';
@@ -44,6 +45,12 @@ class EventDetailsState extends ConsumerState<EventDetails> {
   UserProfile? get userProfile => ref.read(userProfileProvider).valueOrNull;
 
   List<Volunteer>? get userEvents => ref.read(userEventsProvider).valueOrNull;
+
+  Volunteer? get userVolunteer => eventVolunteers
+      .cast<Volunteer?>()
+      .firstWhere((x) => userProfile?.id == x?.userId, orElse: () => null);
+
+  bool get hasUserJoined => userVolunteer != null;
 
   final _dateFormat = DateFormat('dd MMM yy HH:mm');
 
@@ -84,10 +91,14 @@ class EventDetailsState extends ConsumerState<EventDetails> {
         )
       ]),
       floatingActionButton: Visibility(
-          visible: data.hasValue &&
-              userEvents != null &&
-              userProfile != null &&
-              canJoin(userProfile!, data.valueOrNull?.volunteers ?? []),
+          visible: event?.authorId != userProfile?.id &&
+              userVolunteer?.isParticipationConfirmed != true &&
+              (hasUserJoined ||
+                  (data.hasValue &&
+                      userEvents != null &&
+                      userProfile != null &&
+                      canJoin(
+                          userProfile!, data.valueOrNull?.volunteers ?? []))),
           child: _buildFAB()),
       body: data.when(
           data: (data) =>
@@ -199,9 +210,10 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                           )),
                       Visibility(
                         visible: userProfile != null &&
-                            !canJoin(userProfile!, event.volunteers),
+                            !canJoin(userProfile!, event.volunteers) &&
+                            !hasUserJoined,
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 25),
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
                           child: Text(
                             "Nie spełniasz wymagań, aby dołączyć".toUpperCase(),
                             style: Theme.of(context)
@@ -212,6 +224,34 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                           ),
                         ),
                       ),
+                      if (event.authorId != userProfile?.id &&
+                          userVolunteer?.isParticipationConfirmed == true)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 8),
+                          child: OutlinedButton(
+                            onPressed: () {
+                              Fluttertoast.showToast(
+                                  msg: 'Funkcja dostępna wkrótce!');
+                            },
+                            child:
+                                const Text('Wygeneruj certyfikat uczestnictwa'),
+                          ),
+                        ),
+                      if (userVolunteer?.isParticipationConfirmed != true && (event.authorId == userProfile?.id || hasUserJoined))
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 15, vertical: 8),
+                          child: OutlinedButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ConfirmParticipationPage(event: event)));
+                            },
+                            child: Text(event.authorId == userProfile?.id
+                                ? 'Potwierdz uczestnictwo wolontariuszy'
+                                : 'Potwierdź swoje uczestnictwo'),
+                          ),
+                        ),
+
                       const SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -378,13 +418,13 @@ class EventDetailsState extends ConsumerState<EventDetails> {
             _isFABLoading = false;
           });
         },
-        label: Text(!hasJoinedTheEvent(userEvents) ? 'Dołącz' : "Opuść"),
+        label: Text(!hasUserJoined ? 'Dołącz' : "Opuść"),
         icon: (userProfile == null || _isFABLoading)
             ? Transform.scale(
                 scale: 0.6,
-                child: const CircularProgressIndicator(color: Colors.white))
+                child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSecondary))
             : Icon(
-                !hasJoinedTheEvent(userEvents) ? Icons.check : Icons.logout));
+                !hasUserJoined ? Icons.check : Icons.logout));
   }
 
   launchMailto(String mail) async {
@@ -404,7 +444,9 @@ class EventDetailsState extends ConsumerState<EventDetails> {
 
   Future<void> switchMembershipState(
       List<Volunteer>? userEvents, UserProfile userProfile) async {
-    if (!hasJoinedTheEvent(userEvents)) {
+    if(event?.authorId == userProfile.id) return;
+
+    if (!hasUserJoined) {
       if (canJoin(userProfile, eventVolunteers)) {
         await joinEvent(userProfile);
       }
@@ -447,10 +489,5 @@ class EventDetailsState extends ConsumerState<EventDetails> {
     final volunteer = Volunteer(
         userId: supabase.auth.user()!.id, eventId: widget.helpEvent.id!);
     await VolunteersDB.upsert(volunteer);
-  }
-
-  bool hasJoinedTheEvent(List<Volunteer>? userEvents) {
-    return userEvents != null &&
-        userEvents.any((volunteer) => volunteer.eventId == widget.helpEvent.id);
   }
 }
