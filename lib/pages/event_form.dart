@@ -202,9 +202,11 @@ class EventFormState extends ConsumerState<EventForm> {
                       },
                     ),
                     const SizedBox(height: 15),
-                    FormBuilderField(
+                    FormBuilderField<String>(
                       name: 'date_start',
-                      initialValue: DateTime.now().toString(),
+                      initialValue:
+                          (widget.initialData?.dateStart ?? DateTime.now())
+                              .toString(),
                       builder: (field) {
                         return DateTimePicker(
                           type: DateTimePickerType.dateTimeSeparate,
@@ -235,10 +237,10 @@ class EventFormState extends ConsumerState<EventForm> {
                       },
                     ),
                     const SizedBox(height: 15),
-                    FormBuilderField(
+                    FormBuilderField<String>(
                       name: 'date_end',
-                      initialValue: DateTime.now()
-                          .add(const Duration(hours: 1))
+                      initialValue: (widget.initialData?.dateEnd ??
+                              DateTime.now().add(const Duration(hours: 1)))
                           .toString(),
                       builder: (field) {
                         return DateTimePicker(
