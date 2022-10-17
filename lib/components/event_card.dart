@@ -2,12 +2,15 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:pomagacze/components/volunteers_badge.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/pages/event_details.dart';
 import 'package:pomagacze/state/friendships.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/date_extensions.dart';
 import 'package:pomagacze/utils/string_extensions.dart';
+
+import 'gain_points_badge.dart';
 
 class EventCard extends ConsumerStatefulWidget {
   final HelpEvent event;
@@ -37,9 +40,18 @@ class _EventCardState extends ConsumerState<EventCard> {
         closedBuilder: (_, openContainer) {
           return Card(
               elevation: 0,
-              color: Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.12),
+              color: Theme.of(context)
+                  .colorScheme
+                  .secondaryContainer
+                  .withOpacity(0.12),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10), side: BorderSide(color: Theme.of(context).colorScheme.secondary.withOpacity(0.54), width: 1)),
+                  borderRadius: BorderRadius.circular(10),
+                  side: BorderSide(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .secondary
+                          .withOpacity(0.54),
+                      width: 1)),
               child: InkWell(
                 borderRadius: BorderRadius.circular(10),
                 onTap: openContainer,
@@ -64,11 +76,32 @@ class _EventCardState extends ConsumerState<EventCard> {
                           ClipRRect(
                               borderRadius: BorderRadius.circular(5),
                               child: ConstrainedBox(
-                                  constraints: const BoxConstraints(maxHeight: 250),
-                                  child: Image.network(
-                                    widget.event.imageUrl!,
-                                    fit: BoxFit.fitWidth,
-                                  ))),
+                                  constraints:
+                                      const BoxConstraints(maxHeight: 250),
+                                  child: Stack(children: <Widget>[
+                                    SizedBox(
+                                      width: double.infinity,
+                                      child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(0),
+                                          child: ConstrainedBox(
+                                              constraints: const BoxConstraints(
+                                                  maxHeight: 250),
+                                              child: Image.network(
+                                                widget.event.imageUrl!,
+                                                fit: BoxFit.fitWidth,
+                                              ))),
+                                    ),
+                                    Positioned(
+                                        right: 10,
+                                        top: 10,
+                                        child:
+                                            PointsBadge(event: widget.event)),
+                                    Positioned(
+                                        left: 10,
+                                        top: 10,
+                                        child: VolunteersBadge(event: widget.event))
+                                  ]))),
                         const SizedBox(height: 15),
                         Row(children: [
                           Icon(Icons.event,
@@ -96,18 +129,6 @@ class _EventCardState extends ConsumerState<EventCard> {
                               softWrap: false,
                             ),
                           ),
-                          const SizedBox(width: 12),
-                          Icon(Icons.favorite,
-                              size: 15,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withOpacity(0.8)),
-                          const SizedBox(width: 4),
-                          SizedBox(
-                              width: 35,
-                              child: Text("+${widget.event.points}",
-                                  style: Theme.of(context).textTheme.caption))
                         ])
                       ],
                     )),
@@ -138,7 +159,7 @@ class _EventCardState extends ConsumerState<EventCard> {
       return 'Ty i ${friendVolunteers.first.profile?.name} bierzecie udział';
     }
 
-    if(isCurrentUserParticipating && friendVolunteers.length > 1) {
+    if (isCurrentUserParticipating && friendVolunteers.length > 1) {
       return 'Ty i ${friendVolunteers.length} znajomych bierzecie udział';
     }
 
@@ -146,7 +167,7 @@ class _EventCardState extends ConsumerState<EventCard> {
       return '${friendVolunteers.first.profile?.name} bierze udział';
     }
 
-    if(friendVolunteers.length > 1) {
+    if (friendVolunteers.length > 1) {
       return '${friendVolunteers.length} znajomych bierze udział';
     }
 

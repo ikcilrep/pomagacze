@@ -17,6 +17,7 @@ import 'package:pomagacze/utils/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../components/gain_points_badge.dart';
+import '../components/volunteers_badge.dart';
 
 class EventDetails extends ConsumerStatefulWidget {
   final HelpEvent helpEvent;
@@ -134,7 +135,10 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                             fit: BoxFit.fitWidth,
                           ))),
                 ),
-                Positioned(right: 10, top: 10, child: PointsBadge(event: event))
+                Positioned(
+                    right: 10, top: 10, child: PointsBadge(event: event)),
+                Positioned(
+                    left: 10, top: 10, child: VolunteersBadge(event: event))
               ]),
             ),
           /*ListTile(
@@ -238,13 +242,16 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                                 const Text('Wygeneruj certyfikat uczestnictwa'),
                           ),
                         ),
-                      if (userVolunteer?.isParticipationConfirmed != true && (event.authorId == userProfile?.id || hasUserJoined))
+                      if (userVolunteer?.isParticipationConfirmed != true &&
+                          (event.authorId == userProfile?.id || hasUserJoined))
                         Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 15, vertical: 8),
                           child: OutlinedButton(
                             onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ConfirmParticipationPage(event: event)));
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      ConfirmParticipationPage(event: event)));
                             },
                             child: Text(event.authorId == userProfile?.id
                                 ? 'Potwierdz uczestnictwo wolontariuszy'
@@ -306,28 +313,8 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                       // ListTile(
                       //     title: const Text("Punkty"),
                       //     subtitle: Text(event.points.toString())),
-                      const ListTile (
+                      const ListTile(
                           title: Text("Wymagany wiek wolontariusza")),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 13),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Container(
-                              color: Colors.black.withOpacity(0.05),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.face),
-                                    const SizedBox(width: 10),
-                                    Text(ageRangeString),
-                                  ],
-                                )
-                              ),
-                            )),
-                      ),
-                      const ListTile (
-                          title: Text("Zgłoszeni wolontariusze")),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 13),
                         child: ClipRRect(
@@ -338,18 +325,19 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(
                                     children: [
-                                      const Icon(Icons.group),
+                                      const Icon(Icons.face),
                                       const SizedBox(width: 10),
-                                      Text(numberOfVolunteersText()),
+                                      Text(ageRangeString),
                                     ],
-                                  )
-                              ),
+                                  )),
                             )),
                       ),
                       ListTile(
                           title: const Text("Kontakt do organizatora"),
                           subtitle: Text(event.contactEmail ?? 'Brak'),
-                          trailing: event.contactEmail != null ? const Icon(Icons.open_in_new) : null,
+                          trailing: event.contactEmail != null
+                              ? const Icon(Icons.open_in_new)
+                              : null,
                           onTap: () async {
                             if (event.contactEmail != null) {
                               showModalBottomSheet(
@@ -422,9 +410,9 @@ class EventDetailsState extends ConsumerState<EventDetails> {
         icon: (userProfile == null || _isFABLoading)
             ? Transform.scale(
                 scale: 0.6,
-                child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSecondary))
-            : Icon(
-                !hasUserJoined ? Icons.check : Icons.logout));
+                child: CircularProgressIndicator(
+                    color: Theme.of(context).colorScheme.onSecondary))
+            : Icon(!hasUserJoined ? Icons.check : Icons.logout));
   }
 
   launchMailto(String mail) async {
@@ -444,7 +432,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
 
   Future<void> switchMembershipState(
       List<Volunteer>? userEvents, UserProfile userProfile) async {
-    if(event?.authorId == userProfile.id) return;
+    if (event?.authorId == userProfile.id) return;
 
     if (!hasUserJoined) {
       if (canJoin(userProfile, eventVolunteers)) {
