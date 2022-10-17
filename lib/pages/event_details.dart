@@ -266,12 +266,46 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                       // ListTile(
                       //     title: const Text("Punkty"),
                       //     subtitle: Text(event.points.toString())),
-                      ListTile(
-                          title: const Text("Wymagany wiek wolontariusza"),
-                          subtitle: Text(ageRangeString)),
-                      ListTile(
-                          title: const Text("Zgłoszeni wolontariusze"),
-                          subtitle: Text(numberOfVolunteersText())),
+                      const ListTile (
+                          title: Text("Wymagany wiek wolontariusza")),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 13),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              color: Colors.black.withOpacity(0.05),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.face),
+                                    const SizedBox(width: 10),
+                                    Text(ageRangeString),
+                                  ],
+                                )
+                              ),
+                            )),
+                      ),
+                      const ListTile (
+                          title: Text("Zgłoszeni wolontariusze")),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 13),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Container(
+                              color: Colors.black.withOpacity(0.05),
+                              child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.group),
+                                      const SizedBox(width: 10),
+                                      Text(numberOfVolunteersText()),
+                                    ],
+                                  )
+                              ),
+                            )),
+                      ),
                       ListTile(
                           title: const Text("Kontakt do organizatora"),
                           subtitle: Text(event.contactEmail ?? 'Brak'),
