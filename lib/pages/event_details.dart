@@ -45,6 +45,9 @@ class EventDetailsState extends ConsumerState<EventDetails> {
 
   List<Volunteer>? get userEvents => ref.read(userEventsProvider).valueOrNull;
 
+  bool get hasUserJoined =>
+      event?.volunteers.any((v) => v.userId == userProfile?.id) == true;
+
   final _dateFormat = DateFormat('dd MMM yy HH:mm');
 
   @override
@@ -84,10 +87,11 @@ class EventDetailsState extends ConsumerState<EventDetails> {
         )
       ]),
       floatingActionButton: Visibility(
-          visible: data.hasValue &&
-              userEvents != null &&
-              userProfile != null &&
-              canJoin(userProfile!, data.valueOrNull?.volunteers ?? []),
+          visible: hasUserJoined ||
+              (data.hasValue &&
+                  userEvents != null &&
+                  userProfile != null &&
+                  canJoin(userProfile!, data.valueOrNull?.volunteers ?? [])),
           child: _buildFAB()),
       body: data.when(
           data: (data) =>
@@ -199,7 +203,8 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                           )),
                       Visibility(
                         visible: userProfile != null &&
-                            !canJoin(userProfile!, event.volunteers),
+                            !canJoin(userProfile!, event.volunteers) &&
+                            !hasUserJoined,
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(16, 0, 16, 25),
                           child: Text(
@@ -344,13 +349,13 @@ class EventDetailsState extends ConsumerState<EventDetails> {
             _isFABLoading = false;
           });
         },
-        label: Text(!hasJoinedTheEvent(userEvents) ? 'Dołącz' : "Opuść"),
+        label: Text(!hasUserJoined ? 'Dołącz' : "Opuść"),
         icon: (userProfile == null || _isFABLoading)
             ? Transform.scale(
                 scale: 0.6,
-                child: const CircularProgressIndicator(color: Colors.white))
+                child: CircularProgressIndicator(color: Theme.of(context).colorScheme.onSecondary))
             : Icon(
-                !hasJoinedTheEvent(userEvents) ? Icons.check : Icons.logout));
+                !hasUserJoined ? Icons.check : Icons.logout));
   }
 
   launchMailto(String mail) async {
@@ -370,7 +375,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
 
   Future<void> switchMembershipState(
       List<Volunteer>? userEvents, UserProfile userProfile) async {
-    if (!hasJoinedTheEvent(userEvents)) {
+    if (!hasUserJoined) {
       if (canJoin(userProfile, eventVolunteers)) {
         await joinEvent(userProfile);
       }
@@ -413,10 +418,5 @@ class EventDetailsState extends ConsumerState<EventDetails> {
     final volunteer = Volunteer(
         userId: supabase.auth.user()!.id, eventId: widget.helpEvent.id!);
     await VolunteersDB.upsert(volunteer);
-  }
-
-  bool hasJoinedTheEvent(List<Volunteer>? userEvents) {
-    return userEvents != null &&
-        userEvents.any((volunteer) => volunteer.eventId == widget.helpEvent.id);
   }
 }
