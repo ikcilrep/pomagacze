@@ -91,7 +91,8 @@ class EventDetailsState extends ConsumerState<EventDetails> {
         )
       ]),
       floatingActionButton: Visibility(
-          visible: userVolunteer?.isParticipationConfirmed != true &&
+          visible: event?.authorId != userProfile?.id &&
+              userVolunteer?.isParticipationConfirmed != true &&
               (hasUserJoined ||
                   (data.hasValue &&
                       userEvents != null &&
@@ -212,7 +213,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                             !canJoin(userProfile!, event.volunteers) &&
                             !hasUserJoined,
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 25),
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
                           child: Text(
                             "Nie spełniasz wymagań, aby dołączyć".toUpperCase(),
                             style: Theme.of(context)
@@ -409,6 +410,8 @@ class EventDetailsState extends ConsumerState<EventDetails> {
 
   Future<void> switchMembershipState(
       List<Volunteer>? userEvents, UserProfile userProfile) async {
+    if(event?.authorId == userProfile.id) return;
+
     if (!hasUserJoined) {
       if (canJoin(userProfile, eventVolunteers)) {
         await joinEvent(userProfile);
