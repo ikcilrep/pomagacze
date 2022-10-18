@@ -17,14 +17,23 @@ class ActivitiesPage extends ConsumerWidget {
         ref.watch(friendsAndUserActivitiesProvider);
 
     return activities.when(
-        data: (friendsAndUserActivities) {
+        data: (data) {
+          if (data.isEmpty) {
+            return ErrorWithAction(
+                errorText: 'Brak aktualności',
+                action: () {
+                  Navigator.of(context).pushNamed('/search-users');
+                },
+                actionText: 'Dodaj znajomych');
+          }
           return RefreshIndicator(
-            onRefresh: () => ref.refresh(friendsAndUserActivitiesProvider.future),
+            onRefresh: () =>
+                ref.refresh(friendsAndUserActivitiesProvider.future),
             child: ListView.builder(
-                itemCount: friendsAndUserActivities.length,
+                itemCount: data.length,
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 itemBuilder: (context, index) {
-                  final activity = friendsAndUserActivities[index];
+                  final activity = data[index];
                   return OpenContainer<bool>(
                       tappable: false,
                       transitionType: ContainerTransitionType.fadeThrough,

@@ -38,7 +38,7 @@ class EventListState extends ConsumerState<EventList> {
                         ref.invalidate(widget.provider);
                       },
                       actionText: 'Odśwież',
-                      errorText: 'Brak wydarzeń.'),
+                      errorText: 'Brak wydarzeń'),
                 ),
           error: (err, stack) {
             print(err);
