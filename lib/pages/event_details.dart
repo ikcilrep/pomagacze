@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:mailto/mailto.dart';
+import 'package:maps_launcher/maps_launcher.dart';
+import 'package:pomagacze/components/user_list_tile.dart';
 import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/user_profile.dart';
@@ -94,7 +96,8 @@ class EventDetailsState extends ConsumerState<EventDetails> {
         IconButton(
           icon: const Icon(Icons.share),
           onPressed: () {
-            Share.share('"${event?.title}" w aplikacji Pomagacze - $websiteUrl/event/${event?.id}');
+            Share.share(
+                '"${event?.title}" w aplikacji Pomagacze - $websiteUrl/event/${event?.id}');
           },
         ),
       ]),
@@ -148,42 +151,6 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                     left: 10, top: 10, child: VolunteersBadge(event: event))
               ]),
             ),
-          /*ListTile(
-              title: const Text("Lokalizacja"),
-              subtitle: Text(event.addressFull ?? ''),
-              trailing: const Icon(Icons.open_in_new),
-              onTap: () async {
-                showModalBottomSheet(
-                    shape: bottomSheetShape,
-                    context: context,
-                    builder: (context) => ListView(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          children: [
-                            ListTile(
-                                leading: const Icon(Icons.copy),
-                                title: const Text('Skopiuj do schowka'),
-                                onTap: () async {
-                                  Navigator.of(context).pop();
-                                  await Clipboard.setData(ClipboardData(
-                                      text: event.addressFull ?? ''));
-                                  Fluttertoast.showToast(
-                                      msg: 'Skopiowano do schowka!');
-                                }),
-                            ListTile(
-                                leading: const Icon(Icons.open_in_new),
-                                title: const Text('Otwórz w mapach'),
-                                onTap: () async {
-                                  Navigator.of(context).pop();
-                                  MapsLauncher.launchCoordinates(
-                                      event.latitude!,
-                                      event.longitude!,
-                                      '${event.addressShort} - ${event.title}');
-                                })
-                          ],
-                        ));
-              }),*/
           ConstrainedBox(
             constraints: BoxConstraints(
                 minHeight: MediaQuery.of(context).size.height - 120),
@@ -320,10 +287,12 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                       // ListTile(
                       //     title: const Text("Punkty"),
                       //     subtitle: Text(event.points.toString())),
-                      const ListTile(
-                          title: Text("Wymagany wiek wolontariusza")),
+                      if (ageRangeString != "Brak")
+                        const ListTile(
+                            title: Text("Wymagany wiek wolontariusza")),
+                      if (ageRangeString != "Brak")
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 13),
+                        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 6),
                         child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Container(
@@ -339,6 +308,51 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                                   )),
                             )),
                       ),
+
+                      ListTile(
+                          title: const Text("Lokalizacja"),
+                          subtitle: Text(event.addressFull ?? '', maxLines: 4),
+                          trailing: const Icon(Icons.open_in_new),
+                          onTap: () async {
+                            showModalBottomSheet(
+                                shape: bottomSheetShape,
+                                context: context,
+                                builder: (context) => ListView(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10),
+                                      children: [
+                                        ListTile(
+                                            leading: const Icon(Icons.copy),
+                                            title: const Text(
+                                                'Skopiuj do schowka'),
+                                            onTap: () async {
+                                              Navigator.of(context).pop();
+                                              await Clipboard.setData(
+                                                  ClipboardData(
+                                                      text: event.addressFull ??
+                                                          ''));
+                                              Fluttertoast.showToast(
+                                                  msg:
+                                                      'Skopiowano do schowka!');
+                                            }),
+                                        ListTile(
+                                            leading:
+                                                const Icon(Icons.open_in_new),
+                                            title:
+                                                const Text('Otwórz w mapach'),
+                                            onTap: () async {
+                                              Navigator.of(context).pop();
+                                              MapsLauncher.launchCoordinates(
+                                                  event.latitude!,
+                                                  event.longitude!,
+                                                  '${event.addressShort} - ${event.title}');
+                                            })
+                                      ],
+                                    ));
+                          }),
                       ListTile(
                           title: const Text("Kontakt do organizatora"),
                           subtitle: Text(event.contactEmail ?? 'Brak'),
@@ -384,6 +398,10 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                                       ));
                             }
                           }),
+                      const ListTile(
+                        title: Text("Organizator"),
+                      ),
+                      UserListTile(userProfile: event.author!),
                     ])),
           )
         ],
