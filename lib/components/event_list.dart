@@ -34,12 +34,12 @@ class EventListState extends ConsumerState<EventList> {
                 )
               : Center(
                 child: ErrorWithAction(
-                    action: () {
-                      ref.invalidate(widget.provider);
-                    },
-                    actionText: 'Odśwież',
-                    errorText: 'Brak wydarzeń'),
-              ),
+                      action: () {
+                        ref.invalidate(widget.provider);
+                      },
+                      actionText: 'Odśwież',
+                      errorText: 'Brak wydarzeń.'),
+                ),
           error: (err, stack) {
             print(err);
             print(stack);

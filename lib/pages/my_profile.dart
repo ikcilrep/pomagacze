@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pomagacze/components/edit_profile.dart';
 import 'package:pomagacze/components/error_with_action.dart';
 import 'package:pomagacze/components/profile_action.dart';
@@ -31,7 +32,7 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
     return currentUser.when(
         data: (data) => buildSuccess(data),
         error: (err, stack) =>
-            ErrorWithAction(action: _signOut, actionText: 'Wyloguj się'),
+            ErrorWithAction(action: _signOut, error: err, actionText: 'Wyloguj się'),
         loading: () => const Center(child: CircularProgressIndicator()));
   }
 
@@ -66,6 +67,13 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
               },
               icon: const Icon(Icons.edit)),
           children: [
+            ProfileAction(
+              onTap: () {
+                Fluttertoast.showToast(msg: 'Funkcja dostępna wkrótce!');
+              },
+              title: const Text('Wymień punkty'),
+              icon: const Icon(Icons.arrow_forward),
+            ),
             Divider(color: Theme.of(context).dividerColor.withAlpha(80)),
             ProfileAction(
               onTap: () {
