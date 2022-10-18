@@ -250,10 +250,10 @@ class EventFormState extends ConsumerState<EventForm> {
                           dateMask: 'EE, dd MMM yyyy',
                           initialValue: field.value.toString(),
                           key: Key(field.value.toString() +
-                              _formKey
-                                  .currentState?.fields['date_start']?.value),
+                              (_formKey
+                                  .currentState?.fields['date_start']?.value ?? '')),
                           firstDate: DateTime.tryParse(_formKey
-                                  .currentState?.fields['date_start']?.value) ??
+                                  .currentState?.fields['date_start']?.value ?? '') ??
                               DateTime.now(),
                           lastDate: DateTime(2500),
                           onChanged: (dateTimeString) {
