@@ -6,10 +6,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class EventsDB {
   static const String select =
-      '*, author:author_id(name, avatar_url), volunteers( *, profile:user_id ( id, name ) )';
+      '*, author:author_id(*), volunteers(*, profile:user_id(id, name))';
 
   static const String selectInner =
-      '*, author:author_id(name, avatar_url), volunteers!inner( *, profile:user_id ( id, name ) )';
+      '*, author:author_id(*), volunteers!inner(*, profile:user_id(id, name))';
 
   static Future<List<HelpEvent>> getAll() async {
     var result = await supabase.from('events').select(select).execute();
