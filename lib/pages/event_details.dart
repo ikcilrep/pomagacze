@@ -128,6 +128,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
   Widget buildSuccess(BuildContext context, HelpEvent event) {
     return SingleChildScrollView(
       controller: _scrollController,
+      physics: const AlwaysScrollableScrollPhysics(),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
