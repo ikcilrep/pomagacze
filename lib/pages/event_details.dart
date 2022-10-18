@@ -112,8 +112,10 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                           userProfile!, data.valueOrNull?.volunteers ?? []))),
           child: _buildFAB()),
       body: data.when(
-          data: (data) =>
-              Builder(builder: (context) => buildSuccess(context, data)),
+          data: (data) => Builder(
+              builder: (context) => RefreshIndicator(
+                  onRefresh: () => ref.refresh(eventProvider.future),
+                  child: buildSuccess(context, data))),
           error: (err, stack) {
             print(err);
             print(stack);
