@@ -284,16 +284,16 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                       ListTile(
                           title: const Text("Opis"),
                           subtitle: Text(event.description)),
-                      // ListTile(
-                      //     title: const Text("Punkty"),
-                      //     subtitle: Text(event.points.toString())),
-                      if (ageRangeString != "Brak")
-                        const ListTile(
-                            title: Text("Wymagany wiek wolontariusza")),
                       if (ageRangeString != "Brak")
                         Padding(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 13, vertical: 6),
+                              horizontal: 16, vertical: 8),
+                          child: Text("Wymagany wiek",
+                              style: Theme.of(context).textTheme.titleMedium),
+                        ),
+                      if (ageRangeString != "Brak")
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(13, 0, 13, 8),
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Container(
