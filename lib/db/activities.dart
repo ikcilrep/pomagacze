@@ -1,21 +1,22 @@
-import 'package:pomagacze/db/events.dart';
-import 'package:pomagacze/db/users.dart';
-import 'package:pomagacze/db/volunteers.dart';
+import 'package:pomagacze/db/helpers.dart';
 import 'package:pomagacze/models/activity.dart';
-import 'package:pomagacze/models/help_event.dart';
-import 'package:pomagacze/models/volunteer.dart';
+import 'package:pomagacze/utils/constants.dart';
 
 class ActivitiesDB {
-  static Future<List<Activity>> getAllByUserId(String userId) async {
-    final events =
-        await EventsDB.getByVolunteer(EventFilters(volunteerId: userId));
-    final volunteer = await VolunteersDB.getAllByUserId(userId);
-    final user = await UsersDB.getById(userId);
-    return events
-        .map((event) => Activity(user, event, _joiningDate(volunteer, event)))
+  static Future<List<Activity>> getActivitiesForUsers(List<String> userIds) async {
+    var result = await supabase
+        .from('volunteers')
+        .select('*, event:event_id(*), user:user_id(*)')
+        .in_('user_id', userIds)
+        .order('created_at')
+        .execute();
+    result.throwOnError();
+    return (result.data as List<dynamic>)
+        .map((e) => Activity.fromData(e))
         .toList();
   }
 
-  static DateTime _joiningDate(List<Volunteer> volunteer, HelpEvent event) =>
-      volunteer.firstWhere((v) => v.eventId == event.id).createdAt;
+  static Future<List<Activity>> getActivitiesForUser(String userId) async {
+    return await getActivitiesForUsers([userId]);
+  }
 }

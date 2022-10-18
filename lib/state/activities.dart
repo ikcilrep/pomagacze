@@ -2,19 +2,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomagacze/db/activities.dart';
 import 'package:pomagacze/models/activity.dart';
 import 'package:pomagacze/state/friendships.dart';
-import 'package:pomagacze/utils/constants.dart';
+import 'package:pomagacze/state/user.dart';
 
 final friendsAndUserActivitiesProvider =
     FutureProvider<List<Activity>>((ref) async {
-  final userId = supabase.auth.user()?.id ?? '';
-  final friendsIds = await ref.watch(friendsIdsProvider.future);
-  final activities = <Activity>[];
-  for (final id in friendsIds + [userId]) {
-    activities.addAll(await ActivitiesDB.getAllByUserId(id));
-  }
-
-  return activities;
+  var friendIds = await ref.watch(friendsIdsProvider.future);
+  var userProfile = await ref.watch(userProfileProvider.future);
+  return await ActivitiesDB.getActivitiesForUsers([...friendIds, userProfile.id]);
 });
 
 final userActivitiesProvider = FutureProvider.family<List<Activity>, String>(
-    (ref, userId) async => ActivitiesDB.getAllByUserId(userId));
+    (ref, userId) async => ActivitiesDB.getActivitiesForUsers([userId]));
