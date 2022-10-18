@@ -25,8 +25,6 @@ class _LearnPageState extends State<LearnPage> {
           .map<FAQSection>((x) => FAQSection.fromData(x))
           .toList();
     });
-
-    print(sections);
   }
 
   List<FAQSection> sections = [];
