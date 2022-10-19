@@ -17,7 +17,7 @@ class PointsBadge extends StatelessWidget {
                 borderRadius: const BorderRadius.all(Radius.circular(20))),
             child: Center(
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 5),
                 child: Row(
                   children: [
                     const Icon(Icons.favorite, color: Colors.white, size: 20),
@@ -26,7 +26,7 @@ class PointsBadge extends StatelessWidget {
                       "+${event.points}",
                       style: Theme.of(context)
                           .textTheme
-                          .bodyText1
+                          .bodyText2
                           ?.copyWith(color: Colors.white),
                     ),
                   ],

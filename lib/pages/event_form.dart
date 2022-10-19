@@ -214,8 +214,8 @@ class EventFormState extends ConsumerState<EventForm> {
                           key: Key(field.value.toString()),
                           dateMask: 'EE, dd MMM yyyy',
                           initialValue: field.value,
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime(2500),
+                          firstDate: widget.initialData?.dateStart ?? DateTime.now(),
+                          lastDate: DateTime(3000),
                           onChanged: (dateTimeString) {
                             var date = DateTime.tryParse(dateTimeString);
                             if (date == null) return;
@@ -252,7 +252,7 @@ class EventFormState extends ConsumerState<EventForm> {
                           key: Key(field.value.toString() +
                               (_formKey
                                   .currentState?.fields['date_start']?.value ?? '')),
-                          firstDate: DateTime.tryParse(_formKey
+                          firstDate: widget.initialData?.dateStart ?? DateTime.tryParse(_formKey
                                   .currentState?.fields['date_start']?.value ?? '') ??
                               DateTime.now(),
                           lastDate: DateTime(2500),

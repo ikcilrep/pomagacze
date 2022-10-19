@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pomagacze/components/error_with_action.dart';
 import 'package:pomagacze/pages/event_details.dart';
 import 'package:pomagacze/state/activities.dart';
 import 'package:pomagacze/utils/date_extensions.dart';
@@ -12,19 +13,27 @@ class ActivitiesPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final friendsAndUserActivities =
+    final activities =
         ref.watch(friendsAndUserActivitiesProvider);
 
-    return Padding(
-      padding: const EdgeInsets.only(top: 12),
-      child: friendsAndUserActivities.when(
-          data: (friendsAndUserActivities) {
-            friendsAndUserActivities
-                .sort((a, b) => b.createdAt.compareTo(a.createdAt));
-            return ListView.builder(
-                itemCount: friendsAndUserActivities.length,
+    return activities.when(
+        data: (data) {
+          if (data.isEmpty) {
+            return ErrorWithAction(
+                errorText: 'Brak aktualności',
+                action: () {
+                  Navigator.of(context).pushNamed('/search-users');
+                },
+                actionText: 'Dodaj znajomych');
+          }
+          return RefreshIndicator(
+            onRefresh: () =>
+                ref.refresh(friendsAndUserActivitiesProvider.future),
+            child: ListView.builder(
+                itemCount: data.length,
+                padding: const EdgeInsets.symmetric(vertical: 12),
                 itemBuilder: (context, index) {
-                  final activity = friendsAndUserActivities[index];
+                  final activity = data[index];
                   return OpenContainer<bool>(
                       tappable: false,
                       transitionType: ContainerTransitionType.fadeThrough,
@@ -44,10 +53,15 @@ class ActivitiesPage extends ConsumerWidget {
                           subtitle: Text(activity.createdAt.displayable()),
                         );
                       });
-                });
-          },
-          error: (err, stack) => Center(child: Text('Coś poszło nie tak: $err')),
-          loading: () => const Center(child: CircularProgressIndicator())),
-    );
+                }),
+          );
+        },
+        error: (err, stack) => ErrorWithAction(
+            error: err,
+            action: () {
+              ref.invalidate(friendsAndUserActivitiesProvider);
+            },
+            actionText: 'Odśwież'),
+        loading: () => const Center(child: CircularProgressIndicator()));
   }
 }

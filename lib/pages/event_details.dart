@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:mailto/mailto.dart';
+import 'package:maps_launcher/maps_launcher.dart';
+import 'package:pomagacze/components/user_list_tile.dart';
 import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/user_profile.dart';
@@ -110,8 +112,10 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                           userProfile!, data.valueOrNull?.volunteers ?? []))),
           child: _buildFAB()),
       body: data.when(
-          data: (data) =>
-              Builder(builder: (context) => buildSuccess(context, data)),
+          data: (data) => Builder(
+              builder: (context) => RefreshIndicator(
+                  onRefresh: () => ref.refresh(eventProvider.future),
+                  child: buildSuccess(context, data))),
           error: (err, stack) {
             print(err);
             print(stack);
@@ -124,6 +128,8 @@ class EventDetailsState extends ConsumerState<EventDetails> {
   Widget buildSuccess(BuildContext context, HelpEvent event) {
     return SingleChildScrollView(
       controller: _scrollController,
+      physics: const AlwaysScrollableScrollPhysics(),
+      padding: const EdgeInsets.only(bottom: 80),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -149,42 +155,6 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                     left: 10, top: 10, child: VolunteersBadge(event: event))
               ]),
             ),
-          /*ListTile(
-              title: const Text("Lokalizacja"),
-              subtitle: Text(event.addressFull ?? ''),
-              trailing: const Icon(Icons.open_in_new),
-              onTap: () async {
-                showModalBottomSheet(
-                    shape: bottomSheetShape,
-                    context: context,
-                    builder: (context) => ListView(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          children: [
-                            ListTile(
-                                leading: const Icon(Icons.copy),
-                                title: const Text('Skopiuj do schowka'),
-                                onTap: () async {
-                                  Navigator.of(context).pop();
-                                  await Clipboard.setData(ClipboardData(
-                                      text: event.addressFull ?? ''));
-                                  Fluttertoast.showToast(
-                                      msg: 'Skopiowano do schowka!');
-                                }),
-                            ListTile(
-                                leading: const Icon(Icons.open_in_new),
-                                title: const Text('Otwórz w mapach'),
-                                onTap: () async {
-                                  Navigator.of(context).pop();
-                                  MapsLauncher.launchCoordinates(
-                                      event.latitude!,
-                                      event.longitude!,
-                                      '${event.addressShort} - ${event.title}');
-                                })
-                          ],
-                        ));
-              }),*/
           ConstrainedBox(
             constraints: BoxConstraints(
                 minHeight: MediaQuery.of(context).size.height - 120),
@@ -196,7 +166,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                         topRight: Radius.circular(10)),
                     color: Theme.of(context).colorScheme.surface),
                 padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
@@ -323,36 +293,39 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                       ListTile(
                           title: const Text("Opis"),
                           subtitle: Text(event.description)),
-                      // ListTile(
-                      //     title: const Text("Punkty"),
-                      //     subtitle: Text(event.points.toString())),
-                      const ListTile(
-                          title: Text("Wymagany wiek wolontariusza")),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 13),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Container(
-                              color: Colors.black.withOpacity(0.05),
-                              child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.face),
-                                      const SizedBox(width: 10),
-                                      Text(ageRangeString),
-                                    ],
-                                  )),
-                            )),
-                      ),
-                      ListTile(
-                          title: const Text("Kontakt do organizatora"),
-                          subtitle: Text(event.contactEmail ?? 'Brak'),
-                          trailing: event.contactEmail != null
-                              ? const Icon(Icons.open_in_new)
-                              : null,
-                          onTap: () async {
-                            if (event.contactEmail != null) {
+                      if (ageRangeString != "Brak")
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          child: Text("Wymagany wiek",
+                              style: Theme.of(context).textTheme.titleMedium),
+                        ),
+                      if (ageRangeString != "Brak")
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(13, 0, 13, 8),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Container(
+                                color: Colors.black.withOpacity(0.05),
+                                child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.face),
+                                        const SizedBox(width: 10),
+                                        Text(ageRangeString),
+                                      ],
+                                    )),
+                              )),
+                        ),
+
+                      Material(
+                        child: ListTile(
+                            title: const Text("Lokalizacja"),
+                            subtitle:
+                                Text(event.addressFull ?? '', maxLines: 4),
+                            trailing: const Icon(Icons.open_in_new),
+                            onTap: () async {
                               showModalBottomSheet(
                                   shape: bottomSheetShape,
                                   context: context,
@@ -371,25 +344,83 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                                                 Navigator.of(context).pop();
                                                 await Clipboard.setData(
                                                     ClipboardData(
-                                                        text: event
-                                                            .contactEmail));
+                                                        text:
+                                                            event.addressFull ??
+                                                                ''));
                                                 Fluttertoast.showToast(
                                                     msg:
                                                         'Skopiowano do schowka!');
                                               }),
                                           ListTile(
-                                              leading: const Icon(Icons.mail),
-                                              title: const Text(
-                                                  'Wyślij wiadomość'),
+                                              leading:
+                                                  const Icon(Icons.open_in_new),
+                                              title:
+                                                  const Text('Otwórz w mapach'),
                                               onTap: () async {
                                                 Navigator.of(context).pop();
-                                                launchMailto(
-                                                    event.contactEmail!);
+                                                MapsLauncher.launchCoordinates(
+                                                    event.latitude!,
+                                                    event.longitude!,
+                                                    '${event.addressShort} - ${event.title}');
                                               })
                                         ],
                                       ));
-                            }
-                          }),
+                            }),
+                      ),
+                      Material(
+                        child: ListTile(
+                            title: const Text("Kontakt do organizatora"),
+                            subtitle: Text(event.contactEmail ?? 'Brak'),
+                            trailing: event.contactEmail != null
+                                ? const Icon(Icons.open_in_new)
+                                : null,
+                            onTap: () async {
+                              if (event.contactEmail != null) {
+                                showModalBottomSheet(
+                                    shape: bottomSheetShape,
+                                    context: context,
+                                    builder: (context) => ListView(
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          children: [
+                                            ListTile(
+                                                leading: const Icon(Icons.copy),
+                                                title: const Text(
+                                                    'Skopiuj do schowka'),
+                                                onTap: () async {
+                                                  Navigator.of(context).pop();
+                                                  await Clipboard.setData(
+                                                      ClipboardData(
+                                                          text: event
+                                                              .contactEmail));
+                                                  Fluttertoast.showToast(
+                                                      msg:
+                                                          'Skopiowano do schowka!');
+                                                }),
+                                            ListTile(
+                                                leading: const Icon(Icons.mail),
+                                                title: const Text(
+                                                    'Wyślij wiadomość'),
+                                                onTap: () async {
+                                                  Navigator.of(context).pop();
+                                                  launchMailto(
+                                                      event.contactEmail!);
+                                                })
+                                          ],
+                                        ));
+                              }
+                            }),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        child: Text("Organizator",
+                            style: Theme.of(context).textTheme.titleMedium),
+                      ),
+                      UserListTile(userProfile: event.author!),
                     ])),
           )
         ],
