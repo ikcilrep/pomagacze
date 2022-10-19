@@ -52,9 +52,10 @@ class NearbyOrganizersListState extends State<NearbyOrganizersList> {
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: const [
-      Icon(Icons.visibility_outlined, size: 100),
+      Icon(Icons.visibility_outlined, size: 80),
       Text("Jesteś widoczny dla organizatora w pobliżu.",
-          textAlign: TextAlign.center)
+          textAlign: TextAlign.center),
+      SizedBox(height: 100),
     ]);
   }
 }

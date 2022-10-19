@@ -83,6 +83,19 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
         .where((device) => _isUserAnUnconfirmedVolunteer(device.userId))
         .toList();
     print("rebuilding");
+
+    if (unconfirmedVolunteersDevices.isEmpty) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Text('Wyszukiwanie wolontariuszy w pobliżu...'),
+          SizedBox(height: 15),
+          CircularProgressIndicator(),
+          SizedBox(height: 100),
+        ],
+      );
+    }
+
     return ListView.builder(
         itemCount: unconfirmedVolunteersDevices.length,
         itemBuilder: (context, index) {
