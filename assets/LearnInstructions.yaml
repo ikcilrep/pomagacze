@@ -103,6 +103,27 @@ sections:
             •	aktualności na temat wydarzeń
             •	otrzymywanie punktów za udział w akcjach
             •	sprawdzanie rankingów najlepszych wolontariuszy
+      - title: Jak zorganizować akcję pomocy?
+        body: | 
+            1.	Kliknij przycisk „Nowe wydarzenie” znajdujący się w prawym dolnym rogu
+            2.	Wypełnij dane wydarzenia: Nazwę, opis, miejsce, lokalizację, wymagany wiek i ilość wolontariuszy oraz Punkty Pomocy, które dostaną za uczestnictwo
+            3.	Opcjonalnie dodaj swój adres e-mail oraz zdjęcie do wydarzenia
+            4.	Wciśnij „Opublikuj”
+            Brawo! Twoja akcja wyczekuje na uczestników!
+      - title: Jak wziąć udział w akcji pomocy?
+        body: |
+            1.	Wybierz akcję w której chcesz uczestniczyć i kliknij na nią
+            2.	Jeżeli nie spełniasz wymagań wiekowych pojawi się komunikat
+            3.	Sprawdź czy data oraz lokalizacja ci odpowiadają
+            4.	Kliknij „Dołącz” w prawym dobrym rogu
+            5.	Weź udział w wydarzeniu w podanym miejscu i czasie
+            6.	Zeskanuj plakietkę NFC organizatora, aby odebrać swoje Punkty Pomocy
+      - title: Czym są Punkty Pomocy?
+        body: |
+                •	Punkty pomocy otrzymują wolontariusze za udział w wydarzeniu
+                •	Organizator wydarzenia sam określa ilość punktów, jaką przydziela wolontariuszom za udział
+                •	Dzięki punktom pomagacze otrzymują lepsze miejsca w rankingach
+                •	Punkty można wymienić na nagrody u partnerów aplikacji Pomagacze (aktualnie szukamy partnerów)
 
 
 

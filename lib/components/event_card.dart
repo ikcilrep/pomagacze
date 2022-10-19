@@ -100,7 +100,8 @@ class _EventCardState extends ConsumerState<EventCard> {
                                     Positioned(
                                         left: 10,
                                         top: 10,
-                                        child: VolunteersBadge(event: widget.event))
+                                        child: VolunteersBadge(
+                                            event: widget.event))
                                   ]))),
                         const SizedBox(height: 15),
                         Row(children: [
@@ -129,6 +130,23 @@ class _EventCardState extends ConsumerState<EventCard> {
                               softWrap: false,
                             ),
                           ),
+                          if (widget.event.imageUrl == null)
+                            Row(
+                              children: [
+                                Icon(Icons.group,
+                                    size: 15,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withOpacity(0.8)),
+                                Text(
+                                    "${widget.event.volunteers.length}/${widget.event.maximalNumberOfVolunteers}",
+                                    style: Theme.of(context).textTheme.caption,
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: false,
+                                  ),
+                              ],
+                            ),
                         ])
                       ],
                     )),

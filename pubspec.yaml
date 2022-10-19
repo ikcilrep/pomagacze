@@ -49,6 +49,7 @@ dependencies:
   animations: ^2.0.7
   intl: ^0.17.0
   image_picker: ^0.8.6
+  avatars: ^3.0.2
   age_calculator: ^1.0.0
   geocode: 1.0.2
   flutter_riverpod: ^2.0.2
@@ -66,6 +67,7 @@ dependencies:
   nearby_connections: ^3.2.0
   permission_handler: ^10.1.0
   cached_network_image: ^3.2.2
+  add_2_calendar: ^2.0.2
 
 
 dev_dependencies:
