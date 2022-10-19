@@ -49,6 +49,7 @@ dependencies:
   animations: ^2.0.7
   intl: ^0.17.0
   image_picker: ^0.8.6
+  avatars: ^3.0.2
   age_calculator: ^1.0.0
   geocode: 1.0.2
   flutter_riverpod: ^2.0.2
@@ -65,6 +66,8 @@ dependencies:
   device_info: ^2.0.3
   nearby_connections: ^3.2.0
   cached_network_image: ^3.2.2
+  add_2_calendar: ^2.0.2
+  flutter_launcher_icons: ^0.10.0
 
 
 dev_dependencies:
@@ -120,3 +123,8 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: false
+  image_path: "assets/IconTransparent.png"
