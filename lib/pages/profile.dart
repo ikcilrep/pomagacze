@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomagacze/components/profile_action.dart';
 import 'package:pomagacze/components/user_profile_details.dart';
 import 'package:pomagacze/db/db.dart';
-import 'package:pomagacze/models/activity.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/pages/event_details.dart';
 import 'package:pomagacze/state/activities.dart';
@@ -29,7 +28,16 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
       appBar: AppBar(title: const Text('Profil użytkownika')),
       body: UserProfileDetails(
         userProfile: widget.userProfile,
-        children: [..._buildFriendRelatedItems()],
+        children: [
+          const SizedBox(height: 5),
+          ..._buildFriendRelatedItems(),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 15),
+            child: Divider(color: Theme.of(context).dividerColor.withAlpha(80)),
+          ),
+          const SizedBox(height: 5),
+          _buildUserActivities()
+        ],
       ),
     );
   }
@@ -42,18 +50,9 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
     final friendIds = ref.watch(friendsIdsProvider);
     final outgoingFriendRequests = ref.watch(outgoingFriendRequestsProvider);
     final incomingFriendRequests = ref.watch(incomingFriendRequestsProvider);
-    final userActivities =
-        ref.watch(userActivitiesProvider(widget.userProfile.id));
 
     if (friendIds.valueOrNull?.contains(widget.userProfile.id) == true) {
       return [
-        ExpansionTile(title: const Text("Ostatnie wydarzenia"), children: [
-          userActivities.when(
-              data: _buildUserActivities,
-              error: (err, stack) =>
-                  Center(child: Text('Coś poszło nie tak: $err')),
-              loading: () => const Center(child: CircularProgressIndicator()))
-        ]),
         ProfileAction(
             title: const Text('Usuń znajomego'),
             icon: const Icon(Icons.person_remove),
@@ -144,29 +143,45 @@ class ProfilePageState extends ConsumerState<ProfilePage> {
     ];
   }
 
-  Widget _buildUserActivities(List<Activity> activities) {
-    activities.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: activities.length,
-      itemBuilder: (BuildContext context, int index) {
-        return OpenContainer<bool>(
-            tappable: true,
-            transitionType: ContainerTransitionType.fadeThrough,
-            transitionDuration: const Duration(milliseconds: 350),
-            openBuilder: (BuildContext context, VoidCallback _) =>
-                EventDetails(activities[index].event),
-            closedShape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-            closedElevation: 1.5,
-            // transitionDuration: const Duration(seconds: 2),
-            closedBuilder: (_, openContainer) => ListTile(
-                  title: Text(activities[index].event.title),
-                  subtitle: Text(
-                      "Dołączono ${activities[index].createdAt.displayable()}"),
-                ));
-      },
-    );
+  Widget _buildUserActivities() {
+    final userActivities =
+        ref.watch(userActivitiesProvider(widget.userProfile.id));
+
+    return userActivities.when(
+        data: (activities) => ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: activities.length,
+              itemBuilder: (BuildContext context, int index) {
+                return OpenContainer<bool>(
+                    tappable: false,
+                    transitionType: ContainerTransitionType.fadeThrough,
+                    transitionDuration: const Duration(milliseconds: 350),
+                    openBuilder: (BuildContext context, VoidCallback _) =>
+                        EventDetails(activities[index].event),
+                    closedShape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18)),
+                    closedElevation: 1.5,
+                    // transitionDuration: const Duration(seconds: 2),
+                    closedBuilder: (_, openContainer) => Material(
+                          child: ListTile(
+                            title: Text(activities[index].event.title),
+                            subtitle: Text(
+                                "Dołączono ${activities[index].createdAt.displayable()}"),
+                            onTap: openContainer,
+                          ),
+                        ));
+              },
+            ),
+        error: (err, stack) => Text('Coś poszło nie tak: $err'),
+        loading: () => Padding(
+            padding: const EdgeInsets.all(12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
+              children: const [
+                CircularProgressIndicator(),
+              ],
+            )));
   }
 }
