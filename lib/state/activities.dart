@@ -7,7 +7,7 @@ import 'package:pomagacze/state/user.dart';
 final friendsAndUserActivitiesProvider =
     FutureProvider<List<Activity>>((ref) async {
   var friendIds = await ref.watch(friendsIdsProvider.future);
-  var userProfile = await ref.watch(userProfileProvider.future);
+  var userProfile = await ref.watch(currentUserProvider.future);
   return await ActivitiesDB.getActivitiesForUsers([...friendIds, userProfile.id]);
 });
 
