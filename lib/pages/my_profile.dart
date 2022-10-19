@@ -27,7 +27,7 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    var currentUser = ref.watch(userProfileProvider);
+    var currentUser = ref.watch(currentUserProvider);
     return currentUser.when(
         data: (data) => buildSuccess(data),
         error: (err, stack) =>
@@ -39,7 +39,7 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
     return RefreshIndicator(
         onRefresh: () {
           return Future.wait([
-            ref.refresh(userProfileProvider.future),
+            ref.refresh(currentUserProvider.future),
           ]);
         },
         child: UserProfileDetails(

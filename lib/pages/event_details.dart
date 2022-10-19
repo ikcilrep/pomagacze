@@ -44,7 +44,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
 
   HelpEvent? get event => ref.read(eventProvider).valueOrNull;
 
-  UserProfile? get userProfile => ref.read(userProfileProvider).valueOrNull;
+  UserProfile? get userProfile => ref.read(currentUserProvider).valueOrNull;
 
   List<Volunteer>? get userEvents => ref.read(userEventsProvider).valueOrNull;
 
@@ -94,7 +94,8 @@ class EventDetailsState extends ConsumerState<EventDetails> {
         IconButton(
           icon: const Icon(Icons.share),
           onPressed: () {
-            Share.share('"${event?.title}" w aplikacji Pomagacze - $websiteUrl/event/${event?.id}');
+            Share.share(
+                '"${event?.title}" w aplikacji Pomagacze - $websiteUrl/event/${event?.id}');
           },
         ),
       ]),
@@ -258,7 +259,12 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                             onPressed: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
-                                      ConfirmParticipationPage(event: event)));
+                                      ConfirmParticipationPage(
+                                          event: event,
+                                          side: event.authorId ==
+                                                  userProfile?.id
+                                              ? ConfirmationSide.organizer
+                                              : ConfirmationSide.volunteer)));
                             },
                             child: Text(event.authorId == userProfile?.id
                                 ? 'Potwierdz uczestnictwo wolontariuszy'
@@ -446,7 +452,9 @@ class EventDetailsState extends ConsumerState<EventDetails> {
         await joinEvent(userProfile);
       }
     } else {
-      await VolunteersDB.deleteByUserId(userEvents![0].userId);
+      if (userEvents != null) {
+        await VolunteersDB.deleteByUserId(userEvents[0].userId);
+      }
     }
     ref.invalidate(feedFutureProvider);
   }

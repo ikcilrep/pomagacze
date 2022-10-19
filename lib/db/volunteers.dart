@@ -9,6 +9,12 @@ class VolunteersDB {
     result.throwOnError();
   }
 
+  static Future<void> update(Volunteer volunteer) async {
+    var result =
+        await supabase.from('volunteers').update(volunteer.toJson()).execute();
+    result.throwOnError();
+  }
+
   static Future<void> deleteByUserId(String userId) async {
     var result = await supabase
         .from('volunteers')

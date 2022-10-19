@@ -42,7 +42,7 @@ class EditProfilePageState extends ConsumerState<EditProfile> {
   void initState() {
     super.initState();
     userProfile =
-        ref.read(userProfileProvider).valueOrNull ?? UserProfile.empty();
+        ref.read(currentUserProvider).valueOrNull ?? UserProfile.empty();
   }
 
   Future<void> _saveChanges() async {
@@ -62,7 +62,7 @@ class EditProfilePageState extends ConsumerState<EditProfile> {
         'avatar_url': supabase.auth.currentUser?.userMetadata['avatar_url'],
       });
       await UsersDB.upsert(data);
-      ref.refresh(userProfileProvider);
+      ref.refresh(currentUserProvider);
       if (mounted) {
         context.showSnackBar(message: 'Pomyślnie zapisano zmiany!');
       }
@@ -88,7 +88,7 @@ class EditProfilePageState extends ConsumerState<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
-    var userProfileAsync = ref.watch(userProfileProvider);
+    var userProfileAsync = ref.watch(currentUserProvider);
 
     if (userProfileAsync.hasError) return const Text('Coś poszło nie tak');
     if (userProfileAsync.isLoading) {

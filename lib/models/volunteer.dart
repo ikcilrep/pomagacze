@@ -24,6 +24,7 @@ class Volunteer {
     return {
       'user_id': userId,
       'event_id': eventId,
+      'is_participation_confirmed': isParticipationConfirmed
     };
   }
 }

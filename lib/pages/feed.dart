@@ -25,7 +25,7 @@ class FeedPageState extends ConsumerState<FeedPage> {
   @override
   void initState() {
     super.initState();
-    var userProfile = ref.read(userProfileProvider);
+    var userProfile = ref.read(currentUserProvider);
 
     _eventFilters = _eventFilters.copyWith(
         currentLat: userProfile.valueOrNull?.latitude,
