@@ -95,7 +95,7 @@ class FeedPageState extends ConsumerState<FeedPage> {
         children: [
           SegmentedControl(
             children: const {
-              EventOrder.closest: Text('Najbliższe'),
+              EventOrder.closest: Text('Blisko ciebie'),
               EventOrder.incoming: Text('Nadchodzące'),
               EventOrder.popular: Text('Popularne'),
             },
