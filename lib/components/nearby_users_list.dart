@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nearby_connections/nearby_connections.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:pomagacze/components/nearby_user_list_tile.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/nearby_device.dart';
@@ -44,55 +43,64 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
   }
 
   Future<void> startDiscovery() async {
-    if (await ensurePermissions()) {
-      Nearby().startDiscovery(
-        "organizer",
-        Strategy.P2P_CLUSTER,
-        onEndpointFound: (String endpointId, String userId, String serviceId) {
-          if (_isUserAnUnconfirmedVolunteer(userId)) {
-            setState(() {
-              nearbyDevices.add(NearbyDevice(
-                  endpointId: endpointId,
-                  userId: userId,
-                  serviceId: serviceId));
-            });
-          } else {
-            print("Found but not valid!");
-          }
-        },
-        onEndpointLost: (String? endpointId) {
-          nearbyDevices
-              .removeWhere((element) => element.endpointId == endpointId);
-        },
-        serviceId: "com.pomagacze.pomagacze",
-      );
+    if (!await Nearby().checkLocationPermission()) {
+      await Nearby().askLocationPermission();
     }
+    if (!await Nearby().checkBluetoothPermission()) {
+      Nearby().askBluetoothPermission();
+    }
+    Nearby().startDiscovery(
+      "organizer",
+      Strategy.P2P_CLUSTER,
+      onEndpointFound: (String endpointId, String userId, String serviceId) {
+        if (_isUserAnUnconfirmedVolunteer(userId)) {
+          setState(() {
+            nearbyDevices.add(NearbyDevice(
+                endpointId: endpointId, userId: userId, serviceId: serviceId));
+          });
+        } else {
+          print("Found but not valid!");
+        }
+      },
+      onEndpointLost: (String? endpointId) {
+        nearbyDevices
+            .removeWhere((element) => element.endpointId == endpointId);
+      },
+      serviceId: "com.pomagacze.pomagacze",
+    );
   }
 
   bool _isUserAnUnconfirmedVolunteer(String userId) {
     return eventVolunteers.any((element) => element.userId == userId) &&
-            !eventVolunteers
-                .firstWhere((element) => element.userId == userId)
-                .isParticipationConfirmed;
+        !eventVolunteers
+            .firstWhere((element) => element.userId == userId)
+            .isParticipationConfirmed;
   }
-
-  Future<bool> ensurePermissions() async =>
-      await Permission.bluetooth
-          .request()
-          .isGranted &&
-          await Permission.location
-              .request()
-              .isGranted;
 
   @override
   Widget build(BuildContext context) {
-    final unconfirmedVolunteersDevices = nearbyDevices.where((device) => _isUserAnUnconfirmedVolunteer(device.userId)).toList();
+    final unconfirmedVolunteersDevices = nearbyDevices
+        .where((device) => _isUserAnUnconfirmedVolunteer(device.userId))
+        .toList();
     print("rebuilding");
+
+    if (unconfirmedVolunteersDevices.isEmpty) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Text('Wyszukiwanie wolontariuszy w pobliżu...'),
+          SizedBox(height: 15),
+          CircularProgressIndicator(),
+          SizedBox(height: 100),
+        ],
+      );
+    }
+
     return ListView.builder(
         itemCount: unconfirmedVolunteersDevices.length,
         itemBuilder: (context, index) {
-          final volunteer = eventVolunteers.firstWhere(
-                  (element) => element.userId == unconfirmedVolunteersDevices[index].userId);
+          final volunteer = eventVolunteers.firstWhere((element) =>
+              element.userId == unconfirmedVolunteersDevices[index].userId);
           print(volunteer.isParticipationConfirmed);
 
           return NearbyVolunteerListTile(

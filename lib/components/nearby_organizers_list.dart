@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:nearby_connections/nearby_connections.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:pomagacze/utils/constants.dart';
 
 class NearbyOrganizersList extends StatefulWidget {
@@ -27,31 +26,36 @@ class NearbyOrganizersListState extends State<NearbyOrganizersList> {
   }
 
   void startAdvertising() async {
-    if (await Permission.bluetooth.request().isGranted &&
-        await Permission.location.request().isGranted) {
-      await Nearby().startAdvertising(
-        supabase.auth.user()?.id ?? '',
-        Strategy.P2P_CLUSTER,
-        onConnectionInitiated: (String id, ConnectionInfo info) {
-          print(id);
-        },
-        onConnectionResult: (String id, Status status) {
-          print(id);
-        },
-        onDisconnected: (String id) {
-          // Callled whenever a discoverer disconnects from advertiser
-        },
-        serviceId: "com.pomagacze.pomagacze", // uniquely identifies your app
-      );
+    if (!await Nearby().checkLocationPermission()) {
+      await Nearby().askLocationPermission();
     }
+    if (!await Nearby().checkBluetoothPermission()) {
+      Nearby().askBluetoothPermission();
+    }
+
+    await Nearby().startAdvertising(
+      supabase.auth.user()?.id ?? '',
+      Strategy.P2P_CLUSTER,
+      onConnectionInitiated: (String id, ConnectionInfo info) {
+        print(id);
+      },
+      onConnectionResult: (String id, Status status) {
+        print(id);
+      },
+      onDisconnected: (String id) {
+        // Callled whenever a discoverer disconnects from advertiser
+      },
+      serviceId: "com.pomagacze.pomagacze", // uniquely identifies your app
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: const [
-      Icon(Icons.visibility_outlined, size: 100),
+      Icon(Icons.visibility_outlined, size: 80),
       Text("Jesteś widoczny dla organizatora w pobliżu.",
-          textAlign: TextAlign.center)
+          textAlign: TextAlign.center),
+      SizedBox(height: 100),
     ]);
   }
 }

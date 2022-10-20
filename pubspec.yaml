@@ -65,7 +65,6 @@ dependencies:
   share_plus: ^4.5.3
   device_info: ^2.0.3
   nearby_connections: ^3.2.0
-  permission_handler: ^10.1.0
   cached_network_image: ^3.2.2
   add_2_calendar: ^2.0.2
   flutter_launcher_icons: ^0.10.0

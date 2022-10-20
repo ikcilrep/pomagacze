@@ -68,7 +68,7 @@ class SearchUsersState extends ConsumerState<SearchUsersPage> {
           if (i == 0) {
             return ListTile(
               contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 21, vertical: 5),
+                  const EdgeInsets.symmetric(horizontal: 25, vertical: 5),
               title: const Text('Zaproś znajomych do aplikacji'),
               leading: const Icon(Icons.person_add),
               onTap: () {
