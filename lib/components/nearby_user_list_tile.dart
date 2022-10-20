@@ -1,16 +1,24 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nearby_connections/nearby_connections.dart';
 import 'package:pomagacze/components/user_avatar.dart';
 import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
+import 'package:pomagacze/models/nearby_device.dart';
 import 'package:pomagacze/models/volunteer.dart';
 import 'package:pomagacze/state/events.dart';
+import 'package:pomagacze/state/user.dart';
 import 'package:pomagacze/utils/snackbar.dart';
 
 class NearbyVolunteerListTile extends ConsumerStatefulWidget {
   final Volunteer volunteer;
+  final NearbyDevice device;
 
-  const NearbyVolunteerListTile({Key? key, required this.volunteer})
+  const NearbyVolunteerListTile(
+      {Key? key, required this.volunteer, required this.device})
       : super(key: key);
 
   @override
@@ -33,12 +41,30 @@ class NearbyVolunteerListTileState
         context.showSnackBar(
             message: 'Udało się potwierdzić uczestnictwo wolontariusza!');
       }
+      await _notifyUserAboutSuccess();
     } catch (e) {
       if (mounted) {
         context.showErrorSnackBar(
             message: 'Nie udało się potwierdzić uczestnictwa wolontariusza.');
       }
     }
+  }
+
+  Future<void> _notifyUserAboutSuccess() async {
+    await Nearby().disconnectFromEndpoint(widget.device.endpointId);
+    await Nearby().requestConnection(
+        ref.read(currentUserIdProvider), widget.device.endpointId,
+        onConnectionInitiated: (endpointId, info) async {
+      await Nearby().acceptConnection(endpointId,
+          onPayLoadRecieved: (String endpointId, Payload payload) {});
+    }, onConnectionResult: (endpointId, status) async {
+      if (status == Status.CONNECTED) {
+        final encodedEventId =
+            Uint8List.fromList(utf8.encode(widget.volunteer.eventId));
+        await Nearby()
+            .sendBytesPayload(widget.device.endpointId, encodedEventId);
+      }
+    }, onDisconnected: (endpointId) {});
   }
 
   @override

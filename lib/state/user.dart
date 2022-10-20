@@ -4,6 +4,8 @@ import 'package:pomagacze/db/helpers.dart';
 import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/utils/constants.dart';
 
+final currentUserIdProvider = Provider((ref) => supabase.auth.currentUser?.id ?? '');
+
 final currentUserProvider = FutureProvider<UserProfile>((ref) async {
   try {
     return await UsersDB.getById(supabase.auth.user()?.id ?? '');

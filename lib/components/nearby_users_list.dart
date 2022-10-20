@@ -32,6 +32,7 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
   @override
   void dispose() {
     Nearby().stopDiscovery();
+    Nearby().stopAllEndpoints();
     super.dispose();
   }
 
@@ -59,8 +60,6 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
             nearbyDevices.add(NearbyDevice(
                 endpointId: endpointId, userId: userId, serviceId: serviceId));
           });
-        } else {
-          print("Found but not valid!");
         }
       },
       onEndpointLost: (String? endpointId) {
@@ -83,16 +82,15 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
     final unconfirmedVolunteersDevices = nearbyDevices
         .where((device) => _isUserAnUnconfirmedVolunteer(device.userId))
         .toList();
-    print("rebuilding");
     return ListView.builder(
         itemCount: unconfirmedVolunteersDevices.length,
         itemBuilder: (context, index) {
           final volunteer = eventVolunteers.firstWhere((element) =>
               element.userId == unconfirmedVolunteersDevices[index].userId);
-          print(volunteer.isParticipationConfirmed);
 
           return NearbyVolunteerListTile(
             volunteer: volunteer,
+            device: unconfirmedVolunteersDevices[index],
           );
         });
   }
