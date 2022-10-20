@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nearby_connections/nearby_connections.dart';
+import 'package:pomagacze/components/congratulations_dialog.dart';
 import 'package:pomagacze/components/participation_confirmed_message.dart';
 import 'package:pomagacze/components/visible_for_organizer_message.dart';
 import 'package:pomagacze/models/help_event.dart';
@@ -45,7 +46,22 @@ class NearbyOrganizersListState extends ConsumerState<NearbyOrganizersList> {
       final String message = utf8.decode(payload.bytes!);
       if (message == widget.event.id) {
         ref.refresh(eventProvider);
+        _showCongratulationsDialog();
       }
+    }
+  }
+
+  void onDismiss() {
+    Navigator.of(context).pop();
+  }
+
+  void _showCongratulationsDialog() {
+    if (mounted) {
+      showDialog(
+          context: context,
+          builder: (_) => CongratulationsDialog(
+              event: widget.event,
+              onDismiss: () => Navigator.of(context).pop()));
     }
   }
 
@@ -71,8 +87,7 @@ class NearbyOrganizersListState extends ConsumerState<NearbyOrganizersList> {
       supabase.auth.user()?.id ?? '',
       Strategy.P2P_CLUSTER,
       onConnectionInitiated: acceptIfFromOrganizer,
-      onConnectionResult: (String id, Status status) {
-      },
+      onConnectionResult: (String id, Status status) {},
       onDisconnected: (String id) {
         // Callled whenever a discoverer disconnects from advertiser
       },
