@@ -10,14 +10,13 @@ class ProfileAction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      child: InkWell(
-        child: ListTile(
-          onTap: onTap,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-          title: title,
-          trailing: icon,
-        ),
+      color: Colors.transparent,
+      child: ListTile(
+        onTap: onTap,
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        title: title,
+        trailing: icon,
       ),
     );
   }

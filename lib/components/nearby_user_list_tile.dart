@@ -69,6 +69,7 @@ class NearbyVolunteerListTileState
   @override
   Widget build(BuildContext context) {
     return Material(
+      type: MaterialType.transparency,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
         title: Text(widget.volunteer.profile!.name ?? ''),

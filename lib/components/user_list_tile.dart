@@ -12,9 +12,9 @@ class UserListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+      type: MaterialType.transparency,
       child: ListTile(
-        contentPadding:
-        const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
         title: Text(userProfile.name ?? ''),
         leading: UserAvatar(userProfile),
         trailing: Row(
@@ -25,14 +25,12 @@ class UserListTile extends StatelessWidget {
               style: Theme.of(context).textTheme.subtitle1,
             ),
             const SizedBox(width: 3),
-            Icon(Icons.favorite,
-                color: Theme.of(context).colorScheme.error)
+            Icon(Icons.favorite, color: Theme.of(context).colorScheme.error)
           ],
         ),
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) =>
-                  ProfilePage(userProfile: userProfile)));
+              builder: (context) => ProfilePage(userProfile: userProfile)));
         },
       ),
     );

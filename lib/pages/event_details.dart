@@ -128,7 +128,6 @@ class EventDetailsState extends ConsumerState<EventDetails> {
     return SingleChildScrollView(
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.only(bottom: 80),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -165,7 +164,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                         topRight: Radius.circular(10)),
                     color: Theme.of(context).colorScheme.surface),
                 padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 8).copyWith(bottom: 80),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
@@ -319,6 +318,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                         ),
 
                       Material(
+                        type: MaterialType.transparency,
                         child: ListTile(
                             title: const Text("Lokalizacja"),
                             subtitle:
@@ -367,6 +367,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                             }),
                       ),
                       Material(
+                        type: MaterialType.transparency,
                         child: ListTile(
                             title: const Text("Kontakt do organizatora"),
                             subtitle: Text(event.contactEmail ?? 'Brak'),
