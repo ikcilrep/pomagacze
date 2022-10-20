@@ -32,12 +32,12 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
   @override
   void dispose() {
     Nearby().stopDiscovery();
-    Nearby().stopAllEndpoints();
     super.dispose();
   }
 
   @override
   void initState() {
+    Nearby().stopDiscovery();
     startDiscovery();
     super.initState();
   }
@@ -80,6 +80,19 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
     final unconfirmedVolunteersDevices = nearbyDevices
         .where((device) => _isUserAnUnconfirmedVolunteer(device.userId))
         .toList();
+
+    if (unconfirmedVolunteersDevices.isEmpty) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Text('Wyszukiwanie wolontariuszy w pobliżu...'),
+          SizedBox(height: 15),
+          CircularProgressIndicator(),
+          SizedBox(height: 100),
+        ],
+      );
+    }
+
     return ListView.builder(
         itemCount: unconfirmedVolunteersDevices.length,
         itemBuilder: (context, index) {

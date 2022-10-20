@@ -6,7 +6,7 @@ extension OrderBySerializing on EventOrder {
       case EventOrder.incoming:
         return "Nadchodzące";
       case EventOrder.closest:
-        return "Najbliższe";
+        return "Blisko ciebie";
       case EventOrder.popular:
         return "Popularne";
       default:

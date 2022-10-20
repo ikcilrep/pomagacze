@@ -13,11 +13,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends AuthState<LoginPage> {
-  bool _isLoading = false;
+  final _isLoading = <Provider, bool>{
+    Provider.google: false,
+    Provider.facebook: false
+  };
   late final TextEditingController _emailController;
 
-  Future<void> _signIn() async {
-    await supabase.auth.signInWithProvider(Provider.google,
+  Provider? _lastProviderUsed;
+
+  Future<void> _signIn(Provider provider) async {
+    _lastProviderUsed = provider;
+    await supabase.auth.signInWithProvider(provider,
         options: AuthOptions(
             redirectTo: 'com.pomagacze.pomagacze://login-callback/'));
   }
@@ -37,20 +43,22 @@ class LoginPageState extends AuthState<LoginPage> {
   @override
   void onAuthenticated(Session session) async {
     setState(() {
-      _isLoading = true;
+      if (_lastProviderUsed != null) _isLoading[_lastProviderUsed!] = true;
     });
 
     super.onAuthenticated(session);
   }
 
+  AuthButtonStyle get _authButtonStyle => AuthButtonStyle(
+        textStyle: Theme.of(context).typography.englishLike.bodyText2,
+        height: 50,
+        borderRadius: 50,
+        width: 100,
+      );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*appBar: AppBar(
-        backgroundColor: Colors.transparent,
-          title: const Center(
-              child: Text('Pomagacze',
-                  style: TextStyle(fontWeight: FontWeight.bold)))),*/
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -71,18 +79,26 @@ class LoginPageState extends AuthState<LoginPage> {
                               .headline2
                               ?.copyWith(color: Colors.black))),
                   Center(
-                    child: GoogleAuthButton(
-                        style: AuthButtonStyle(
-                          textStyle: Theme.of(context)
-                              .typography
-                              .englishLike
-                              .bodyText2,
-                          height: 50,
-                        ),
-                        isLoading: _isLoading,
-                        onPressed: _signIn,
-                        themeMode: ThemeMode.light,
-                        text: 'Zaloguj się z Google'),
+                    child: IntrinsicWidth(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          GoogleAuthButton(
+                              style: _authButtonStyle,
+                              isLoading: _isLoading[Provider.google] ?? false,
+                              onPressed: () => _signIn(Provider.google),
+                              themeMode: ThemeMode.light,
+                              text: 'Zaloguj się z Google'),
+                          const SizedBox(height: 10),
+                          FacebookAuthButton(
+                              style: _authButtonStyle,
+                              isLoading: _isLoading[Provider.facebook] ?? false,
+                              onPressed: () => _signIn(Provider.facebook),
+                              themeMode: ThemeMode.light,
+                              text: 'Zaloguj się z Facebook')
+                        ],
+                      ),
+                    ),
                   )
                 ])),
       ),

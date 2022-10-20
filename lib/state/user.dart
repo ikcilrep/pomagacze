@@ -26,7 +26,7 @@ final userProfilesProvider = FutureProvider<List<UserProfile>>((ref) async {
 });
 
 final searchUsersProvider =
-    FutureProvider.family<List<UserProfile>, String>((ref, query) async {
+    FutureProvider.autoDispose.family<List<UserProfile>, String>((ref, query) async {
   var currentUser = await ref.watch(currentUserProvider.future);
   return await UsersDB.search(query, excludeId: currentUser.id);
 });

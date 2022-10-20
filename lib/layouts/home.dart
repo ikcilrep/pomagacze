@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:pomagacze/components/auth_required_state.dart';
+import 'package:pomagacze/components/deep_link_detector.dart';
 import 'package:pomagacze/components/indexed_transition_switcher.dart';
 import 'package:pomagacze/pages/feed.dart';
 import 'package:pomagacze/pages/friends.dart';
@@ -46,21 +47,23 @@ class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Text(destinations[_index].label), scrolledUnderElevation: 0, actions: _index == 0 ? [
-            IconButton(onPressed: () {
-              Navigator.of(context).pushNamed('/learn');
-            }, icon: const Icon(Icons.school, color: Colors.black87))
-      ] : []),
-      body: _buildBody(),
-      bottomNavigationBar: NavigationBar(
-        destinations: destinations,
-        selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() {
-          _reversed = i < _index;
-          _index = i;
-        }),
+    return DeepLinkDetector(
+      child: Scaffold(
+        appBar: AppBar(
+            title: Text(destinations[_index].label), scrolledUnderElevation: 0, actions: _index == 0 ? [
+              IconButton(onPressed: () {
+                Navigator.of(context).pushNamed('/learn');
+              }, icon: const Icon(Icons.school, color: Colors.black87))
+        ] : []),
+        body: _buildBody(),
+        bottomNavigationBar: NavigationBar(
+          destinations: destinations,
+          selectedIndex: _index,
+          onDestinationSelected: (i) => setState(() {
+            _reversed = i < _index;
+            _index = i;
+          }),
+        ),
       ),
     );
   }
