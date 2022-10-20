@@ -51,7 +51,6 @@ class NearbyVolunteerListTileState
   }
 
   Future<void> _notifyUserAboutSuccess() async {
-    await Nearby().disconnectFromEndpoint(widget.device.endpointId);
     await Nearby().requestConnection(
         ref.read(currentUserIdProvider), widget.device.endpointId,
         onConnectionInitiated: (endpointId, info) async {
