@@ -37,12 +37,12 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
 
   @override
   void initState() {
-    Nearby().stopDiscovery();
     startDiscovery();
     super.initState();
   }
 
   Future<void> startDiscovery() async {
+    await Nearby().stopDiscovery();
     if (!await Nearby().checkLocationPermission()) {
       await Nearby().askLocationPermission();
     }
@@ -53,6 +53,7 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
       "organizer",
       Strategy.P2P_CLUSTER,
       onEndpointFound: (String endpointId, String userId, String serviceId) {
+        ref.refresh(eventProvider);
         if (_isUserAnUnconfirmedVolunteer(userId)) {
           setState(() {
             nearbyDevices.add(NearbyDevice(

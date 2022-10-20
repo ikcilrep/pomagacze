@@ -26,6 +26,7 @@ class NearbyOrganizersListState extends State<NearbyOrganizersList> {
   }
 
   void startAdvertising() async {
+    await Nearby().stopAdvertising();
     if (!await Nearby().checkLocationPermission()) {
       await Nearby().askLocationPermission();
     }
