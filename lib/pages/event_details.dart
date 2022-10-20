@@ -193,7 +193,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                       Visibility(
                         visible: userProfile != null &&
                             !canJoin(userProfile!, event.volunteers) &&
-                            !hasUserJoined,
+                            !hasUserJoined && event.authorId != userProfile?.id,
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
                           child: Text(

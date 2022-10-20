@@ -80,7 +80,7 @@ class EventsDB {
 
   static Future<HelpEvent> getById(String id) async {
     var result = await supabase
-        .from('events')
+        .from('events_extended')
         .select(select)
         .eq('id', id)
         .single()

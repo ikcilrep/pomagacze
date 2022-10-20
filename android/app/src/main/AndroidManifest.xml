@@ -32,6 +32,9 @@
                 <data
                         android:scheme="com.pomagacze.pomagacze"
                         android:host="login-callback" />
+                <data
+                        android:scheme="com.pomagacze.pomagacze"
+                        android:host="event" />
             </intent-filter>
 
         </activity>

@@ -53,6 +53,7 @@ class LoginPageState extends AuthState<LoginPage> {
         textStyle: Theme.of(context).typography.englishLike.bodyText2,
         height: 50,
         borderRadius: 50,
+        width: 100,
       );
 
   @override
@@ -78,22 +79,25 @@ class LoginPageState extends AuthState<LoginPage> {
                               .headline2
                               ?.copyWith(color: Colors.black))),
                   Center(
-                    child: Column(
-                      children: [
-                        GoogleAuthButton(
-                            style: _authButtonStyle,
-                            isLoading: _isLoading[Provider.google] ?? false,
-                            onPressed: () => _signIn(Provider.google),
-                            themeMode: ThemeMode.light,
-                            text: 'Zaloguj się z Google'),
-                        const SizedBox(height: 10),
-                        FacebookAuthButton(
-                            style: _authButtonStyle,
-                            isLoading: _isLoading[Provider.facebook] ?? false,
-                            onPressed: () => _signIn(Provider.facebook),
-                            themeMode: ThemeMode.light,
-                            text: 'Zaloguj się z Facebook')
-                      ],
+                    child: IntrinsicWidth(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          GoogleAuthButton(
+                              style: _authButtonStyle,
+                              isLoading: _isLoading[Provider.google] ?? false,
+                              onPressed: () => _signIn(Provider.google),
+                              themeMode: ThemeMode.light,
+                              text: 'Zaloguj się z Google'),
+                          const SizedBox(height: 10),
+                          FacebookAuthButton(
+                              style: _authButtonStyle,
+                              isLoading: _isLoading[Provider.facebook] ?? false,
+                              onPressed: () => _signIn(Provider.facebook),
+                              themeMode: ThemeMode.light,
+                              text: 'Zaloguj się z Facebook')
+                        ],
+                      ),
                     ),
                   )
                 ])),
