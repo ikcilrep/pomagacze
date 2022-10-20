@@ -147,6 +147,24 @@ class _EventCardState extends ConsumerState<EventCard> {
                                   ),
                               ],
                             ),
+                          if (widget.event.imageUrl == null)
+                            Row(
+                              children: [
+                                const SizedBox(width: 3),
+                                Icon(Icons.favorite,
+                                    size: 15,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withOpacity(0.8)),
+                                Text(
+                                  "${widget.event.points}",
+                                  style: Theme.of(context).textTheme.caption,
+                                  overflow: TextOverflow.ellipsis,
+                                  softWrap: false,
+                                ),
+                              ],
+                            ),
                         ])
                       ],
                     )),
