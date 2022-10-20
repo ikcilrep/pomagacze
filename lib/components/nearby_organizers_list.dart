@@ -46,6 +46,7 @@ class NearbyOrganizersListState extends ConsumerState<NearbyOrganizersList> {
       final String message = utf8.decode(payload.bytes!);
       if (message == widget.event.id) {
         ref.refresh(eventProvider);
+        ref.refresh(currentUserProvider);
         _showCongratulationsDialog();
       }
     }
