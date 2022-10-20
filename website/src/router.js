@@ -4,7 +4,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 const routes = [
 	{ path: '/', component: Home },
-	{ path: '/events/:id', component: Event },
+	{ path: '/event/:id', component: Event },
 	{
 		path: '/install',
 		beforeEnter(to, from, next) {

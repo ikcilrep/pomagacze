@@ -96,8 +96,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
         IconButton(
           icon: const Icon(Icons.share),
           onPressed: () {
-            Share.share(
-                '"${event?.title}" w aplikacji Pomagacze - $websiteUrl/event/${event?.id}');
+            Share.share('$websiteUrl/event/${event?.id}');
           },
         ),
       ]),
