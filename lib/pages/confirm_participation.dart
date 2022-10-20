@@ -45,7 +45,7 @@ class _ConfirmParticipationPageState
             Container(),
             widget.side == ConfirmationSide.organizer
                 ? NearbyUsersList(event: widget.event)
-                : const NearbyOrganizersList()
+                : NearbyOrganizersList(event: widget.event,)
           ],
         ),
       ),

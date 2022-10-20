@@ -43,6 +43,7 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
   }
 
   Future<void> startDiscovery() async {
+    await Nearby().stopDiscovery();
     if (!await Nearby().checkLocationPermission()) {
       await Nearby().askLocationPermission();
     }
@@ -53,14 +54,11 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
       "organizer",
       Strategy.P2P_CLUSTER,
       onEndpointFound: (String endpointId, String userId, String serviceId) {
-        if (_isUserAnUnconfirmedVolunteer(userId)) {
-          setState(() {
-            nearbyDevices.add(NearbyDevice(
-                endpointId: endpointId, userId: userId, serviceId: serviceId));
-          });
-        } else {
-          print("Found but not valid!");
-        }
+        ref.refresh(eventProvider);
+        setState(() {
+          nearbyDevices.add(NearbyDevice(
+              endpointId: endpointId, userId: userId, serviceId: serviceId));
+        });
       },
       onEndpointLost: (String? endpointId) {
         nearbyDevices
@@ -82,7 +80,6 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
     final unconfirmedVolunteersDevices = nearbyDevices
         .where((device) => _isUserAnUnconfirmedVolunteer(device.userId))
         .toList();
-    print("rebuilding");
 
     if (unconfirmedVolunteersDevices.isEmpty) {
       return Column(
@@ -101,10 +98,10 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
         itemBuilder: (context, index) {
           final volunteer = eventVolunteers.firstWhere((element) =>
               element.userId == unconfirmedVolunteersDevices[index].userId);
-          print(volunteer.isParticipationConfirmed);
 
           return NearbyVolunteerListTile(
             volunteer: volunteer,
+            device: unconfirmedVolunteersDevices[index],
           );
         });
   }
