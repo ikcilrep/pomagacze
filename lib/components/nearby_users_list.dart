@@ -55,12 +55,10 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
       Strategy.P2P_CLUSTER,
       onEndpointFound: (String endpointId, String userId, String serviceId) {
         ref.refresh(eventProvider);
-        if (_isUserAnUnconfirmedVolunteer(userId)) {
-          setState(() {
-            nearbyDevices.add(NearbyDevice(
-                endpointId: endpointId, userId: userId, serviceId: serviceId));
-          });
-        }
+        setState(() {
+          nearbyDevices.add(NearbyDevice(
+              endpointId: endpointId, userId: userId, serviceId: serviceId));
+        });
       },
       onEndpointLost: (String? endpointId) {
         nearbyDevices
