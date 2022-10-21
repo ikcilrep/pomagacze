@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nearby_connections/nearby_connections.dart';
+import 'package:pomagacze/components/ask_for_permissions_button.dart';
 import 'package:pomagacze/components/nearby_user_list_tile.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/nearby_device.dart';
 import 'package:pomagacze/models/volunteer.dart';
 import 'package:pomagacze/state/events.dart';
+import 'package:pomagacze/state/permissions.dart';
 
 class NearbyUsersList extends ConsumerStatefulWidget {
   final HelpEvent event;
@@ -27,7 +29,7 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
   List<Volunteer> get eventVolunteers =>
       ref.watch(eventProvider).valueOrNull?.volunteers ?? [];
 
-  bool isInit = false;
+  bool _isDiscovering = false;
 
   @override
   void dispose() {
@@ -37,19 +39,10 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
 
   @override
   void initState() {
-    Nearby().stopDiscovery();
-    startDiscovery();
     super.initState();
   }
 
   Future<void> startDiscovery() async {
-    await Nearby().stopDiscovery();
-    if (!await Nearby().checkLocationPermission()) {
-      await Nearby().askLocationPermission();
-    }
-    if (!await Nearby().checkBluetoothPermission()) {
-      Nearby().askBluetoothPermission();
-    }
     Nearby().startDiscovery(
       "organizer",
       Strategy.P2P_CLUSTER,
@@ -77,6 +70,16 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
 
   @override
   Widget build(BuildContext context) {
+    final bluetoothPermission = ref.watch(bluetoothPermissionProvider);
+    final locationPermission = ref.watch(locationPermissionProvider);
+
+    _discoverIfPermissionsGranted(bluetoothPermission, locationPermission);
+
+    if (bluetoothPermission.valueOrNull != true ||
+        locationPermission.valueOrNull != true) {
+      return const AskForPermissionsButton();
+    }
+
     final unconfirmedVolunteersDevices = nearbyDevices
         .where((device) => _isUserAnUnconfirmedVolunteer(device.userId))
         .toList();
@@ -104,5 +107,19 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
             device: unconfirmedVolunteersDevices[index],
           );
         });
+  }
+
+  void _discoverIfPermissionsGranted(AsyncValue<bool> bluetoothPermission,
+      AsyncValue<bool> locationPermission) {
+    if (bluetoothPermission.valueOrNull == true &&
+        locationPermission.valueOrNull == true) {
+      if (!_isDiscovering) {
+        startDiscovery();
+        _isDiscovering = true;
+      }
+    } else {
+      Nearby().stopDiscovery();
+      _isDiscovering = false;
+    }
   }
 }
