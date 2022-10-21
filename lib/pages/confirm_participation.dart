@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomagacze/components/nearby_organizers_list.dart';
 import 'package:pomagacze/components/nearby_users_list.dart';
+import 'package:pomagacze/components/nfc_writer.dart';
 import 'package:pomagacze/models/help_event.dart';
 
 enum ConfirmationSide {
@@ -42,10 +43,14 @@ class _ConfirmParticipationPageState
         ),
         body: TabBarView(
           children: [
-            Container(),
+            widget.side == ConfirmationSide.organizer
+                ? NfcWriter(event: widget.event)
+                : Container(),
             widget.side == ConfirmationSide.organizer
                 ? NearbyUsersList(event: widget.event)
-                : NearbyOrganizersList(event: widget.event,)
+                : NearbyOrganizersList(
+                    event: widget.event,
+                  )
           ],
         ),
       ),
