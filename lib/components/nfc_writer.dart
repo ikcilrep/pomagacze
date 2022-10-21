@@ -40,7 +40,7 @@ class NfcWriterState extends ConsumerState<NfcWriter> {
         if (tag.ndefWritable == true) {
           // decoded NDEF records
           await FlutterNfcKit.writeNDEFRecords(
-              [ndef.UriRecord.fromString(widget.event.id)]);
+              [ndef.TextRecord(text: widget.event.id)]);
           await FlutterNfcKit.finish();
           if (mounted) {
             context.showSnackBar(
