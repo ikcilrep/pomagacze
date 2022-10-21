@@ -1,13 +1,23 @@
 <template>
-  <v-container class="d-flex align-center flex-column text-center mt-8 pb-10">
+  <v-container class="d-flex align-center flex-column text-center mt-16 pb-10">
     <h1 class="text-h3 mb-2">Pomagacze</h1>
-    <h2 class="text-h6">Aplikacja Pomagacze zachęca do pomagania, bycia wolontariuszem,<br>zmieniania swojego otoczenia
+    <h2 class="text-h6">Aplikacja Pomagacze zachęca do pomagania, bycia wolontariuszem <br>i zmieniania swojego otoczenia
       na lepsze.</h2>
     <v-btn class="mt-4" color="primary" rounded="xl" size="x-large" to="/install">POBIERZ
       <v-icon class="ml-2">mdi-download</v-icon>
     </v-btn>
-    <img :src="imgUrl" width="300" class="mt-4 mb-10"/>
-    <h2 class="mb-4">Do czego służy aplikacja?</h2>
+
+    <v-carousel v-model="index" hide-delimiter-background style="width: 400px; height: 530px" class="mt-8" continuous cycle interval="4000">
+      <v-carousel-item
+          v-for="(url, i) in Array.from({length: 5}).map((x, i) => `screenshots/screenshot${i+1}.png`)"
+          :key="url"
+      >
+        <img :src="url" height="500" />
+      </v-carousel-item>
+    </v-carousel>
+
+    <h2 class="mt-12 mb-8">Do czego służy aplikacja?</h2>
+
     <div class="text-left mb-10 w-66">
       <h3>Poszukiwanie wolontariuszy</h3>
       <ul>
@@ -34,8 +44,10 @@
 </template>
 
 <script setup lang="ts">
-import imgUrl from '../assets/screenshot.png';</script>
+import { ref } from 'vue';
 
-<style scoped lang="scss">
+const index = ref(0);
+</script>
 
+<style scoped>
 </style>

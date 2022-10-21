@@ -212,7 +212,7 @@ class EventFormState extends ConsumerState<EventForm> {
                       key: Key(field.value.toString()),
                       dateMask: 'EE, dd MMM yyyy',
                       initialValue: field.value,
-                      firstDate: widget.initialData?.dateStart ?? DateTime.now(),
+                      firstDate: DateTime.now(),
                       lastDate: DateTime(3000),
                       onChanged: (dateTimeString) {
                         var date = DateTime.tryParse(dateTimeString);

@@ -139,6 +139,7 @@ class _EventCardState extends ConsumerState<EventCard> {
                                         .colorScheme
                                         .onSurface
                                         .withOpacity(0.8)),
+                                const SizedBox(width: 3),
                                 Text(
                                     "${widget.event.volunteers.length}/${widget.event.maximalNumberOfVolunteers}",
                                     style: Theme.of(context).textTheme.caption,
@@ -150,13 +151,14 @@ class _EventCardState extends ConsumerState<EventCard> {
                           if (widget.event.imageUrl == null)
                             Row(
                               children: [
-                                const SizedBox(width: 3),
+                                const SizedBox(width: 5),
                                 Icon(Icons.favorite,
                                     size: 15,
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onSurface
                                         .withOpacity(0.8)),
+                                const SizedBox(width: 3),
                                 Text(
                                   "${widget.event.points}",
                                   style: Theme.of(context).textTheme.caption,

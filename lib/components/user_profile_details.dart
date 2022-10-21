@@ -37,7 +37,7 @@ class _UserProfileDetailsState extends ConsumerState<UserProfileDetails> {
               children: [
                 Text(widget.userProfile.name ?? '',
                     style: Theme.of(context).textTheme.headline6),
-                Text('${widget.userProfile.gender?.display()} • ${widget.userProfile.age} l.')
+                Text('${widget.userProfile.gender?.display()} • ${widget.userProfile.age} l. ${widget.userProfile.city != null ? '• ${widget.userProfile.city}' : ''}')
               ],
             ),
             Expanded(child: Container()),

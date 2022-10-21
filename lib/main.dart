@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -27,6 +28,8 @@ Future<void> main() async {
     anonKey: supabaseAnonKey,
     authCallbackUrlHostname: 'login-callback'
   );
+
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(systemNavigationBarColor: getTheme().colorScheme.surface));
 
   runApp(const ProviderScope(child: MyApp()));
 }
