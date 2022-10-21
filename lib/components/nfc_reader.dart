@@ -7,8 +7,12 @@ import 'package:nfc_manager/nfc_manager.dart';
 import 'package:pomagacze/components/congratulations_dialog.dart';
 import 'package:pomagacze/components/nfc_not_available_message.dart';
 import 'package:pomagacze/components/nfc_read_message.dart';
+import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
+import 'package:pomagacze/models/volunteer.dart';
+import 'package:pomagacze/state/events.dart';
 import 'package:pomagacze/state/nfc.dart';
+import 'package:pomagacze/state/users.dart';
 import 'package:pomagacze/utils/snackbar.dart';
 
 class NfcReader extends ConsumerStatefulWidget {
@@ -21,6 +25,9 @@ class NfcReader extends ConsumerStatefulWidget {
 }
 
 class NfcReaderState extends ConsumerState<NfcReader> {
+  AutoDisposeFutureProvider<HelpEvent> get eventProvider =>
+      eventFutureProvider(widget.event.id!);
+
   @override
   Widget build(BuildContext context) {
     final isNfcAvailableFuture = ref.watch(nfcAvailabilityProvider);
@@ -60,6 +67,12 @@ class NfcReaderState extends ConsumerState<NfcReader> {
         final record = message.records.last;
         final eventId = utf8.decode(record.payload.sublist(1));
         if (eventId == widget.event.id) {
+          final volunteer = Volunteer(
+              userId: ref.read(currentUserIdProvider),
+              eventId: widget.event.id!);
+          volunteer.isParticipationConfirmed = true;
+          await VolunteersDB.update(volunteer);
+          ref.refresh(eventProvider);
           _showCongratulationsDialog();
         } else if (mounted) {
           context.showErrorSnackBar(message: 'Niepoprawne dane wydarzenia.');
