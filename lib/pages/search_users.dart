@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomagacze/components/error_with_action.dart';
 import 'package:pomagacze/components/user_list_tile.dart';
 import 'package:pomagacze/models/user_profile.dart';
-import 'package:pomagacze/state/user.dart';
+import 'package:pomagacze/state/users.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:share_plus/share_plus.dart';
 

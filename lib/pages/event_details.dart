@@ -13,7 +13,7 @@ import 'package:pomagacze/models/volunteer.dart';
 import 'package:pomagacze/pages/confirm_participation.dart';
 import 'package:pomagacze/pages/event_form.dart';
 import 'package:pomagacze/state/events.dart';
-import 'package:pomagacze/state/user.dart';
+import 'package:pomagacze/state/users.dart';
 import 'package:pomagacze/state/volunteers.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:share_plus/share_plus.dart';

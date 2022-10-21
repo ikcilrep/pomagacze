@@ -9,7 +9,7 @@ import 'package:pomagacze/components/participation_confirmed_message.dart';
 import 'package:pomagacze/components/visible_for_organizer_message.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/state/events.dart';
-import 'package:pomagacze/state/user.dart';
+import 'package:pomagacze/state/users.dart';
 import 'package:pomagacze/utils/constants.dart';
 
 class NearbyOrganizersList extends ConsumerStatefulWidget {
