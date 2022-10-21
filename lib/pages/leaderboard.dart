@@ -107,6 +107,7 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
     return Material(
       color:
           isMe ? Theme.of(context).colorScheme.primary.withOpacity(0.1) : null,
+      type: isMe ? MaterialType.canvas : MaterialType.transparency,
       child: InkWell(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(

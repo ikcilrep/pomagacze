@@ -148,208 +148,206 @@ class EventFormState extends ConsumerState<EventForm> {
         body: FormBuilder(
           key: _formKey,
           initialValue: widget.initialData?.toJson() ?? {},
-          child: Padding(
-              padding: const EdgeInsets.all(15),
-              child: ListView(
-                  padding: const EdgeInsets.only(bottom: 100),
-                  children: [
-                    FormBuilderTextField(
-                      name: 'title',
-                      style: Theme.of(context).textTheme.titleLarge,
-                      validator: FormBuilderValidators.required(
-                          errorText: 'Tytuł nie może być pusty'),
-                      decoration: const InputDecoration(labelText: 'Tytuł'),
-                    ),
-                    const SizedBox(height: 15),
-                    FormBuilderTextField(
-                      name: 'description',
-                      minLines: 1,
-                      // any number you need (It works as the rows for the textarea)
-                      keyboardType: TextInputType.multiline,
-                      maxLines: 8,
-                      decoration: const InputDecoration(labelText: 'Opis', icon: Icon(Icons.text_snippet)),
-                      validator: FormBuilderValidators.required(
-                          errorText: 'Opis nie może być pusty'),
-                    ),
-                    const SizedBox(height: 15),
-                    FormBuilderTextField(
-                      name: 'image_url',
-                      decoration: InputDecoration(
-                          labelText: 'Zdjęcie',
-                          icon: const Icon(Icons.photo),
-                          suffixIcon: IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              _imageFile = null;
-                              _formKey.currentState?.fields['image_url']
-                                  ?.didChange(null);
-                            },
-                          )),
-                      readOnly: true,
-                      onTap: () async {
-                        final picker = ImagePicker();
-                        final imageFile = await picker.pickImage(
-                          source: ImageSource.gallery,
-                          maxWidth: 300,
-                          maxHeight: 300,
-                        );
-                        if (imageFile == null) {
-                          return;
-                        }
-                        _imageFile = imageFile;
+          child: ListView(
+              padding: const EdgeInsets.all(15).copyWith(bottom: 100),
+              children: [
+                FormBuilderTextField(
+                  name: 'title',
+                  style: Theme.of(context).textTheme.titleLarge,
+                  validator: FormBuilderValidators.required(
+                      errorText: 'Tytuł nie może być pusty'),
+                  decoration: const InputDecoration(labelText: 'Tytuł'),
+                ),
+                const SizedBox(height: 15),
+                FormBuilderTextField(
+                  name: 'description',
+                  minLines: 1,
+                  // any number you need (It works as the rows for the textarea)
+                  keyboardType: TextInputType.multiline,
+                  maxLines: 8,
+                  decoration: const InputDecoration(labelText: 'Opis', icon: Icon(Icons.text_snippet)),
+                  validator: FormBuilderValidators.required(
+                      errorText: 'Opis nie może być pusty'),
+                ),
+                const SizedBox(height: 15),
+                FormBuilderTextField(
+                  name: 'image_url',
+                  decoration: InputDecoration(
+                      labelText: 'Zdjęcie',
+                      icon: const Icon(Icons.photo),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _imageFile = null;
+                          _formKey.currentState?.fields['image_url']
+                              ?.didChange(null);
+                        },
+                      )),
+                  readOnly: true,
+                  onTap: () async {
+                    final picker = ImagePicker();
+                    final imageFile = await picker.pickImage(
+                      source: ImageSource.gallery,
+                      maxWidth: 300,
+                      maxHeight: 300,
+                    );
+                    if (imageFile == null) {
+                      return;
+                    }
+                    _imageFile = imageFile;
 
-                        _formKey.currentState?.fields['image_url']
-                            ?.didChange(_imageFile?.name ?? '');
-                      },
-                    ),
-                    const SizedBox(height: 15),
-                    FormBuilderField<String>(
-                      name: 'date_start',
-                      initialValue:
-                          (widget.initialData?.dateStart ?? DateTime.now())
-                              .toString(),
-                      builder: (field) {
-                        return DateTimePicker(
-                          type: DateTimePickerType.dateTimeSeparate,
-                          key: Key(field.value.toString()),
-                          dateMask: 'EE, dd MMM yyyy',
-                          initialValue: field.value,
-                          firstDate: widget.initialData?.dateStart ?? DateTime.now(),
-                          lastDate: DateTime(3000),
-                          onChanged: (dateTimeString) {
-                            var date = DateTime.tryParse(dateTimeString);
-                            if (date == null) return;
-
-                            field.didChange(dateTimeString);
-
-                            var endDate = DateTime.tryParse(_formKey
-                                .currentState!
-                                .fields['date_end']
-                                ?.value as String);
-
-                            if (endDate != null && date.isAfter(endDate)) {
-                              _formKey.currentState!.fields['date_end']
-                                  ?.didChange(dateTimeString);
-                            }
-                          },
-                          dateLabelText: 'Data rozpoczęcia',
-                          timeLabelText: 'Godzina',
-                          icon: const Icon(Icons.event),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 15),
-                    FormBuilderField<String>(
-                      name: 'date_end',
-                      initialValue: (widget.initialData?.dateEnd ??
-                              DateTime.now().add(const Duration(hours: 1)))
+                    _formKey.currentState?.fields['image_url']
+                        ?.didChange(_imageFile?.name ?? '');
+                  },
+                ),
+                const SizedBox(height: 15),
+                FormBuilderField<String>(
+                  name: 'date_start',
+                  initialValue:
+                      (widget.initialData?.dateStart ?? DateTime.now())
                           .toString(),
-                      builder: (field) {
-                        return DateTimePicker(
-                          type: DateTimePickerType.dateTimeSeparate,
-                          dateMask: 'EE, dd MMM yyyy',
-                          initialValue: field.value.toString(),
-                          key: Key(field.value.toString() +
-                              (_formKey
-                                  .currentState?.fields['date_start']?.value ?? '')),
-                          firstDate: widget.initialData?.dateStart ?? DateTime.tryParse(_formKey
-                                  .currentState?.fields['date_start']?.value ?? '') ??
-                              DateTime.now(),
-                          lastDate: DateTime(2500),
-                          onChanged: (dateTimeString) {
-                            var date = DateTime.tryParse(dateTimeString);
-                            if (date == null) return;
+                  builder: (field) {
+                    return DateTimePicker(
+                      type: DateTimePickerType.dateTimeSeparate,
+                      key: Key(field.value.toString()),
+                      dateMask: 'EE, dd MMM yyyy',
+                      initialValue: field.value,
+                      firstDate: widget.initialData?.dateStart ?? DateTime.now(),
+                      lastDate: DateTime(3000),
+                      onChanged: (dateTimeString) {
+                        var date = DateTime.tryParse(dateTimeString);
+                        if (date == null) return;
 
-                            field.didChange(dateTimeString);
+                        field.didChange(dateTimeString);
 
-                            var startDate = DateTime.tryParse(_formKey
-                                .currentState!
-                                .fields['date_start']
-                                ?.value ?? '');
+                        var endDate = DateTime.tryParse(_formKey
+                            .currentState!
+                            .fields['date_end']
+                            ?.value as String);
 
-                            if (startDate != null && date.isBefore(startDate)) {
-                              _formKey.currentState!.fields['date_start']
-                                  ?.didChange(dateTimeString);
-                            }
-                          },
-                          dateLabelText: 'Data zakończenia',
-                          timeLabelText: 'Godzina',
-                          icon: const Icon(Icons.event, color: Colors.transparent),
-                        );
+                        if (endDate != null && date.isAfter(endDate)) {
+                          _formKey.currentState!.fields['date_end']
+                              ?.didChange(dateTimeString);
+                        }
                       },
-                    ),
-                    const SizedBox(height: 20),
-                    OpenMapPicker(
-                      initialValue: _location,
-                      options: OpenMapOptions(
-                          center: LatLng(
-                              widget.initialData?.latitude ?? wroclawLat,
-                              widget.initialData?.longitude ?? wroclawLng)),
-                      decoration: const InputDecoration(
-                        labelText: "Lokalizacja",
-                        prefixIconConstraints: BoxConstraints(maxWidth: 0),
-                        prefixIcon: Icon(null),
-                        icon: Icon(Icons.location_pin),
-                      ),
-                      removeIcon: Icon(Icons.clear,
-                          color: Theme.of(context).colorScheme.onSurface),
-                      onChanged: (FormattedLocation? newValue) {
-                        _location = newValue;
+                      dateLabelText: 'Data rozpoczęcia',
+                      timeLabelText: 'Godzina',
+                      icon: const Icon(Icons.event),
+                    );
+                  },
+                ),
+                const SizedBox(height: 15),
+                FormBuilderField<String>(
+                  name: 'date_end',
+                  initialValue: (widget.initialData?.dateEnd ??
+                          DateTime.now().add(const Duration(hours: 1)))
+                      .toString(),
+                  builder: (field) {
+                    return DateTimePicker(
+                      type: DateTimePickerType.dateTimeSeparate,
+                      dateMask: 'EE, dd MMM yyyy',
+                      initialValue: field.value.toString(),
+                      key: Key(field.value.toString() +
+                          (_formKey
+                              .currentState?.fields['date_start']?.value ?? '')),
+                      firstDate: widget.initialData?.dateStart ?? DateTime.tryParse(_formKey
+                              .currentState?.fields['date_start']?.value ?? '') ??
+                          DateTime.now(),
+                      lastDate: DateTime(2500),
+                      onChanged: (dateTimeString) {
+                        var date = DateTime.tryParse(dateTimeString);
+                        if (date == null) return;
+
+                        field.didChange(dateTimeString);
+
+                        var startDate = DateTime.tryParse(_formKey
+                            .currentState!
+                            .fields['date_start']
+                            ?.value ?? '');
+
+                        if (startDate != null && date.isBefore(startDate)) {
+                          _formKey.currentState!.fields['date_start']
+                              ?.didChange(dateTimeString);
+                        }
                       },
-                      validator: FormBuilderValidators.required(
-                          errorText: "Lokalizacja nie może być pusta"),
-                    ),
-                    const SizedBox(height: 20),
-                    FormBuilderSlider(
-                      name: 'points',
-                      initialValue: minimalPoints.toDouble(),
-                      min: minimalPoints.toDouble(),
-                      max: maximalPoints.toDouble(),
-                      numberFormat: NumberFormat('###'),
-                      decoration: const InputDecoration(labelText: 'Punkty za udział', icon: Icon(Icons.favorite)),
-                    ),
-                    const SizedBox(height: 20),
-                    FormBuilderRangeSlider(
-                      name: 'age_range',
-                      decoration: const InputDecoration(
-                          labelText: 'Wymagany wiek wolontariusza',
-                          icon: Icon(Icons.face)),
-                      min: minimalVolunteerAge.toDouble(),
-                      max: maximalVolunteerAge.toDouble(),
-                      divisions: maximalVolunteerAge - minimalVolunteerAge + 1,
-                      initialValue: RangeValues(
-                          widget.initialData?.minimalAge?.toDouble() ??
-                              minimalVolunteerAge.toDouble(),
-                          widget.initialData?.maximalAge?.toDouble() ??
-                              maximalVolunteerAge.toDouble()),
-                      numberFormat: NumberFormat('### lat'),
-                    ),
-                    const SizedBox(height: 20),
-                    FormBuilderRangeSlider(
-                      name: 'volunteer_count_range',
-                      decoration: const InputDecoration(
-                          labelText: 'Ilość wolontariuszy',
-                          icon: Icon(Icons.people)),
-                      min: minimalVolunteerCount.toDouble(),
-                      max: maximalVolunteerCount.toDouble(),
-                      divisions:
-                          maximalVolunteerCount - minimalVolunteerCount + 1,
-                      initialValue: RangeValues(
-                          widget.initialData?.minimalNumberOfVolunteers
-                                  ?.toDouble() ??
-                              minimalVolunteerCount.toDouble(),
-                          widget.initialData?.maximalNumberOfVolunteers
-                                  ?.toDouble() ??
-                              maximalVolunteerCount.toDouble()),
-                      numberFormat: NumberFormat('###'),
-                    ),
-                    const SizedBox(height: 20),
-                    FormBuilderTextField(
-                      name: 'email',
-                      decoration: const InputDecoration(labelText: 'Adres e-mail (opcjonalne)', icon: Icon(Icons.alternate_email)),
-                    ),
-                    const SizedBox(height: 20),
-                  ])),
+                      dateLabelText: 'Data zakończenia',
+                      timeLabelText: 'Godzina',
+                      icon: const Icon(Icons.event, color: Colors.transparent),
+                    );
+                  },
+                ),
+                const SizedBox(height: 20),
+                OpenMapPicker(
+                  initialValue: _location,
+                  options: OpenMapOptions(
+                      center: LatLng(
+                          widget.initialData?.latitude ?? wroclawLat,
+                          widget.initialData?.longitude ?? wroclawLng)),
+                  decoration: const InputDecoration(
+                    labelText: "Lokalizacja",
+                    prefixIconConstraints: BoxConstraints(maxWidth: 0),
+                    prefixIcon: Icon(null),
+                    icon: Icon(Icons.location_pin),
+                  ),
+                  removeIcon: Icon(Icons.clear,
+                      color: Theme.of(context).colorScheme.onSurface),
+                  onChanged: (FormattedLocation? newValue) {
+                    _location = newValue;
+                  },
+                  validator: FormBuilderValidators.required(
+                      errorText: "Lokalizacja nie może być pusta"),
+                ),
+                const SizedBox(height: 20),
+                FormBuilderSlider(
+                  name: 'points',
+                  initialValue: minimalPoints.toDouble(),
+                  min: minimalPoints.toDouble(),
+                  max: maximalPoints.toDouble(),
+                  numberFormat: NumberFormat('###'),
+                  decoration: const InputDecoration(labelText: 'Punkty za udział', icon: Icon(Icons.favorite)),
+                ),
+                const SizedBox(height: 20),
+                FormBuilderRangeSlider(
+                  name: 'age_range',
+                  decoration: const InputDecoration(
+                      labelText: 'Wymagany wiek wolontariusza',
+                      icon: Icon(Icons.face)),
+                  min: minimalVolunteerAge.toDouble(),
+                  max: maximalVolunteerAge.toDouble(),
+                  divisions: maximalVolunteerAge - minimalVolunteerAge + 1,
+                  initialValue: RangeValues(
+                      widget.initialData?.minimalAge?.toDouble() ??
+                          minimalVolunteerAge.toDouble(),
+                      widget.initialData?.maximalAge?.toDouble() ??
+                          maximalVolunteerAge.toDouble()),
+                  numberFormat: NumberFormat('### lat'),
+                ),
+                const SizedBox(height: 20),
+                FormBuilderRangeSlider(
+                  name: 'volunteer_count_range',
+                  decoration: const InputDecoration(
+                      labelText: 'Ilość wolontariuszy',
+                      icon: Icon(Icons.people)),
+                  min: minimalVolunteerCount.toDouble(),
+                  max: maximalVolunteerCount.toDouble(),
+                  divisions:
+                      maximalVolunteerCount - minimalVolunteerCount + 1,
+                  initialValue: RangeValues(
+                      widget.initialData?.minimalNumberOfVolunteers
+                              ?.toDouble() ??
+                          minimalVolunteerCount.toDouble(),
+                      widget.initialData?.maximalNumberOfVolunteers
+                              ?.toDouble() ??
+                          maximalVolunteerCount.toDouble()),
+                  numberFormat: NumberFormat('###'),
+                ),
+                const SizedBox(height: 20),
+                FormBuilderTextField(
+                  name: 'email',
+                  decoration: const InputDecoration(labelText: 'Adres e-mail (opcjonalne)', icon: Icon(Icons.alternate_email)),
+                ),
+                const SizedBox(height: 20),
+              ]),
         ));
   }
 }
