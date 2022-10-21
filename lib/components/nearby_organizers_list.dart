@@ -8,6 +8,7 @@ import 'package:pomagacze/components/congratulations_dialog.dart';
 import 'package:pomagacze/components/visible_for_organizer_message.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/state/events.dart';
+import 'package:pomagacze/state/leaderboard.dart';
 import 'package:pomagacze/state/users.dart';
 import 'package:pomagacze/utils/constants.dart';
 
@@ -44,8 +45,12 @@ class NearbyOrganizersListState extends ConsumerState<NearbyOrganizersList> {
     if (payload.type == PayloadType.BYTES) {
       final String message = utf8.decode(payload.bytes!);
       if (message == widget.event.id) {
-        ref.refresh(eventProvider);
-        ref.refresh(currentUserProvider);
+
+        ref.invalidate(eventProvider);
+        ref.invalidate(feedFutureProvider);
+        ref.invalidate(currentUserProvider);
+        ref.invalidate(leaderboardProvider);
+
         _showCongratulationsDialog();
       }
     }

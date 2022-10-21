@@ -7,6 +7,8 @@ import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/volunteer.dart';
 import 'package:pomagacze/pages/event_details.dart';
 import 'package:pomagacze/state/events.dart';
+import 'package:pomagacze/state/leaderboard.dart';
+import 'package:pomagacze/state/users.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/snackbar.dart';
 import 'package:receive_intent/receive_intent.dart';
@@ -91,6 +93,9 @@ class _DeepLinkDetectorState extends ConsumerState<DeepLinkDetector> {
           await VolunteersDB.upsert(volunteer);
 
           ref.invalidate(feedFutureProvider);
+          ref.invalidate(currentUserProvider);
+          ref.invalidate(leaderboardProvider);
+
           setState(() {
             _isLoading = false;
           });
