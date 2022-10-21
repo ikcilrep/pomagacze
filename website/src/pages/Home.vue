@@ -7,12 +7,12 @@
       <v-icon class="ml-2">mdi-download</v-icon>
     </v-btn>
 
-    <v-carousel v-model="index" hide-delimiter-background style="width: 430px; height: 630px" class="my-7" continuous cycle interval="4000">
+    <v-carousel v-model="index" hide-delimiter-background style="width: 410px; height: 630px" class="my-7" continuous cycle interval="4000">
       <v-carousel-item
           v-for="(url, i) in Array.from({length: 8}).map((x, i) => `screenshots/screenshot${i+1}.png`)"
           :key="url"
       >
-        <img :src="url" height="600" />
+        <img :src="url" height="590" />
       </v-carousel-item>
     </v-carousel>
 
