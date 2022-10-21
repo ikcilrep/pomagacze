@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:nfc_manager/nfc_manager.dart';
 import 'package:pomagacze/components/nfc_not_available_message.dart';
 import 'package:pomagacze/components/nfc_write_message.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/state/nfc.dart';
-import 'package:ndef/ndef.dart' as ndef;
 import 'package:pomagacze/utils/snackbar.dart';
 
 class NfcWriter extends ConsumerStatefulWidget {
@@ -21,11 +20,11 @@ class NfcWriter extends ConsumerStatefulWidget {
 class NfcWriterState extends ConsumerState<NfcWriter> {
   @override
   Widget build(BuildContext context) {
-    final nfcAvailability = ref.read(nfcAvailabilityProvider);
-    return nfcAvailability.when(
-        data: (nfcAvailability) {
-          scanNfcTag(nfcAvailability);
-          return nfcAvailability == NFCAvailability.available
+    final isNfcAvailableFuture = ref.watch(nfcAvailabilityProvider);
+    return isNfcAvailableFuture.when(
+        data: (isNfcAvailable) {
+          scanNfcTag();
+          return isNfcAvailable
               ? const NfcWriteMessage()
               : const NfcNotAvailableMessage();
         },
@@ -33,23 +32,36 @@ class NfcWriterState extends ConsumerState<NfcWriter> {
         loading: () => const Center(child: CircularProgressIndicator()));
   }
 
-  Future<void> scanNfcTag(NFCAvailability nfcAvailability) async {
-    while (mounted) {
+  @override
+  void dispose() {
+    NfcManager.instance.stopSession();
+    super.dispose();
+  }
+
+  Future<void> scanNfcTag() async {
+    await NfcManager.instance.stopSession();
+    NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
+      var ndef = Ndef.from(tag);
+      if (ndef == null || !ndef.isWritable) {
+        const errorMessage = 'Na ten tag NFC nie da się zapisywać danych';
+        context.showErrorSnackBar(message: errorMessage);
+        NfcManager.instance.stopSession(errorMessage: errorMessage);
+        return;
+      }
+      NdefMessage message = NdefMessage([
+        NdefRecord.createText(widget.event.id!, languageCode: ''),
+      ]);
+
       try {
-        final tag = await FlutterNfcKit.poll();
-        if (tag.ndefWritable == true) {
-          // decoded NDEF records
-          await FlutterNfcKit.writeNDEFRecords(
-              [ndef.TextRecord(text: widget.event.id)]);
-          await FlutterNfcKit.finish();
-          if (mounted) {
-            context.showSnackBar(
-                message: "Zapisano dane wydarzenia na tagu NFC");
-          }
+        await ndef.write(message);
+        if (mounted) {
+          context.showSnackBar(
+              message: 'Udało się pomyślnie zapisać dane na tagu NFC!');
         }
       } catch (e) {
-        print(e);
+        NfcManager.instance.stopSession(errorMessage: e.toString());
+        return;
       }
-    }
+    });
   }
 }
