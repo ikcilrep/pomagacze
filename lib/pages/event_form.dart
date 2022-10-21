@@ -300,7 +300,7 @@ class EventFormState extends ConsumerState<EventForm> {
                 const SizedBox(height: 20),
                 FormBuilderSlider(
                   name: 'points',
-                  initialValue: minimalPoints.toDouble(),
+                  initialValue: widget.initialData?.points.toDouble() ?? minimalPoints.toDouble(),
                   min: minimalPoints.toDouble(),
                   max: maximalPoints.toDouble(),
                   numberFormat: NumberFormat('###'),
