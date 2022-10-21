@@ -8,7 +8,7 @@ class Volunteer {
 
   UserProfile? profile;
 
-  Volunteer({required this.userId, required this.eventId});
+  Volunteer({required this.userId, required this.eventId, this.isParticipationConfirmed = false});
 
   Volunteer.fromData(dynamic data) {
     userId = data['user_id'] ?? '';

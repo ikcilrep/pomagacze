@@ -3,6 +3,13 @@ import 'package:pomagacze/models/volunteer.dart';
 import 'package:pomagacze/utils/constants.dart';
 
 class VolunteersDB {
+  static Future<Volunteer?> get(String eventId, String userId) async {
+    var result =
+    await supabase.from('volunteers').select().eq('event_id', eventId).eq('user_id', userId).single().execute();
+    result.throwOnError();
+    return Volunteer.fromData(result.data);
+  }
+
   static Future<void> upsert(Volunteer volunteer) async {
     var result =
         await supabase.from('volunteers').upsert(volunteer.toJson()).execute();

@@ -11,6 +11,7 @@ import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/volunteer.dart';
 import 'package:pomagacze/state/events.dart';
+import 'package:pomagacze/state/leaderboard.dart';
 import 'package:pomagacze/state/nfc.dart';
 import 'package:pomagacze/state/users.dart';
 import 'package:pomagacze/utils/snackbar.dart';
@@ -77,8 +78,12 @@ class NfcReaderState extends ConsumerState<NfcReader> {
               eventId: widget.event.id!);
           volunteer.isParticipationConfirmed = true;
           await VolunteersDB.update(volunteer);
-          ref.refresh(eventProvider);
-          ref.refresh(currentUserProvider);
+
+          ref.invalidate(eventProvider);
+          ref.invalidate(feedFutureProvider);
+          ref.invalidate(currentUserProvider);
+          ref.invalidate(leaderboardProvider);
+
           _showCongratulationsDialog();
         } else if (mounted) {
           context.showErrorSnackBar(message: 'Niepoprawne dane wydarzenia.');

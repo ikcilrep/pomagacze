@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +8,7 @@ import 'package:pomagacze/components/nfc_not_available_message.dart';
 import 'package:pomagacze/components/nfc_write_message.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/state/nfc.dart';
+import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/snackbar.dart';
 
 class NfcWriter extends ConsumerStatefulWidget {
@@ -49,7 +52,13 @@ class NfcWriterState extends ConsumerState<NfcWriter> {
         return;
       }
       NdefMessage message = NdefMessage([
-        NdefRecord.createText(widget.event.id!, languageCode: ''),
+        NdefRecord.createUri(
+            Uri.parse('$websiteUrl/confirm-event/${widget.event.id}')),
+        NdefRecord(
+            typeNameFormat: NdefTypeNameFormat.nfcExternal,
+            type: Uint8List.fromList('android.com:pkg'.codeUnits),
+            identifier: Uint8List.fromList([]),
+            payload: Uint8List.fromList('com.pomagacze.pomagacze'.codeUnits))
       ]);
 
       try {
