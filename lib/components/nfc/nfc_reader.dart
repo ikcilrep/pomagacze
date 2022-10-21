@@ -5,8 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:pomagacze/components/congratulations_dialog.dart';
-import 'package:pomagacze/components/nfc_not_available_message.dart';
-import 'package:pomagacze/components/nfc_read_message.dart';
+import 'package:pomagacze/components/nfc/nfc_not_available_message.dart';
 import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/volunteer.dart';
@@ -15,6 +14,8 @@ import 'package:pomagacze/state/leaderboard.dart';
 import 'package:pomagacze/state/nfc.dart';
 import 'package:pomagacze/state/users.dart';
 import 'package:pomagacze/utils/snackbar.dart';
+
+import 'nfc_read_message.dart';
 
 class NfcReader extends ConsumerStatefulWidget {
   final HelpEvent event;
