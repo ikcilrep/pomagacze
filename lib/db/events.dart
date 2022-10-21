@@ -22,8 +22,6 @@ class EventsDB {
   }
 
   static Future<List<HelpEvent>> getFiltered(EventFilters filters) async {
-    print('query: ${filters.query}');
-
     PostgrestFilterBuilder query;
 
     if (filters.orderBy == EventOrder.closest) {
