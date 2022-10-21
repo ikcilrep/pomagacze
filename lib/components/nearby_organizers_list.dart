@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nearby_connections/nearby_connections.dart';
 import 'package:pomagacze/components/congratulations_dialog.dart';
-import 'package:pomagacze/components/participation_confirmed_message.dart';
 import 'package:pomagacze/components/visible_for_organizer_message.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/state/events.dart';
@@ -52,7 +51,8 @@ class NearbyOrganizersListState extends ConsumerState<NearbyOrganizersList> {
     }
   }
 
-  void onDismiss() {
+  void _closeDialogAndPopScreen() {
+    Navigator.of(context).pop();
     Navigator.of(context).pop();
   }
 
@@ -62,7 +62,7 @@ class NearbyOrganizersListState extends ConsumerState<NearbyOrganizersList> {
           context: context,
           builder: (_) => CongratulationsDialog(
               event: widget.event,
-              onDismiss: () => Navigator.of(context).pop()));
+              onDismiss: _closeDialogAndPopScreen));
     }
   }
 
@@ -98,16 +98,6 @@ class NearbyOrganizersListState extends ConsumerState<NearbyOrganizersList> {
 
   @override
   Widget build(BuildContext context) {
-    final event = ref.watch(eventProvider);
-    return event.when(
-        data: (event) {
-          final volunteer = event.volunteers.firstWhere(
-              (element) => element.userId == ref.read(currentUserIdProvider));
-          return volunteer.isParticipationConfirmed
-              ? const ParticipationConfirmedMessage()
-              : const VisibleForOrganizerMessage();
-        },
-        error: (err, stack) => Center(child: Text('Coś poszło nie tak: $err')),
-        loading: () => const Center(child: CircularProgressIndicator()));
+    return const VisibleForOrganizerMessage();
   }
 }

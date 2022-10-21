@@ -42,13 +42,18 @@ class NfcReaderState extends ConsumerState<NfcReader> {
         loading: () => const Center(child: CircularProgressIndicator()));
   }
 
+  void _closeDialogAndPopScreen() {
+    Navigator.of(context).pop();
+    Navigator.of(context).pop();
+  }
+
   void _showCongratulationsDialog() {
     if (mounted) {
       showDialog(
           context: context,
           builder: (_) => CongratulationsDialog(
               event: widget.event,
-              onDismiss: () => Navigator.of(context).pop()));
+              onDismiss: _closeDialogAndPopScreen));
     }
   }
 
