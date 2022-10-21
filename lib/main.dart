@@ -15,6 +15,7 @@ import 'package:pomagacze/pages/events_joined.dart';
 import 'package:pomagacze/pages/learn.dart';
 import 'package:pomagacze/pages/login.dart';
 import 'package:pomagacze/pages/my_events.dart';
+import 'package:pomagacze/pages/search_events.dart';
 import 'package:pomagacze/pages/search_users.dart';
 import 'package:pomagacze/pages/setup_profile.dart';
 import 'package:pomagacze/pages/splash.dart';
@@ -71,6 +72,7 @@ class _MyAppState extends State<MyApp> {
                 '/search-users': (_) => const SearchUsersPage(),
                 '/about': (_) => const AboutPage(),
                 '/learn': (_) => const LearnPage(),
+                '/search-events': (_) => const SearchEventsPage(),
               },
             ));
   }

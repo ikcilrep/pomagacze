@@ -22,6 +22,8 @@ class EventsDB {
   }
 
   static Future<List<HelpEvent>> getFiltered(EventFilters filters) async {
+    print('query: ${filters.query}');
+
     PostgrestFilterBuilder query;
 
     if (filters.orderBy == EventOrder.closest) {
@@ -65,6 +67,10 @@ class EventsDB {
   }
 
   static PostgrestFilterBuilder applyFilters(PostgrestFilterBuilder query, EventFilters filters) {
+    if (filters.query != null) {
+      query = query.ilike('title', '%${filters.query}%');
+    }
+
     if (filters.state == EventState.active) {
       query = query.gt('date_end', DateTime.now());
     } else if (filters.state == EventState.past) {
@@ -103,6 +109,7 @@ enum EventState { active, past }
 enum EventOrder { incoming, closest, popular }
 
 class EventFilters extends Equatable {
+  final String? query;
   final EventState? state;
   final String? authorId;
   final String? volunteerId;
@@ -111,7 +118,8 @@ class EventFilters extends Equatable {
   final double? currentLat, currentLng;
 
   const EventFilters(
-      {this.state,
+      {this.query,
+      this.state,
       this.authorId,
       this.volunteerId,
       this.orderBy,
@@ -120,10 +128,11 @@ class EventFilters extends Equatable {
 
   @override
   List<Object?> get props =>
-      [state, authorId, volunteerId, orderBy, currentLat, currentLng];
+      [state, authorId, volunteerId, orderBy, currentLat, currentLng, query];
 
   EventFilters copyWith(
-      {EventState? state,
+      {String? query,
+      EventState? state,
       String? authorId,
       String? volunteerId,
       EventOrder? orderBy,
@@ -135,6 +144,7 @@ class EventFilters extends Equatable {
         volunteerId: volunteerId ?? this.volunteerId,
         orderBy: orderBy ?? this.orderBy,
         currentLat: currentLat ?? this.currentLat,
-        currentLng: currentLng ?? this.currentLng);
+        currentLng: currentLng ?? this.currentLng,
+        query: query ?? this.query);
   }
 }

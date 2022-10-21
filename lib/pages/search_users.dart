@@ -47,7 +47,11 @@ class SearchUsersState extends ConsumerState<SearchUsersPage> {
             autofocus: true,
           ),
           actions: [
-            IconButton(onPressed: () {}, icon: const Icon(Icons.search))
+            IconButton(
+                onPressed: () {
+                  ref.invalidate(searchUsersProvider);
+                },
+                icon: const Icon(Icons.search))
           ],
         ),
         body: users.when(
