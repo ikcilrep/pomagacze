@@ -51,10 +51,18 @@ class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
       child: Scaffold(
         appBar: AppBar(
             title: Text(destinations[_index].label), scrolledUnderElevation: 0, actions: _index == 0 ? [
-              IconButton(onPressed: () {
-                Navigator.of(context).pushNamed('/learn');
-              }, icon: const Icon(Icons.school, color: Colors.black87))
-        ] : []),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/search-events');
+                        },
+                        icon: const Icon(Icons.search, color: Colors.black87)),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/learn');
+                        },
+                        icon: const Icon(Icons.school, color: Colors.black87))
+                  ]
+                : []),
         body: _buildBody(),
         bottomNavigationBar: NavigationBar(
           destinations: destinations,

@@ -8,7 +8,7 @@ import 'package:pomagacze/models/user_profile.dart';
 import 'package:pomagacze/pages/profile.dart';
 import 'package:pomagacze/state/friendships.dart';
 import 'package:pomagacze/state/leaderboard.dart';
-import 'package:pomagacze/state/user.dart';
+import 'package:pomagacze/state/users.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/xp.dart';
 
@@ -107,6 +107,7 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
     return Material(
       color:
           isMe ? Theme.of(context).colorScheme.primary.withOpacity(0.1) : null,
+      type: isMe ? MaterialType.canvas : MaterialType.transparency,
       child: InkWell(
         onTap: () {
           Navigator.of(context).push(MaterialPageRoute(

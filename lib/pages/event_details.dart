@@ -13,7 +13,7 @@ import 'package:pomagacze/models/volunteer.dart';
 import 'package:pomagacze/pages/confirm_participation.dart';
 import 'package:pomagacze/pages/event_form.dart';
 import 'package:pomagacze/state/events.dart';
-import 'package:pomagacze/state/user.dart';
+import 'package:pomagacze/state/users.dart';
 import 'package:pomagacze/state/volunteers.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:share_plus/share_plus.dart';
@@ -96,8 +96,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
         IconButton(
           icon: const Icon(Icons.share),
           onPressed: () {
-            Share.share(
-                '"${event?.title}" w aplikacji Pomagacze - $websiteUrl/event/${event?.id}');
+            Share.share('$websiteUrl/event/${event?.id}');
           },
         ),
       ]),
@@ -129,7 +128,6 @@ class EventDetailsState extends ConsumerState<EventDetails> {
     return SingleChildScrollView(
       controller: _scrollController,
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.only(bottom: 80),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -166,7 +164,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                         topRight: Radius.circular(10)),
                     color: Theme.of(context).colorScheme.surface),
                 padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                    const EdgeInsets.symmetric(vertical: 10, horizontal: 8).copyWith(bottom: 80),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: <Widget>[
@@ -320,6 +318,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                         ),
 
                       Material(
+                        type: MaterialType.transparency,
                         child: ListTile(
                             title: const Text("Lokalizacja"),
                             subtitle:
@@ -368,6 +367,7 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                             }),
                       ),
                       Material(
+                        type: MaterialType.transparency,
                         child: ListTile(
                             title: const Text("Kontakt do organizatora"),
                             subtitle: Text(event.contactEmail ?? 'Brak'),

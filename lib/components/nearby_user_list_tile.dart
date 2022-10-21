@@ -10,7 +10,7 @@ import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/nearby_device.dart';
 import 'package:pomagacze/models/volunteer.dart';
 import 'package:pomagacze/state/events.dart';
-import 'package:pomagacze/state/user.dart';
+import 'package:pomagacze/state/users.dart';
 import 'package:pomagacze/utils/snackbar.dart';
 
 class NearbyVolunteerListTile extends ConsumerStatefulWidget {
@@ -69,6 +69,7 @@ class NearbyVolunteerListTileState
   @override
   Widget build(BuildContext context) {
     return Material(
+      type: MaterialType.transparency,
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
         title: Text(widget.volunteer.profile!.name ?? ''),

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -14,6 +15,7 @@ import 'package:pomagacze/pages/events_joined.dart';
 import 'package:pomagacze/pages/learn.dart';
 import 'package:pomagacze/pages/login.dart';
 import 'package:pomagacze/pages/my_events.dart';
+import 'package:pomagacze/pages/search_events.dart';
 import 'package:pomagacze/pages/search_users.dart';
 import 'package:pomagacze/pages/setup_profile.dart';
 import 'package:pomagacze/pages/splash.dart';
@@ -27,6 +29,8 @@ Future<void> main() async {
     anonKey: supabaseAnonKey,
     authCallbackUrlHostname: 'login-callback'
   );
+
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(systemNavigationBarColor: getTheme().colorScheme.surface));
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -68,6 +72,7 @@ class _MyAppState extends State<MyApp> {
                 '/search-users': (_) => const SearchUsersPage(),
                 '/about': (_) => const AboutPage(),
                 '/learn': (_) => const LearnPage(),
+                '/search-events': (_) => const SearchEventsPage(),
               },
             ));
   }
