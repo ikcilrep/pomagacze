@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomagacze/db/events.dart';
 import 'package:pomagacze/db/volunteers.dart';
+import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/models/volunteer.dart';
 import 'package:pomagacze/pages/event_details.dart';
 import 'package:pomagacze/state/events.dart';
@@ -44,10 +45,12 @@ class _DeepLinkDetectorState extends ConsumerState<DeepLinkDetector> {
 
   Future<void> _initUniLinks() async {
     _sub = uriLinkStream.listen((Uri? uri) async {
-      if(uri == null) return;
+      if (uri == null) return;
 
       try {
-        if (uri.scheme == 'com.pomagacze.pomagacze' && uri.host == 'event' && uri.pathSegments.length == 1) {
+        if (uri.scheme == 'com.pomagacze.pomagacze' &&
+            uri.host == 'event' &&
+            uri.pathSegments.length == 1) {
           var event = await EventsDB.getById(uri.pathSegments[0]);
           if (mounted) {
             Navigator.of(context).push(
@@ -68,14 +71,26 @@ class _DeepLinkDetectorState extends ConsumerState<DeepLinkDetector> {
       if (receivedIntent?.action == 'android.nfc.action.NDEF_DISCOVERED') {
         var uri = Uri.tryParse(receivedIntent?.data ?? '');
         if (uri != null && uri.pathSegments.length == 2) {
-          var id = uri.pathSegments[1];
+          var eventId = uri.pathSegments[1];
 
           setState(() {
             _isLoading = true;
           });
 
-          var volunteer = await VolunteersDB.get(id, supabase.auth.user()!.id)
-              .catchError((err, stack) => null);
+          final HelpEvent event =
+              await EventsDB.getById(eventId);
+          if (event.authorId == supabase.auth.user()!.id && mounted) {
+            context.showErrorSnackBar(
+                message: 'Ty jesteś już organizatorem tego wydarzenia!');
+            setState(() {
+              _isLoading = false;
+            });
+            return;
+          }
+
+          var volunteer =
+              await VolunteersDB.get(eventId, supabase.auth.user()!.id)
+                  .catchError((err, stack) => null);
           if (volunteer?.isParticipationConfirmed == true && mounted) {
             context.showErrorSnackBar(
                 message:
@@ -86,10 +101,10 @@ class _DeepLinkDetectorState extends ConsumerState<DeepLinkDetector> {
             return;
           }
 
-          var event = await EventsDB.getById(id);
-
-          volunteer =
-              Volunteer(userId: supabase.auth.user()!.id, eventId: event.id!, isParticipationConfirmed: true);
+          volunteer = Volunteer(
+              userId: supabase.auth.user()!.id,
+              eventId: event.id!,
+              isParticipationConfirmed: true);
           await VolunteersDB.upsert(volunteer);
 
           ref.invalidate(feedFutureProvider);
