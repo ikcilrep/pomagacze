@@ -188,8 +188,7 @@ class EventFormState extends ConsumerState<EventForm> {
                     final picker = ImagePicker();
                     final imageFile = await picker.pickImage(
                       source: ImageSource.gallery,
-                      maxWidth: 300,
-                      maxHeight: 300,
+                      imageQuality: 80,
                     );
                     if (imageFile == null) {
                       return;
