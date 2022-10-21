@@ -1,5 +1,5 @@
 <template>
-  <v-container class="d-flex align-center flex-column text-center mt-16 pb-10">
+  <v-container class="d-flex align-center flex-column text-center mt-10 pb-10">
     <h1 class="text-h3 mb-2">Pomagacze</h1>
     <h2 class="text-h6">Aplikacja Pomagacze zachęca do pomagania, bycia wolontariuszem <br>i zmieniania swojego otoczenia
       na lepsze.</h2>
@@ -7,12 +7,12 @@
       <v-icon class="ml-2">mdi-download</v-icon>
     </v-btn>
 
-    <v-carousel v-model="index" hide-delimiter-background style="width: 400px; height: 530px" class="my-8" continuous cycle interval="4000">
+    <v-carousel v-model="index" hide-delimiter-background style="width: 430px; height: 630px" class="my-7" continuous cycle interval="4000">
       <v-carousel-item
-          v-for="(url, i) in Array.from({length: 5}).map((x, i) => `screenshots/screenshot${i+1}.png`)"
+          v-for="(url, i) in Array.from({length: 8}).map((x, i) => `screenshots/screenshot${i+1}.png`)"
           :key="url"
       >
-        <img :src="url" height="500" />
+        <img :src="url" height="600" />
       </v-carousel-item>
     </v-carousel>
 
