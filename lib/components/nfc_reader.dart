@@ -78,6 +78,7 @@ class NfcReaderState extends ConsumerState<NfcReader> {
           volunteer.isParticipationConfirmed = true;
           await VolunteersDB.update(volunteer);
           ref.refresh(eventProvider);
+          ref.refresh(currentUserProvider);
           _showCongratulationsDialog();
         } else if (mounted) {
           context.showErrorSnackBar(message: 'Niepoprawne dane wydarzenia.');
