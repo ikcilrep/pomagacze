@@ -18,7 +18,8 @@ class UserListTile extends ConsumerStatefulWidget {
 class _UserListTileState extends ConsumerState<UserListTile> {
   @override
   Widget build(BuildContext context) {
-    var user = ref.read(userProfileProvider(widget.userProfile.id)).valueOrNull ?? widget.userProfile;
+    var userData = ref.watch(userProfileProvider(widget.userProfile.id));
+    var user = userData.valueOrNull ?? widget.userProfile;
     
     return Material(
       type: MaterialType.transparency,
