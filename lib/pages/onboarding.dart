@@ -70,13 +70,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     duration: const Duration(milliseconds: 250),
                   ),
                 ),
-                const SizedBox(height: 85),
+                const SizedBox(height: 80),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 25),
                   child: _buildButtons(context),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 28),
               ],
             ),
     ));
