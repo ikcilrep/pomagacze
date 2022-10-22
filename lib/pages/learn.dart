@@ -18,7 +18,7 @@ class _LearnPageState extends State<LearnPage> {
   }
 
   void load() async {
-    final data = await rootBundle.loadString('assets/LearnInstructions.yaml');
+    final data = await rootBundle.loadString('assets/learnInstructions.yaml');
     final mapData = loadYaml(data);
     setState(() {
       sections = mapData['sections']

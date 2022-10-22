@@ -62,7 +62,7 @@ class LoginPageState extends AuthState<LoginPage> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage("assets/loginBGgren.png"),
+            image: AssetImage("assets/loginBg.png"),
             fit: BoxFit.fitHeight,
           ),
         ),

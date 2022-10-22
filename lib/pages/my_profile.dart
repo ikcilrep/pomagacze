@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -100,6 +101,13 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
               onTap: () {
                 Navigator.of(context).pushNamed('/learn');
               }
+            ),
+            if(kDebugMode) ProfileAction(
+                title: const Text('Wprowadzenie (debug)'),
+                icon: const Icon(Icons.arrow_forward),
+                onTap: () {
+                  Navigator.of(context).pushNamed('/onboarding');
+                }
             ),
             ProfileAction(
               onTap: _signOut,

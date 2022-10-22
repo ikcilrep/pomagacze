@@ -25,3 +25,5 @@ const bottomSheetShape = RoundedRectangleBorder(
 );
 
 const websiteUrl = 'https://pomagacze.vercel.app';
+
+const hasCompletedOnboardingKey = "HAS_COMPLETED_ONBOARDING";

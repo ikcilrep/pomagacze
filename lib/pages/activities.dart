@@ -44,9 +44,9 @@ class ActivitiesPage extends ConsumerWidget {
                       //     borderRadius: BorderRadius.circular(18)),
                       closedElevation: 1.5,
                       // transitionDuration: const Duration(seconds: 2),
+                      closedColor: Colors.transparent,
                       closedBuilder: (_, openContainer) {
                         return ListTile(
-                          tileColor: Colors.transparent,
                           onTap: openContainer,
                           title: Text(
                               '${activity.user.name} dołączył do "${activity.event.title}"'),

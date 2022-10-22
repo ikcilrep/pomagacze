@@ -1,0 +1,13 @@
+sections:
+  - title: Witaj w Pomagaczach!
+    subtitle: Pomagacze to miejsce dla wszystkich gotowych nieść wsparcie ludziom.
+    image: empowering.png
+  - title: Stań na straży dobra!
+    subtitle: Szukaj wolontariatów i okaż pomoc potrzebującym z twojej okolicy.
+    image: hands.png
+  - title: Nie bój się prosić o pomoc
+    subtitle: Dodawaj własne wydarzenia i szukaj wolontariuszy zawsze, gdy potrzebujesz pomocnej dłoni.
+    image: onboarding.png
+  - title: Spróbuj sięgnąć szczytu!
+    subtitle: Zdobywaj punkty w pozytywnej rywalizacji ze znajomymi na tygodniowym rankingu!
+    image: volunteer.png
