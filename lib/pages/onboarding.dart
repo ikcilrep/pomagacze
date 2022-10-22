@@ -48,7 +48,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 40),
                 Expanded(
                     child: PageView(
                         controller: _pageController,
