@@ -85,7 +85,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Widget _buildSection(OnboardingSection section) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 50),
+      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.max,
