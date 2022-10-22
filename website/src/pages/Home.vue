@@ -44,9 +44,11 @@
 
     <h2 class="mt-15 mb-8">Wygodny sposób potwierdzania uczestnictwa</h2>
     <iframe src="https://player.vimeo.com/video/762995817?h=79c66b2416" width="640" height="360" frameborder="0"
+            style="max-width: 90vw"
             allow="autoplay; fullscreen; picture-in-picture" allowfullscreen class="mb-8 rounded-lg"></iframe>
     <iframe src="https://player.vimeo.com/video/762995817?h=79c66b2416" width="640" height="360" frameborder="0"
-            allow="autoplay; fullscreen; picture-in-picture" allowfullscreen class="rounded-lg"></iframe>
+            allow="autoplay; fullscreen; picture-in-picture" allowfullscreen class="rounded-lg"
+            style="max-width: 90vw"></iframe>
   </v-container>
 </template>
 
