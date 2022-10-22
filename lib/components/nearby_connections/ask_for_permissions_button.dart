@@ -1,6 +1,6 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:nearby_connections/nearby_connections.dart';
 import 'package:pomagacze/components/error_with_action.dart';
 import 'package:pomagacze/state/permissions.dart';
 
@@ -18,7 +18,11 @@ class AskForPermissionsButton extends ConsumerWidget {
             locationPermission, bluetoothPermission);
         ref.refresh(bluetoothPermissionProvider);
         ref.refresh(locationPermissionProvider);
+        await Future.delayed(const Duration(seconds: 2));
+        ref.refresh(bluetoothPermissionProvider);
+        ref.refresh(locationPermissionProvider);
       },
+
       actionText: 'Przyznaj uprawnienia',
       errorText: 'Ta funkcja wymaga dodatkowych uprawnień',
     );
@@ -27,11 +31,11 @@ class AskForPermissionsButton extends ConsumerWidget {
   Future<void> _askForLackingPermissions(AsyncValue<bool> locationPermission,
       AsyncValue<bool> bluetoothPermission) async {
     if (locationPermission.valueOrNull != true) {
-      await Permission.location.request();
+      await Nearby().askLocationPermission();
     }
 
     if (bluetoothPermission.valueOrNull != true) {
-      await Permission.bluetooth.request();
+      Nearby().askBluetoothPermission();
     }
   }
 }

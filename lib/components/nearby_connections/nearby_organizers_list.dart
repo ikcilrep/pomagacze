@@ -83,6 +83,7 @@ class NearbyOrganizersListState extends ConsumerState<NearbyOrganizersList> {
   }
 
   void startAdvertising() async {
+    await Nearby().stopAdvertising();
     await Nearby().startAdvertising(
       supabase.auth.user()?.id ?? '',
       Strategy.P2P_CLUSTER,

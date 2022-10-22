@@ -43,6 +43,7 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
   }
 
   Future<void> startDiscovery() async {
+    await Nearby().stopAdvertising();
     Nearby().startDiscovery(
       "organizer",
       Strategy.P2P_CLUSTER,
