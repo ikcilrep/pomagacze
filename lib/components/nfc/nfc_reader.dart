@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nfc_manager/nfc_manager.dart';
 import 'package:pomagacze/components/congratulations_dialog.dart';
+import 'package:pomagacze/components/nfc/nfc_disabled_message.dart';
 import 'package:pomagacze/components/nfc/nfc_not_available_message.dart';
 import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
@@ -30,15 +32,25 @@ class NfcReaderState extends ConsumerState<NfcReader> {
   AutoDisposeFutureProvider<HelpEvent> get eventProvider =>
       eventFutureProvider(widget.event.id!);
 
+  Widget _screenContent(NFCAvailability nfcAvailability) {
+    switch (nfcAvailability) {
+      case NFCAvailability.not_supported:
+        return const NfcNotAvailableMessage();
+      case NFCAvailability.disabled:
+        return const NfcDisabledMessage();
+      case NFCAvailability.available:
+        return const NfcReadMessage();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final isNfcAvailableFuture = ref.watch(nfcAvailabilityProvider);
-    return isNfcAvailableFuture.when(
-        data: (isNfcAvailable) {
-          scanNfcTag();
-          return isNfcAvailable
-              ? const NfcReadMessage()
-              : const NfcNotAvailableMessage();
+    final nfcAvailabilityAsyncValue = ref.watch(nfcAvailabilityProvider);
+    ref.refresh(nfcAvailabilityProvider);
+    return nfcAvailabilityAsyncValue.when(
+        data: (nfcAvailability) {
+          if (nfcAvailability == NFCAvailability.available) _scanNfcTag();
+          return _screenContent(nfcAvailability);
         },
         error: (err, stack) => Center(child: Text('Coś poszło nie tak: $err')),
         loading: () => const Center(child: CircularProgressIndicator()));
@@ -54,8 +66,7 @@ class NfcReaderState extends ConsumerState<NfcReader> {
       showDialog(
           context: context,
           builder: (_) => CongratulationsDialog(
-              event: widget.event,
-              onDismiss: _closeDialogAndPopScreen));
+              event: widget.event, onDismiss: _closeDialogAndPopScreen));
     }
   }
 
@@ -65,7 +76,7 @@ class NfcReaderState extends ConsumerState<NfcReader> {
     super.dispose();
   }
 
-  Future<void> scanNfcTag() async {
+  Future<void> _scanNfcTag() async {
     await NfcManager.instance.stopSession();
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
       final ndef = Ndef.from(tag);

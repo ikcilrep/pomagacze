@@ -2,8 +2,10 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nfc_manager/nfc_manager.dart';
+import 'package:pomagacze/components/nfc/nfc_disabled_message.dart';
 import 'package:pomagacze/components/nfc/nfc_not_available_message.dart';
 import 'package:pomagacze/components/nfc/nfc_write_message.dart';
 import 'package:pomagacze/models/help_event.dart';
@@ -21,15 +23,24 @@ class NfcWriter extends ConsumerStatefulWidget {
 }
 
 class NfcWriterState extends ConsumerState<NfcWriter> {
+  Widget _screenContent(NFCAvailability nfcAvailability) {
+    switch (nfcAvailability) {
+      case NFCAvailability.not_supported:
+        return const NfcNotAvailableMessage();
+      case NFCAvailability.disabled:
+        return const NfcDisabledMessage();
+      case NFCAvailability.available:
+        return const NfcWriteMessage();
+    }
+  }
   @override
   Widget build(BuildContext context) {
-    final isNfcAvailableFuture = ref.watch(nfcAvailabilityProvider);
-    return isNfcAvailableFuture.when(
-        data: (isNfcAvailable) {
-          scanNfcTag();
-          return isNfcAvailable
-              ? const NfcWriteMessage()
-              : const NfcNotAvailableMessage();
+    final nfcAvailabilityAsyncValue = ref.watch(nfcAvailabilityProvider);
+    ref.refresh(nfcAvailabilityProvider);
+    return nfcAvailabilityAsyncValue.when(
+        data: (nfcAvailability) {
+          if (nfcAvailability == NFCAvailability.available) _scanNfcTag();
+          return _screenContent(nfcAvailability);
         },
         error: (err, stack) => Center(child: Text('Coś poszło nie tak: $err')),
         loading: () => const Center(child: CircularProgressIndicator()));
@@ -41,7 +52,7 @@ class NfcWriterState extends ConsumerState<NfcWriter> {
     super.dispose();
   }
 
-  Future<void> scanNfcTag() async {
+  Future<void> _scanNfcTag() async {
     await NfcManager.instance.stopSession();
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
       var ndef = Ndef.from(tag);
