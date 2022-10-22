@@ -44,9 +44,9 @@ class _UserProfileDetailsState extends ConsumerState<UserProfileDetails> {
             if (widget.iconButton != null) widget.iconButton!
           ],
         ),
-        const SizedBox(height: 50),
-        _buildSummary(context),
         const SizedBox(height: 40),
+        _buildSummary(context),
+        const SizedBox(height: 30),
         ...widget.children,
       ],
     );

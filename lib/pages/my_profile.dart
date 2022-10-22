@@ -92,6 +92,12 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
             ),
             Divider(color: Theme.of(context).dividerColor.withAlpha(80)),
             ProfileAction(
+                title: const Text('Wprowadzenie'),
+                icon: const Icon(Icons.arrow_forward),
+                onTap: () {
+                  Navigator.of(context).pushNamed('/onboarding');
+                }),
+            ProfileAction(
                 title: const Text('Jak pomagać?'),
                 icon: const Icon(Icons.arrow_forward),
                 onTap: () {
@@ -103,13 +109,7 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
                 onTap: () {
                   Navigator.of(context).pushNamed('/about');
                 }),
-            if (kDebugMode)
-              ProfileAction(
-                  title: const Text('Wprowadzenie (debug)'),
-                  icon: const Icon(Icons.arrow_forward),
-                  onTap: () {
-                    Navigator.of(context).pushNamed('/onboarding');
-                  }),
+            Divider(color: Theme.of(context).dividerColor.withAlpha(80)),
             ProfileAction(
               onTap: _signOut,
               title: const Text('Wyloguj się'),
