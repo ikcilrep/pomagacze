@@ -23,7 +23,7 @@ class _ErrorWithActionState extends State<ErrorWithAction> {
   @override
   void initState() {
     super.initState();
-    if(widget.error != null) {
+    if (widget.error != null) {
       context.showErrorSnackBar(message: widget.error.toString());
     }
   }
@@ -33,7 +33,10 @@ class _ErrorWithActionState extends State<ErrorWithAction> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(widget.errorText),
+        Text(
+          widget.errorText,
+          textAlign: TextAlign.center,
+        ),
         const SizedBox(height: 10),
         OutlinedButton(onPressed: widget.action, child: Text(widget.actionText))
       ],

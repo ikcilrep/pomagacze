@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pomagacze/db/activities.dart';
 import 'package:pomagacze/models/activity.dart';
 import 'package:pomagacze/state/friendships.dart';
-import 'package:pomagacze/state/user.dart';
+import 'package:pomagacze/state/users.dart';
 
 final friendsAndUserActivitiesProvider =
     FutureProvider<List<Activity>>((ref) async {

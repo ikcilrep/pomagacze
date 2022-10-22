@@ -7,7 +7,7 @@ import 'package:pomagacze/components/segmented_control.dart';
 import 'package:pomagacze/db/db.dart';
 import 'package:pomagacze/pages/event_form.dart';
 import 'package:pomagacze/state/events.dart';
-import 'package:pomagacze/state/user.dart';
+import 'package:pomagacze/state/users.dart';
 
 class FeedPage extends ConsumerStatefulWidget {
   const FeedPage({Key? key}) : super(key: key);

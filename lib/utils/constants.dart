@@ -24,4 +24,4 @@ const bottomSheetShape = RoundedRectangleBorder(
       topLeft: Radius.circular(12), topRight: Radius.circular(12)),
 );
 
-const websiteUrl = 'https://pomagacze.cubepotato.eu';
+const websiteUrl = 'https://pomagacze.vercel.app';

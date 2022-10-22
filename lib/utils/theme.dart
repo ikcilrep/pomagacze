@@ -52,5 +52,6 @@ ThemeData getTheme({bool dark = false}) {
         width: 1,
         color: data.colorScheme.secondary,
         style: BorderStyle.solid,
-      ))));
+      ))),
+      listTileTheme: const ListTileThemeData(tileColor: Colors.transparent));
 }

@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -12,6 +15,7 @@ import 'package:pomagacze/pages/events_joined.dart';
 import 'package:pomagacze/pages/learn.dart';
 import 'package:pomagacze/pages/login.dart';
 import 'package:pomagacze/pages/my_events.dart';
+import 'package:pomagacze/pages/search_events.dart';
 import 'package:pomagacze/pages/search_users.dart';
 import 'package:pomagacze/pages/setup_profile.dart';
 import 'package:pomagacze/pages/splash.dart';
@@ -23,33 +27,41 @@ Future<void> main() async {
   await Supabase.initialize(
     url: supabaseURL,
     anonKey: supabaseAnonKey,
+    authCallbackUrlHostname: 'login-callback'
   );
 
-  runApp(ProviderScope(child: MyApp()));
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(systemNavigationBarColor: getTheme().colorScheme.surface));
+
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
-  final Location location = Location();
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
-  MyApp({super.key});
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final Location location = Location();
 
   Widget _buildRoutes() {
     return DynamicColorBuilder(
         builder: (lightScheme, darkScheme) => MaterialApp(
-          title: 'Pomagacze',
-          localizationsDelegates: const [
-            FormBuilderLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          locale: const Locale('pl'),
-          supportedLocales: const [Locale('pl'), Locale('en')],
-          theme: getTheme(),
-          // darkTheme: getTheme(dark: true),
-          initialRoute: '/',
-          debugShowCheckedModeBanner: false,
-          routes: <String, WidgetBuilder>{
+              title: 'Pomagacze',
+              localizationsDelegates: const [
+                FormBuilderLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              locale: const Locale('pl'),
+              supportedLocales: const [Locale('pl'), Locale('en')],
+              theme: getTheme(),
+              // darkTheme: getTheme(dark: true),
+              initialRoute: '/',
+              debugShowCheckedModeBanner: false,
+              routes: <String, WidgetBuilder>{
                 '/': (_) => const SplashPage(),
                 '/login': (_) => const LoginPage(),
                 '/home': (_) => const HomeLayout(),
@@ -60,8 +72,9 @@ class MyApp extends StatelessWidget {
                 '/search-users': (_) => const SearchUsersPage(),
                 '/about': (_) => const AboutPage(),
                 '/learn': (_) => const LearnPage(),
+                '/search-events': (_) => const SearchEventsPage(),
               },
-        ));
+            ));
   }
 
   // This widget is the root of your application.

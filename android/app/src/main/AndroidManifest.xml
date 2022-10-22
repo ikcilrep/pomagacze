@@ -32,6 +32,17 @@
                 <data
                         android:scheme="com.pomagacze.pomagacze"
                         android:host="login-callback" />
+                <data
+                        android:scheme="com.pomagacze.pomagacze"
+                        android:host="event" />
+            </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="https"
+                      android:host="pomagacze.vercel.app"
+                      android:pathPrefix="/confirm-event" />
             </intent-filter>
 
         </activity>
@@ -60,5 +71,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+
+    <uses-permission android:name="android.permission.NFC" />
 </manifest>
 

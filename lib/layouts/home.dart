@@ -1,6 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:pomagacze/components/auth_required_state.dart';
+import 'package:pomagacze/components/deep_link_detector.dart';
 import 'package:pomagacze/components/indexed_transition_switcher.dart';
 import 'package:pomagacze/pages/feed.dart';
 import 'package:pomagacze/pages/friends.dart';
@@ -26,41 +27,54 @@ class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
   ];
 
   List<NavigationDestination> destinations = const [
-        NavigationDestination(
-            selectedIcon: Icon(Icons.handshake),
-            icon: Icon(Icons.handshake_outlined),
-            label: 'Pomagaj'),
-        NavigationDestination(
-            selectedIcon: Icon(Icons.people),
-            icon: Icon(Icons.people_outline),
-            label: 'Znajomi'),
-        NavigationDestination(
-            selectedIcon: Icon(Icons.leaderboard),
-            icon: Icon(Icons.leaderboard_outlined),
-            label: 'Rankingi'),
-        NavigationDestination(
-            selectedIcon: Icon(Icons.account_circle),
-            icon: Icon(Icons.account_circle_outlined),
-            label: 'Profil'),
-      ];
+    NavigationDestination(
+        selectedIcon: Icon(Icons.handshake),
+        icon: Icon(Icons.handshake_outlined),
+        label: 'Pomagaj'),
+    NavigationDestination(
+        selectedIcon: Icon(Icons.people),
+        icon: Icon(Icons.people_outline),
+        label: 'Znajomi'),
+    NavigationDestination(
+        selectedIcon: Icon(Icons.leaderboard),
+        icon: Icon(Icons.leaderboard_outlined),
+        label: 'Ranking'),
+    NavigationDestination(
+        selectedIcon: Icon(Icons.account_circle),
+        icon: Icon(Icons.account_circle_outlined),
+        label: 'Profil'),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Text(destinations[_index].label), scrolledUnderElevation: 0, actions: _index == 0 ? [
-            IconButton(onPressed: () {
-              Navigator.of(context).pushNamed('/learn');
-            }, icon: const Icon(Icons.school, color: Colors.black87))
-      ] : []),
-      body: _buildBody(),
-      bottomNavigationBar: NavigationBar(
-        destinations: destinations,
-        selectedIndex: _index,
-        onDestinationSelected: (i) => setState(() {
-          _reversed = i < _index;
-          _index = i;
-        }),
+    return DeepLinkDetector(
+      child: Scaffold(
+        appBar: AppBar(
+            title: Text(destinations[_index].label),
+            scrolledUnderElevation: 0,
+            actions: _index == 0
+                ? [
+                    IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/search-events');
+                        },
+                        icon: const Icon(Icons.search, color: Colors.black87)),
+                    IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pushNamed('/learn');
+                        },
+                        icon: const Icon(Icons.school, color: Colors.black87))
+                  ]
+                : []),
+        body: _buildBody(),
+        bottomNavigationBar: NavigationBar(
+          destinations: destinations,
+          selectedIndex: _index,
+          onDestinationSelected: (i) => setState(() {
+            _reversed = i < _index;
+            _index = i;
+          }),
+        ),
       ),
     );
   }
@@ -68,9 +82,11 @@ class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
   Widget _buildBody() {
     return IndexedTransitionSwitcher(
       reverse: _reversed,
-      transitionBuilder: (Widget child,
-          Animation<double> animation,
-          Animation<double> secondaryAnimation,) {
+      transitionBuilder: (
+        Widget child,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+      ) {
         return SharedAxisTransition(
           animation: animation,
           secondaryAnimation: secondaryAnimation,
