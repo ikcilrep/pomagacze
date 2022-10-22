@@ -29,12 +29,6 @@ class NearbyOrganizersListState extends ConsumerState<NearbyOrganizersList> {
 
   AutoDisposeFutureProvider<HelpEvent> get eventProvider =>
       eventFutureProvider(widget.event.id!);
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   void dispose() {
     Nearby().stopAdvertising();

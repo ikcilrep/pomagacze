@@ -37,11 +37,6 @@ class NearbyUsersListState extends ConsumerState<NearbyUsersList> {
     super.dispose();
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Future<void> startDiscovery() async {
     await Nearby().stopDiscovery();
     Nearby().startDiscovery(
