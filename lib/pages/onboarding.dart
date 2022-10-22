@@ -71,7 +71,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     duration: const Duration(milliseconds: 250),
                   ),
                 ),
-                const SizedBox(height: 100),
+                const SizedBox(height: 85),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 25),
@@ -93,7 +93,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         children: [
           Image.asset(
             'assets/onboarding_icons/${section.image}',
-            height: 250,
+            height: 225,
           ),
           const SizedBox(height: 50),
           Text(section.title,
