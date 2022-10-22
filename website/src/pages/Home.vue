@@ -1,5 +1,5 @@
 <template>
-  <v-container class="d-flex align-center flex-column text-center mt-10 pb-10">
+  <v-container class="d-flex align-center flex-column text-center mt-10 pb-16">
     <h1 class="text-h3 mb-2">Pomagacze</h1>
     <h2 class="text-h6">Aplikacja Pomagacze zachęca do pomagania, bycia wolontariuszem <br>i zmieniania swojego otoczenia
       na lepsze.</h2>
@@ -11,6 +11,7 @@
       <v-carousel-item
           v-for="(url, i) in Array.from({length: 8}).map((x, i) => `screenshots/screenshot${i+1}.png`)"
           :key="url"
+          eager
       >
         <img :src="url" height="590" />
       </v-carousel-item>
@@ -40,6 +41,12 @@
         <li>sprawdzanie rankingów najlepszych wolontariuszy</li>
       </ul>
     </div>
+
+    <h2 class="mt-15 mb-8">Wygodny sposób potwierdzania uczestnictwa</h2>
+    <iframe src="https://player.vimeo.com/video/762995817?h=79c66b2416" width="640" height="360" frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture" allowfullscreen class="mb-8 rounded-lg"></iframe>
+    <iframe src="https://player.vimeo.com/video/762995817?h=79c66b2416" width="640" height="360" frameborder="0"
+            allow="autoplay; fullscreen; picture-in-picture" allowfullscreen class="rounded-lg"></iframe>
   </v-container>
 </template>
 
