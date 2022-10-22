@@ -50,4 +50,7 @@ const index = ref(0);
 </script>
 
 <style scoped>
+ul {
+  margin-left: 25px;
+}
 </style>
