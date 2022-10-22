@@ -33,7 +33,6 @@ class NearbyOrganizersListState extends ConsumerState<NearbyOrganizersList> {
   @override
   void initState() {
     super.initState();
-    startAdvertising();
   }
 
   @override
@@ -47,7 +46,6 @@ class NearbyOrganizersListState extends ConsumerState<NearbyOrganizersList> {
     if (payload.type == PayloadType.BYTES) {
       final String message = utf8.decode(payload.bytes!);
       if (message == widget.event.id) {
-
         ref.invalidate(eventProvider);
         ref.invalidate(feedFutureProvider);
         ref.invalidate(currentUserProvider);
@@ -68,8 +66,7 @@ class NearbyOrganizersListState extends ConsumerState<NearbyOrganizersList> {
       showDialog(
           context: context,
           builder: (_) => CongratulationsDialog(
-              event: widget.event,
-              onDismiss: _closeDialogAndPopScreen));
+              event: widget.event, onDismiss: _closeDialogAndPopScreen));
     }
   }
 
