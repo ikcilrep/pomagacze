@@ -40,7 +40,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
     return Scaffold(
         body: SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.max,
@@ -94,7 +94,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
               )),
         ),
         Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: DotsIndicator(
               dotsCount: _sections.length,
               position: _index.toDouble(),

@@ -20,7 +20,7 @@
       <router-view />
     </v-main>
     <v-footer class="d-flex justify-center py-5">
-      Aplikacja zrobiona przez zespół "hhhhhhhhhhhhhhhh".
+      Aplikacja zrobiona przez zespół "0xdeadbeef".
     </v-footer>
   </v-app>
 </template>
