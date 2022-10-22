@@ -91,24 +91,25 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
               icon: const Icon(Icons.arrow_forward),
             ),
             Divider(color: Theme.of(context).dividerColor.withAlpha(80)),
-            const ListTile(
-              title: Text('Opcje'),
-              trailing: Icon(Icons.arrow_forward),
-            ),
             ProfileAction(
-              title: const Text('O aplikacji'),
-              icon: const Icon(Icons.arrow_forward),
-              onTap: () {
-                Navigator.of(context).pushNamed('/learn');
-              }
-            ),
-            if(kDebugMode) ProfileAction(
-                title: const Text('Wprowadzenie (debug)'),
+                title: const Text('Jak pomagać?'),
                 icon: const Icon(Icons.arrow_forward),
                 onTap: () {
-                  Navigator.of(context).pushNamed('/onboarding');
-                }
-            ),
+                  Navigator.of(context).pushNamed('/learn');
+                }),
+            ProfileAction(
+                title: const Text('O aplikacji'),
+                icon: const Icon(Icons.arrow_forward),
+                onTap: () {
+                  Navigator.of(context).pushNamed('/about');
+                }),
+            if (kDebugMode)
+              ProfileAction(
+                  title: const Text('Wprowadzenie (debug)'),
+                  icon: const Icon(Icons.arrow_forward),
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/onboarding');
+                  }),
             ProfileAction(
               onTap: _signOut,
               title: const Text('Wyloguj się'),
