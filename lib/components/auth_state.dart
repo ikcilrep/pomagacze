@@ -17,7 +17,8 @@ class AuthState<T extends StatefulWidget> extends SupabaseAuthState<T> {
       Navigator.of(context)
           .pushNamedAndRemoveUntil('/setup-profile', (route) => false);
     } else if (mounted) {
-      Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/onboarding', (route) => false);
     }
   }
 

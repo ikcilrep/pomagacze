@@ -73,6 +73,7 @@ dependencies:
   permission_handler: ^10.2.0
   receive_intent: ^0.2.3
   flutter_nfc_kit: ^3.3.1
+  dots_indicator: ^2.1.0
 
 
 dev_dependencies:
@@ -102,6 +103,7 @@ flutter:
     - assets/
     - assets/loginBGgren.png
     - assets/LearnInstructions.yaml
+    - assets/Onboarding.yaml
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

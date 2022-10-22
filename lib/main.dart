@@ -19,18 +19,19 @@ import 'package:pomagacze/pages/search_events.dart';
 import 'package:pomagacze/pages/search_users.dart';
 import 'package:pomagacze/pages/setup_profile.dart';
 import 'package:pomagacze/pages/splash.dart';
+import 'package:pomagacze/pages/onboarding.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/theme.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
   await Supabase.initialize(
-    url: supabaseURL,
-    anonKey: supabaseAnonKey,
-    authCallbackUrlHostname: 'login-callback'
-  );
+      url: supabaseURL,
+      anonKey: supabaseAnonKey,
+      authCallbackUrlHostname: 'login-callback');
 
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(systemNavigationBarColor: getTheme().colorScheme.surface));
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor: getTheme().colorScheme.surface));
 
   runApp(const ProviderScope(child: MyApp()));
 }
@@ -63,6 +64,7 @@ class _MyAppState extends State<MyApp> {
               debugShowCheckedModeBanner: false,
               routes: <String, WidgetBuilder>{
                 '/': (_) => const SplashPage(),
+                '/onboarding': (_) => const OnboardingPage(),
                 '/login': (_) => const LoginPage(),
                 '/home': (_) => const HomeLayout(),
                 '/new': (_) => const EventForm(),
