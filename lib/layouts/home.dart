@@ -27,30 +27,33 @@ class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
   ];
 
   List<NavigationDestination> destinations = const [
-        NavigationDestination(
-            selectedIcon: Icon(Icons.handshake),
-            icon: Icon(Icons.handshake_outlined),
-            label: 'Pomagaj'),
-        NavigationDestination(
-            selectedIcon: Icon(Icons.people),
-            icon: Icon(Icons.people_outline),
-            label: 'Znajomi'),
-        NavigationDestination(
-            selectedIcon: Icon(Icons.leaderboard),
-            icon: Icon(Icons.leaderboard_outlined),
-            label: 'Rankingi'),
-        NavigationDestination(
-            selectedIcon: Icon(Icons.account_circle),
-            icon: Icon(Icons.account_circle_outlined),
-            label: 'Profil'),
-      ];
+    NavigationDestination(
+        selectedIcon: Icon(Icons.handshake),
+        icon: Icon(Icons.handshake_outlined),
+        label: 'Pomagaj'),
+    NavigationDestination(
+        selectedIcon: Icon(Icons.people),
+        icon: Icon(Icons.people_outline),
+        label: 'Znajomi'),
+    NavigationDestination(
+        selectedIcon: Icon(Icons.leaderboard),
+        icon: Icon(Icons.leaderboard_outlined),
+        label: 'Ranking'),
+    NavigationDestination(
+        selectedIcon: Icon(Icons.account_circle),
+        icon: Icon(Icons.account_circle_outlined),
+        label: 'Profil'),
+  ];
 
   @override
   Widget build(BuildContext context) {
     return DeepLinkDetector(
       child: Scaffold(
         appBar: AppBar(
-            title: Text(destinations[_index].label), scrolledUnderElevation: 0, actions: _index == 0 ? [
+            title: Text(destinations[_index].label),
+            scrolledUnderElevation: 0,
+            actions: _index == 0
+                ? [
                     IconButton(
                         onPressed: () {
                           Navigator.of(context).pushNamed('/search-events');
@@ -79,9 +82,11 @@ class _HomeLayoutState extends AuthRequiredState<HomeLayout> {
   Widget _buildBody() {
     return IndexedTransitionSwitcher(
       reverse: _reversed,
-      transitionBuilder: (Widget child,
-          Animation<double> animation,
-          Animation<double> secondaryAnimation,) {
+      transitionBuilder: (
+        Widget child,
+        Animation<double> animation,
+        Animation<double> secondaryAnimation,
+      ) {
         return SharedAxisTransition(
           animation: animation,
           secondaryAnimation: secondaryAnimation,
