@@ -36,7 +36,6 @@ class NfcWriterState extends ConsumerState<NfcWriter> {
   @override
   Widget build(BuildContext context) {
     final nfcAvailabilityAsyncValue = ref.watch(nfcAvailabilityProvider);
-    ref.refresh(nfcAvailabilityProvider);
     return nfcAvailabilityAsyncValue.when(
         data: (nfcAvailability) {
           if (nfcAvailability == NFCAvailability.available) _scanNfcTag();
