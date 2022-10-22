@@ -187,7 +187,14 @@ class EventDetailsState extends ConsumerState<EventDetails> {
                                             fontWeight: FontWeight.w400)),
                               ),
                               if (event.imageUrl == null)
-                                PointsBadge(event: event)
+                                Column(
+                                  children: [
+                                    VolunteersBadge(event: event),
+                                    const SizedBox(height: 5,),
+                                    PointsBadge(event: event),
+                                  ]
+                                ),
+
                             ],
                           )),
                       Visibility(
