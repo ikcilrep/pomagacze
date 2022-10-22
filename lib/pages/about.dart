@@ -33,6 +33,9 @@ class AboutPage extends StatelessWidget {
 Aplikacja stworzona na konkurs HackHeroes.
 Autorzy: Jakub Latuszek, Filip Latuszek, Szymon Perlicki''',
                   style: TextStyle(height: 1.4, fontSize: 15)),
+              const SizedBox(height: 10),
+              const Text('Niektóre grafiki pochodzą z Flaticon - www.flaticon.com',
+                  style: TextStyle(height: 1.4, fontSize: 15)),
               const SizedBox(height: 30),
               OutlinedButton(
                   onPressed: () {
