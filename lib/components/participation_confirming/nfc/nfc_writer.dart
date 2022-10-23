@@ -1,17 +1,19 @@
 import 'dart:typed_data';
 
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nfc_manager/nfc_manager.dart';
-import 'package:pomagacze/components/nfc/nfc_disabled_message.dart';
-import 'package:pomagacze/components/nfc/nfc_not_available_message.dart';
-import 'package:pomagacze/components/nfc/nfc_write_message.dart';
 import 'package:pomagacze/models/help_event.dart';
 import 'package:pomagacze/state/nfc.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/snackbar.dart';
+
+import 'nfc_disabled_message.dart';
+import 'nfc_not_available_message.dart';
+import 'nfc_write_message.dart';
 
 class NfcWriter extends ConsumerStatefulWidget {
   final HelpEvent event;

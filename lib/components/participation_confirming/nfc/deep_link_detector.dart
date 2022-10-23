@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pomagacze/components/participation_confirming/congratulations_dialog.dart';
 import 'package:pomagacze/db/events.dart';
 import 'package:pomagacze/db/volunteers.dart';
 import 'package:pomagacze/models/help_event.dart';
@@ -15,7 +16,6 @@ import 'package:pomagacze/utils/snackbar.dart';
 import 'package:receive_intent/receive_intent.dart';
 import 'package:uni_links/uni_links.dart';
 
-import '../participation_confirming/congratulations_dialog.dart';
 
 class DeepLinkDetector extends ConsumerStatefulWidget {
   final Widget child;

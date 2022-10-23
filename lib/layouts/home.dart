@@ -2,8 +2,8 @@ import 'package:animations/animations.dart';
 
 import 'package:flutter/material.dart';
 import 'package:pomagacze/components/authentication/auth_required_state.dart';
-import 'package:pomagacze/components/nfc/deep_link_detector.dart';
 import 'package:pomagacze/components/general/indexed_transition_switcher.dart';
+import 'package:pomagacze/components/participation_confirming/nfc/deep_link_detector.dart';
 import 'package:pomagacze/pages/events/feed.dart';
 import 'package:pomagacze/pages/users/friends.dart';
 import 'package:pomagacze/pages/users/leaderboard.dart';

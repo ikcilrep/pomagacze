@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pomagacze/components/nfc/nfc_reader.dart';
 
-import 'package:pomagacze/components/nfc/nfc_writer.dart';
 import 'package:pomagacze/components/participation_confirming/nearby_connections/nearby_organizers_list.dart';
+
 import 'package:pomagacze/components/participation_confirming/nearby_connections/nearby_users_list.dart';
+import 'package:pomagacze/components/participation_confirming/nfc/nfc_reader.dart';
+import 'package:pomagacze/components/participation_confirming/nfc/nfc_writer.dart';
 import 'package:pomagacze/models/help_event.dart';
 
 enum ConfirmationSide {
