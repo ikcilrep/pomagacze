@@ -14,7 +14,7 @@ class ActivitiesPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final activities =
-        ref.watch(friendsAndUserActivitiesProvider);
+        ref.watch(activitiesProvider);
 
     return activities.when(
         data: (data) {
@@ -28,7 +28,7 @@ class ActivitiesPage extends ConsumerWidget {
           }
           return RefreshIndicator(
             onRefresh: () =>
-                ref.refresh(friendsAndUserActivitiesProvider.future),
+                ref.refresh(activitiesProvider.future),
             child: ListView.builder(
                 itemCount: data.length,
                 padding: const EdgeInsets.symmetric(vertical: 12),
@@ -59,7 +59,7 @@ class ActivitiesPage extends ConsumerWidget {
         error: (err, stack) => ErrorWithAction(
             error: err,
             action: () {
-              ref.invalidate(friendsAndUserActivitiesProvider);
+              ref.invalidate(activitiesProvider);
             },
             actionText: 'Odśwież'),
         loading: () => const Center(child: CircularProgressIndicator()));

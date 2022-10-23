@@ -16,6 +16,18 @@ class ActivitiesDB {
         .toList();
   }
 
+  static Future<List<Activity>> getActivitiesForOrganizerVolunteers(String authorId) async {
+    var result = await supabase
+        .from('volunteers')
+        .select('*, user:user_id(*), event:event_id!inner(*)!')
+        .eq('event.author_id', authorId)
+        .execute();
+    result.throwOnError();
+    return (result.data as List<dynamic>)
+        .map((e) => Activity.fromData(e))
+        .toList();
+  }
+
   static Future<List<Activity>> getActivitiesForUser(String userId) async {
     return await getActivitiesForUsers([userId]);
   }
