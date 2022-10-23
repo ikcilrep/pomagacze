@@ -5,7 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:nfc_manager/nfc_manager.dart';
-import 'package:pomagacze/components/congratulations_dialog.dart';
+import 'package:pomagacze/components/participation_confirming/congratulations_dialog.dart';
 import 'package:pomagacze/components/nfc/nfc_disabled_message.dart';
 import 'package:pomagacze/components/nfc/nfc_not_available_message.dart';
 import 'package:pomagacze/db/volunteers.dart';

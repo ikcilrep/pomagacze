@@ -1,12 +1,13 @@
 import 'package:animations/animations.dart';
+
 import 'package:flutter/material.dart';
-import 'package:pomagacze/components/auth_required_state.dart';
-import 'package:pomagacze/components/deep_link_detector.dart';
-import 'package:pomagacze/components/indexed_transition_switcher.dart';
-import 'package:pomagacze/pages/feed.dart';
-import 'package:pomagacze/pages/friends.dart';
-import 'package:pomagacze/pages/leaderboard.dart';
-import 'package:pomagacze/pages/my_profile.dart';
+import 'package:pomagacze/components/authentication/auth_required_state.dart';
+import 'package:pomagacze/components/nfc/deep_link_detector.dart';
+import 'package:pomagacze/components/general/indexed_transition_switcher.dart';
+import 'package:pomagacze/pages/events/feed.dart';
+import 'package:pomagacze/pages/users/friends.dart';
+import 'package:pomagacze/pages/users/leaderboard.dart';
+import 'package:pomagacze/pages/profile/my_profile.dart';
 
 class HomeLayout extends StatefulWidget {
   const HomeLayout({Key? key}) : super(key: key);

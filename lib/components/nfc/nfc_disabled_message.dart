@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pomagacze/components/error_with_action.dart';
+import 'package:pomagacze/components/general/error_with_action.dart';
 import 'package:pomagacze/state/nfc.dart';
 
 class NfcDisabledMessage extends ConsumerWidget {
