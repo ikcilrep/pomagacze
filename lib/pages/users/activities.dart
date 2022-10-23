@@ -31,6 +31,7 @@ class ActivitiesPage extends ConsumerWidget {
                 },
                 actionText: 'Dodaj znajomych');
           }
+          data.sort((a, b) => b.createdAt.compareTo(a.createdAt));
           return RefreshIndicator(
             onRefresh: () => ref.refresh(activitiesProvider.future),
             child: ListView.builder(
@@ -52,11 +53,16 @@ class ActivitiesPage extends ConsumerWidget {
                       closedBuilder: (_, openContainer) {
                         return ListTile(
                           onTap: openContainer,
-                          title: currentUserAsyncValue.when(data: (currentUser) {
-                            return Text(_getActivityJoinedText(activity, currentUser, ref));
-                          }, error: (err,stack) {
-                            return Container();
-                          }, loading: () => const Center(child: CircularProgressIndicator())),
+                          title: currentUserAsyncValue.when(
+                              data: (currentUser) {
+                                return Text(_getActivityJoinedText(
+                                    activity, currentUser, ref));
+                              },
+                              error: (err, stack) {
+                                return Container();
+                              },
+                              loading: () => const Center(
+                                  child: CircularProgressIndicator())),
                           subtitle: Text(activity.createdAt.displayable()),
                         );
                       });
