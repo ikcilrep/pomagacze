@@ -7,6 +7,8 @@ import 'package:pomagacze/components/error_with_action.dart';
 import 'package:pomagacze/components/profile_action.dart';
 import 'package:pomagacze/components/user_profile_details.dart';
 import 'package:pomagacze/models/user_profile.dart';
+import 'package:pomagacze/state/events.dart';
+import 'package:pomagacze/state/leaderboard.dart';
 import 'package:pomagacze/state/users.dart';
 import 'package:pomagacze/utils/constants.dart';
 import 'package:pomagacze/utils/snackbar.dart';
@@ -33,13 +35,15 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
     return currentUser.when(
         data: (data) => buildSuccess(data),
         error: (err, stack) =>
-            ErrorWithAction(action: _signOut, error: err, actionText: 'Wyloguj się'),
+            ErrorWithAction(
+                action: _signOut, error: err, actionText: 'Wyloguj się'),
         loading: () => const Center(child: CircularProgressIndicator()));
   }
 
   Widget buildSuccess(UserProfile userProfile) {
     return RefreshIndicator(
         onRefresh: () {
+          ref.invalidate(leaderboardProvider);
           return Future.wait([
             ref.refresh(currentUserProvider.future),
           ]);
@@ -55,7 +59,9 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
                     builder: (context) {
                       return Wrap(children: [
                         Padding(
-                          padding: MediaQuery.of(context).viewInsets,
+                          padding: MediaQuery
+                              .of(context)
+                              .viewInsets,
                           child: EditProfile(
                             title: 'Edytuj profil',
                             onSubmit: () {
@@ -75,7 +81,10 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
               title: const Text('Wymień punkty'),
               icon: const Icon(Icons.arrow_forward),
             ),
-            Divider(color: Theme.of(context).dividerColor.withAlpha(80)),
+            Divider(color: Theme
+                .of(context)
+                .dividerColor
+                .withAlpha(80)),
             ProfileAction(
               onTap: () {
                 Navigator.of(context).pushNamed('/events-joined');
@@ -90,7 +99,10 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
               title: const Text('Moje wydarzenia'),
               icon: const Icon(Icons.arrow_forward),
             ),
-            Divider(color: Theme.of(context).dividerColor.withAlpha(80)),
+            Divider(color: Theme
+                .of(context)
+                .dividerColor
+                .withAlpha(80)),
             ProfileAction(
                 title: const Text('Wprowadzenie'),
                 icon: const Icon(Icons.arrow_forward),
@@ -109,7 +121,10 @@ class ProfilePageState extends ConsumerState<MyProfilePage> {
                 onTap: () {
                   Navigator.of(context).pushNamed('/about');
                 }),
-            Divider(color: Theme.of(context).dividerColor.withAlpha(80)),
+            Divider(color: Theme
+                .of(context)
+                .dividerColor
+                .withAlpha(80)),
             ProfileAction(
               onTap: _signOut,
               title: const Text('Wyloguj się'),
