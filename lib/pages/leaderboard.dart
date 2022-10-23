@@ -102,6 +102,18 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
         loading: () => const Center(child: CircularProgressIndicator()));
   }
 
+  int _getUserXP(UserProfile userProfile) {
+    print(_leaderboardOptions.timeRange);
+    switch(_leaderboardOptions.timeRange) {
+      case LeaderboardTimeRange.week:
+        return userProfile.xpThisWeek;
+      case LeaderboardTimeRange.month:
+        return userProfile.xpThisMonth;
+      default:
+        return userProfile.xp;
+    }
+  }
+
   Widget _buildUserTile(int position, UserProfile userProfile) {
     final isMe = userProfile.id == supabase.auth.currentUser?.id;
     return Material(
@@ -133,12 +145,12 @@ class LeaderboardPageState extends ConsumerState<LeaderboardPage> {
                   children: [
                     Text((userProfile.name ?? '') + (isMe ? ' (Ty)' : ''),
                         style: Theme.of(context).textTheme.subtitle1),
-                    Text('Poziom ${levelFromXP(userProfile.xp)}',
+                    Text('Poziom ${levelFromXP(_getUserXP(userProfile))}',
                         style: Theme.of(context).textTheme.bodySmall)
                   ],
                 ),
               ),
-              Text(formatXP(userProfile.xp),
+              Text(formatXP(_getUserXP(userProfile)),
                   style: Theme.of(context).textTheme.bodyLarge),
               const SizedBox(width: 4),
               Icon(Icons.favorite,

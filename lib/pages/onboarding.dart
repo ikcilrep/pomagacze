@@ -48,7 +48,6 @@ class _OnboardingPageState extends State<OnboardingPage> {
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 40),
                 Expanded(
                     child: PageView(
                         controller: _pageController,
@@ -71,13 +70,13 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     duration: const Duration(milliseconds: 250),
                   ),
                 ),
-                const SizedBox(height: 100),
+                const SizedBox(height: 80),
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 25),
                   child: _buildButtons(context),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 28),
               ],
             ),
     ));
@@ -85,7 +84,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
 
   Widget _buildSection(OnboardingSection section) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 50),
+      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.max,
@@ -93,7 +92,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
         children: [
           Image.asset(
             'assets/onboarding_icons/${section.image}',
-            height: 250,
+            height: 225,
           ),
           const SizedBox(height: 50),
           Text(section.title,
