@@ -7,7 +7,6 @@ import 'package:pomagacze/components/error_with_action.dart';
 import 'package:pomagacze/components/profile_action.dart';
 import 'package:pomagacze/components/user_profile_details.dart';
 import 'package:pomagacze/models/user_profile.dart';
-import 'package:pomagacze/state/events.dart';
 import 'package:pomagacze/state/leaderboard.dart';
 import 'package:pomagacze/state/users.dart';
 import 'package:pomagacze/utils/constants.dart';
