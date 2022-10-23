@@ -19,7 +19,7 @@
 
     <h2 class="mt-15 mb-8">Do czego służy aplikacja?</h2>
 
-    <div class="text-left mb-10 w-66">
+    <div class="text-left mb-10" style="width: 800px; max-width: 90vw;">
       <h3>Poszukiwanie wolontariuszy</h3>
       <ul>
         <li>dodawanie akcji społecznych</li>
@@ -43,12 +43,16 @@
     </div>
 
     <h2 class="mt-15 mb-8">Wygodny sposób potwierdzania uczestnictwa</h2>
-    <iframe src="https://player.vimeo.com/video/762995817?h=79c66b2416" width="640" height="360" frameborder="0"
-            style="max-width: 90vw"
-            allow="autoplay; fullscreen; picture-in-picture" allowfullscreen class="mb-8 rounded-lg"></iframe>
-    <iframe src="https://player.vimeo.com/video/762995817?h=79c66b2416" width="640" height="360" frameborder="0"
-            allow="autoplay; fullscreen; picture-in-picture" allowfullscreen class="rounded-lg"
-            style="max-width: 90vw"></iframe>
+
+    <div style="width: 700px; max-width: 90vw;" class="mb-8">
+      <div style="padding:56.25% 0 0 0;position:relative;">
+        <iframe class="rounded-lg" src="https://player.vimeo.com/video/762995817?h=79c66b2416&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Decorporation"></iframe>
+      </div>
+      <div style="padding:56.25% 0 0 0;position:relative;" class="mt-5">
+        <iframe class="rounded-lg" src="https://player.vimeo.com/video/762995817?h=79c66b2416&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Decorporation"></iframe>
+      </div>
+    </div>
+    <component :is='"script"' src="https://player.vimeo.com/api/player.js"></component>
   </v-container>
 </template>
 
@@ -60,6 +64,6 @@ const index = ref(0);
 
 <style scoped>
 ul {
-  margin-left: 25px;
+  margin-left: 30px;
 }
 </style>
